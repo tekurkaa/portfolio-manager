@@ -50,3 +50,13 @@ Build a website for investment management with 4 tabs: (1) all investments - sto
 - Smart Money tab surfaces held-ticker matches (bought before market moves)
 - Sentiment shows engagement-weighted scores so viral bullish/bearish posts count more
 - All news auto-refreshes every 60s so you see market-moving headlines within a minute
+
+## Iteration 3 (Feb 2026)
+### Added
+- New **ALPHA tab** with two flagship features:
+  - **Alpha Signal per holding**: composite score = 0.45 × 5-day momentum + 0.40 × StockTwits sentiment + 0.15 × call/put options tilt. Emits BUY / HOLD / SELL with plain-English drivers.
+  - **Unusual Options Flow**: live scan of nearest 3 expiries per held ticker via yfinance. Highlights contracts with volume/OI ≥ 3× (whale bets). Shows put/call ratio for market bias.
+- Options + signal endpoints: /api/options/flow, /api/options/{symbol}, /api/signal/alpha
+
+### On Free Congress Alternatives
+- Tried Tracefour (no public API), Capitol Trades (rate-limits Emergent IPs), FMP/Quiver demos (401), House disclosures-clerk (PDF only). All free tier congress feeds are either blocked from AWS-backed preview networks or require paid keys. SEC Form 4 remains the reliable free insider source and is live.

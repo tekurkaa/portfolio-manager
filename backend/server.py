@@ -20,6 +20,7 @@ from news_service import get_stock_news, get_macro_news  # noqa: E402
 from sentiment_service import analyze_portfolio_public, market_fear_greed_from_social, analyze_symbol_public  # noqa: E402
 from insider_service import get_insider_summary, get_congress_trades, get_sec_form4  # noqa: E402
 from history_service import portfolio_history  # noqa: E402
+from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -326,6 +327,30 @@ async def sec_form4_route(symbol: Optional[str] = None, limit: int = 40):
 async def portfolio_history_route(range: str = "1M"):
     docs = await db.holdings.find({}, {"_id": 0}).to_list(1000)
     return await portfolio_history(docs, range.upper())
+
+
+# ---------- ROUTES: OPTIONS FLOW & ALPHA SIGNAL ----------
+@api_router.get("/options/flow")
+async def options_flow_route():
+    symbols = await _get_held_symbols()
+    clean = [s.replace("-USD", "") for s in symbols]
+    return await get_portfolio_options_flow(clean)
+
+
+@api_router.get("/options/{symbol}")
+async def options_symbol(symbol: str):
+    return await get_options_flow(symbol)
+
+
+@api_router.get("/signal/alpha")
+async def alpha_signal_route():
+    symbols = await _get_held_symbols()
+    clean = [s.replace("-USD", "") for s in symbols]
+    # get sentiment scores
+    from sentiment_service import analyze_portfolio_public
+    sent_results = await analyze_portfolio_public(clean)
+    sent_map = {r["symbol"]: r["score"] for r in sent_results}
+    return {"signals": await alpha_signal(clean, sent_map)}
 
 
 # ---------- MIDDLEWARE ----------
