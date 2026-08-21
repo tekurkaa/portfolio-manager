@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException
+from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException, Depends, Request, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -24,6 +24,7 @@ from history_service import portfolio_history  # noqa: E402
 from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
 from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
 from sentiment_service import analyze_symbol_public  # noqa: E402
+from auth import get_current_user, exchange_session, logout_session  # noqa: E402
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -34,6 +35,37 @@ api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+
+# ---------- AUTH DEPENDENCY ----------
+async def current_user(request: Request):
+    return await get_current_user(request, db)
+
+
+async def current_user_id(request: Request) -> str:
+    u = await get_current_user(request, db)
+    return u["user_id"]
+
+
+# ---------- AUTH ROUTES ----------
+class SessionExchange(BaseModel):
+    session_id: str
+
+
+@api_router.post("/auth/callback")
+async def auth_callback(data: SessionExchange, response: Response):
+    return await exchange_session(data.session_id, db, response)
+
+
+@api_router.get("/auth/me")
+async def auth_me(user=Depends(current_user)):
+    return {"user_id": user["user_id"], "email": user["email"], "name": user.get("name"), "picture": user.get("picture")}
+
+
+@api_router.post("/auth/logout")
+async def auth_logout(request: Request, response: Response):
+    await logout_session(request, db, response)
+    return {"ok": True}
 
 
 # ---------- MODELS ----------
@@ -75,8 +107,8 @@ async def health():
 
 
 @api_router.get("/portfolio/holdings")
-async def list_holdings():
-    docs = await db.holdings.find({}, {"_id": 0}).to_list(1000)
+async def list_holdings(uid: str = Depends(current_user_id)):
+    docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
     symbols = [d["symbol"] for d in docs]
     quotes = await get_quotes(symbols) if symbols else {}
     enriched = []
@@ -128,7 +160,7 @@ async def list_holdings():
 
 
 @api_router.post("/portfolio/holdings")
-async def create_holding(data: HoldingCreate):
+async def create_holding(data: HoldingCreate, uid: str = Depends(current_user_id)):
     asset_type = data.asset_type or ("crypto" if is_crypto(data.symbol) else "stock")
     h = Holding(
         symbol=data.symbol.upper().strip(),
@@ -139,38 +171,39 @@ async def create_holding(data: HoldingCreate):
     )
     doc = h.model_dump()
     doc["created_at"] = doc["created_at"].isoformat()
+    doc["user_id"] = uid
     await db.holdings.insert_one(doc)
     return _serialize_holding(doc)
 
 
 @api_router.patch("/portfolio/holdings/{holding_id}")
-async def update_holding(holding_id: str, data: HoldingUpdate):
+async def update_holding(holding_id: str, data: HoldingUpdate, uid: str = Depends(current_user_id)):
     update = {k: v for k, v in data.model_dump().items() if v is not None}
     if not update:
         raise HTTPException(400, "No fields to update")
-    result = await db.holdings.update_one({"id": holding_id}, {"$set": update})
+    result = await db.holdings.update_one({"id": holding_id, "user_id": uid}, {"$set": update})
     if result.matched_count == 0:
         raise HTTPException(404, "Holding not found")
-    doc = await db.holdings.find_one({"id": holding_id}, {"_id": 0})
+    doc = await db.holdings.find_one({"id": holding_id, "user_id": uid}, {"_id": 0})
     return _serialize_holding(doc) if doc else {}
 
 
 @api_router.delete("/portfolio/holdings/{holding_id}")
-async def delete_holding(holding_id: str):
-    result = await db.holdings.delete_one({"id": holding_id})
+async def delete_holding(holding_id: str, uid: str = Depends(current_user_id)):
+    result = await db.holdings.delete_one({"id": holding_id, "user_id": uid})
     if result.deleted_count == 0:
         raise HTTPException(404, "Holding not found")
     return {"ok": True, "id": holding_id}
 
 
 @api_router.delete("/portfolio/holdings")
-async def clear_holdings():
-    await db.holdings.delete_many({})
+async def clear_holdings(uid: str = Depends(current_user_id)):
+    await db.holdings.delete_many({"user_id": uid})
     return {"ok": True}
 
 
 @api_router.post("/portfolio/upload-csv")
-async def upload_csv(file: UploadFile = File(...)):
+async def upload_csv(file: UploadFile = File(...), uid: str = Depends(current_user_id)):
     """Parse a Robinhood-exported CSV. Flexible column matching."""
     content = await file.read()
     try:
@@ -212,11 +245,12 @@ async def upload_csv(file: UploadFile = File(...)):
                         avg_cost=avg_cost, asset_type=asset_type)
             doc = h.model_dump()
             doc["created_at"] = doc["created_at"].isoformat()
-            # upsert by symbol so re-upload merges
-            existing = await db.holdings.find_one({"symbol": sym_up})
+            doc["user_id"] = uid
+            # upsert by (user_id, symbol)
+            existing = await db.holdings.find_one({"user_id": uid, "symbol": sym_up})
             if existing:
                 await db.holdings.update_one(
-                    {"symbol": sym_up},
+                    {"user_id": uid, "symbol": sym_up},
                     {"$set": {"quantity": quantity, "avg_cost": avg_cost, "name": name or existing.get("name")}},
                 )
             else:
@@ -228,9 +262,9 @@ async def upload_csv(file: UploadFile = File(...)):
 
 
 @api_router.post("/portfolio/seed-demo")
-async def seed_demo():
+async def seed_demo(uid: str = Depends(current_user_id)):
     """Load a demo Robinhood-style portfolio."""
-    await db.holdings.delete_many({})
+    await db.holdings.delete_many({"user_id": uid})
     demo = [
         ("AAPL", "Apple Inc.", 25, 152.30, "stock"),
         ("NVDA", "NVIDIA Corp.", 12, 420.50, "stock"),
@@ -247,6 +281,7 @@ async def seed_demo():
         h = Holding(symbol=sym, name=name, quantity=qty, avg_cost=avg, asset_type=atype)
         doc = h.model_dump()
         doc["created_at"] = doc["created_at"].isoformat()
+        doc["user_id"] = uid
         await db.holdings.insert_one(doc)
     return {"ok": True, "count": len(demo)}
 
@@ -266,15 +301,14 @@ async def market_quote(symbol: str):
 
 
 # ---------- ROUTES: NEWS ----------
-async def _get_held_symbols() -> List[str]:
-    docs = await db.holdings.find({}, {"_id": 0, "symbol": 1}).to_list(1000)
+async def _get_held_symbols(uid: str) -> List[str]:
+    docs = await db.holdings.find({"user_id": uid}, {"_id": 0, "symbol": 1}).to_list(1000)
     return sorted({d["symbol"] for d in docs})
 
 
 @api_router.get("/news/stocks")
-async def stock_news():
-    symbols = await _get_held_symbols()
-    # Strip -USD suffix for cleaner queries
+async def stock_news(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     return await get_stock_news(clean)
 
@@ -286,8 +320,8 @@ async def macro_news():
 
 # ---------- ROUTES: SENTIMENT ----------
 @api_router.get("/sentiment/portfolio")
-async def sentiment_portfolio():
-    symbols = await _get_held_symbols()
+async def sentiment_portfolio(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     results = await analyze_portfolio_public(clean)
     if results:
@@ -309,8 +343,8 @@ async def sentiment_symbol(symbol: str):
 
 # ---------- ROUTES: INSIDER FLOW ----------
 @api_router.get("/insider/summary")
-async def insider_summary():
-    symbols = await _get_held_symbols()
+async def insider_summary(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     return await get_insider_summary(clean)
 
@@ -327,15 +361,15 @@ async def sec_form4_route(symbol: Optional[str] = None, limit: int = 40):
 
 # ---------- ROUTES: HISTORY ----------
 @api_router.get("/portfolio/history")
-async def portfolio_history_route(range: str = "1M"):
-    docs = await db.holdings.find({}, {"_id": 0}).to_list(1000)
+async def portfolio_history_route(range: str = "1M", uid: str = Depends(current_user_id)):
+    docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
     return await portfolio_history(docs, range.upper())
 
 
 # ---------- ROUTES: OPTIONS FLOW & ALPHA SIGNAL ----------
 @api_router.get("/options/flow")
-async def options_flow_route():
-    symbols = await _get_held_symbols()
+async def options_flow_route(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     return await get_portfolio_options_flow(clean)
 
@@ -346,8 +380,8 @@ async def options_symbol(symbol: str):
 
 
 @api_router.get("/signal/alpha")
-async def alpha_signal_route():
-    symbols = await _get_held_symbols()
+async def alpha_signal_route(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     from sentiment_service import analyze_portfolio_public
     sent_results = await analyze_portfolio_public(clean)
@@ -356,8 +390,8 @@ async def alpha_signal_route():
 
 
 @api_router.get("/signal/backtest")
-async def signal_backtest_route():
-    symbols = await _get_held_symbols()
+async def signal_backtest_route(uid: str = Depends(current_user_id)):
+    symbols = await _get_held_symbols(uid)
     clean = [s.replace("-USD", "") for s in symbols]
     return {"backtests": await backtest_portfolio(clean)}
 
@@ -368,40 +402,38 @@ class WatchlistSymbol(BaseModel):
 
 
 @api_router.get("/watchlist")
-async def watchlist_list():
-    docs = await db.watchlist.find({}, {"_id": 0}).to_list(200)
+async def watchlist_list(uid: str = Depends(current_user_id)):
+    docs = await db.watchlist.find({"user_id": uid}, {"_id": 0}).to_list(200)
     return {"symbols": sorted({d["symbol"] for d in docs})}
 
 
 @api_router.post("/watchlist")
-async def watchlist_add(data: WatchlistSymbol):
+async def watchlist_add(data: WatchlistSymbol, uid: str = Depends(current_user_id)):
     sym = data.symbol.upper().strip()
     if not sym:
         raise HTTPException(400, "symbol required")
-    await db.watchlist.update_one({"symbol": sym}, {"$set": {"symbol": sym}}, upsert=True)
+    await db.watchlist.update_one({"user_id": uid, "symbol": sym}, {"$set": {"user_id": uid, "symbol": sym}}, upsert=True)
     return {"ok": True, "symbol": sym}
 
 
 @api_router.delete("/watchlist/{symbol}")
-async def watchlist_remove(symbol: str):
-    await db.watchlist.delete_one({"symbol": symbol.upper()})
+async def watchlist_remove(symbol: str, uid: str = Depends(current_user_id)):
+    await db.watchlist.delete_one({"user_id": uid, "symbol": symbol.upper()})
     return {"ok": True}
 
 
 @api_router.get("/watchlist/signals")
-async def watchlist_signals():
-    docs = await db.watchlist.find({}, {"_id": 0}).to_list(200)
+async def watchlist_signals(uid: str = Depends(current_user_id)):
+    docs = await db.watchlist.find({"user_id": uid}, {"_id": 0}).to_list(200)
     symbols = sorted({d["symbol"] for d in docs})
     if not symbols:
         return {"signals": []}
-    # sentiment via stocktwits (fast, no auth)
     sent_map = {}
     tasks = [analyze_symbol_public(s) for s in symbols[:15]]
     sent_results = await asyncio.gather(*tasks)
     for r in sent_results:
         sent_map[r["symbol"]] = r["score"]
     signals = await alpha_signal(symbols, sent_map)
-    # add quotes
     quotes = await get_quotes(symbols)
     for s in signals:
         q = quotes.get(s["symbol"])

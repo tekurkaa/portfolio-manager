@@ -67,3 +67,10 @@ Build a website for investment management with 4 tabs: (1) all investments - sto
 - **Signal Backtest panel** in Alpha tab: For every holding, evaluates how a momentum-based BUY (mom ≥ +3%) or SELL (mom ≤ -3%) signal would have performed 5/10/20 trading days later over last 9 months. Shows avg return · win rate · sample count.
 - **New Watchlist tab**: Add any ticker (SPY, COIN, PLTR etc.) → runs full Alpha Signal (momentum + StockTwits sentiment + options tilt) with live prices. Click any row → drawer with congress trades for that symbol.
 - **Robinhood-style portfolio chart**: TODAY (intraday 5m), 1W, 1M, 3M, YTD, 1Y, 5Y, ALL. Big current value + change with directional triangle + descriptive subtitle ("Past Month" / "Year to Date" / etc.). Intraday x-axis shows times, others show dates.
+
+## Iteration 5 (Feb 2026) - Multi-tenancy
+- Added Emergent Google Auth. Every user gets their own isolated portfolio + watchlist.
+- Backend: /api/auth/callback, /api/auth/me, /api/auth/logout. `get_current_user` dep on all private routes.
+- All holdings and watchlist queries now filter by `user_id`. Market data + news + insider feeds remain public.
+- Frontend: Login screen, AuthCallback (hash-based), user badge with picture + email + logout in header.
+- Existing holdings without user_id are effectively invisible after auth (as expected — each user starts fresh).

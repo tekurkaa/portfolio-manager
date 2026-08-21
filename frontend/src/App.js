@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
+import { api } from "@/lib/api";
 import TopTickerBar from "@/components/TopTickerBar";
 import PortfolioTab from "@/components/PortfolioTab";
 import StockNewsTab from "@/components/StockNewsTab";
@@ -9,7 +10,9 @@ import SentimentTab from "@/components/SentimentTab";
 import InsiderFlowTab from "@/components/InsiderFlowTab";
 import AlphaTab from "@/components/AlphaTab";
 import WatchlistTab from "@/components/WatchlistTab";
-import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye } from "lucide-react";
+import Login from "@/components/Login";
+import AuthCallback from "@/components/AuthCallback";
+import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut } from "lucide-react";
 
 const TABS = [
   { id: "portfolio", label: "PORTFOLIO", icon: LayoutGrid },
@@ -24,11 +27,42 @@ const TABS = [
 function App() {
   const [active, setActive] = useState("portfolio");
   const [now, setNow] = useState(new Date());
+  // auth state: null = checking, false = anon, object = user
+  const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
+  useEffect(() => {
+    if (user === "callback") return; // AuthCallback handles it
+    if (user && user !== null) return;
+    api.get("/auth/me")
+      .then((r) => setUser(r.data))
+      .catch(() => setUser(false));
+  }, []);
+
+  const handleAuthDone = (ok, data) => {
+    if (ok && data) setUser(data);
+    else setUser(false);
+  };
+
+  const handleLogout = async () => {
+    try { await api.post("/auth/logout"); } catch {}
+    setUser(false);
+    toast.success("Signed out");
+  };
+
+  if (user === "callback") return <AuthCallback onDone={handleAuthDone} />;
+  if (user === null) {
+    return (
+      <div className="min-h-screen bg-[#0A0D12] flex items-center justify-center">
+        <div className="text-amber-500 font-mono text-sm tracking-widest uppercase animate-pulse">Loading terminal...</div>
+      </div>
+    );
+  }
+  if (user === false) return <Login />;
 
   return (
     <div className="App min-h-screen" data-testid="app-root">
@@ -58,9 +92,14 @@ function App() {
           <span data-testid="clock-display" className="text-gray-300">
             {now.toISOString().slice(11, 19)} UTC
           </span>
-          <span className="text-gray-500 hidden md:inline">
-            {now.toDateString()}
-          </span>
+          <div className="flex items-center gap-2 pl-3 border-l border-[#222C3D]" data-testid="user-badge">
+            {user.picture && <img src={user.picture} alt="" className="w-6 h-6 rounded-full border border-[#222C3D]" />}
+            <span className="text-gray-300 hidden md:inline max-w-[140px] truncate">{user.email}</span>
+            <button onClick={handleLogout} data-testid="logout-button"
+              className="text-gray-500 hover:text-rose-400 transition-colors" title="Sign out">
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 
