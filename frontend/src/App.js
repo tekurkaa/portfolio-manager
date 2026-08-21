@@ -6,13 +6,15 @@ import PortfolioTab from "@/components/PortfolioTab";
 import StockNewsTab from "@/components/StockNewsTab";
 import MacroNewsTab from "@/components/MacroNewsTab";
 import SentimentTab from "@/components/SentimentTab";
-import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal } from "lucide-react";
+import InsiderFlowTab from "@/components/InsiderFlowTab";
+import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark } from "lucide-react";
 
 const TABS = [
   { id: "portfolio", label: "PORTFOLIO", icon: LayoutGrid },
   { id: "stock-news", label: "STOCK NEWS", icon: Newspaper },
   { id: "macro-news", label: "MACRO", icon: Globe2 },
   { id: "sentiment", label: "SENTIMENT", icon: Gauge },
+  { id: "insider", label: "SMART MONEY", icon: Landmark },
 ];
 
 function App() {
@@ -92,6 +94,7 @@ function App() {
         {active === "stock-news" && <StockNewsTab />}
         {active === "macro-news" && <MacroNewsTab />}
         {active === "sentiment" && <SentimentTab />}
+        {active === "insider" && <InsiderFlowTab />}
       </main>
 
       <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex justify-between">

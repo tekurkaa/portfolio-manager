@@ -17,7 +17,9 @@ load_dotenv(ROOT_DIR / '.env')
 
 from quotes import get_quote, get_quotes, get_market_indices, is_crypto  # noqa: E402
 from news_service import get_stock_news, get_macro_news  # noqa: E402
-from sentiment_service import analyze_portfolio_sentiment, get_fear_greed  # noqa: E402
+from sentiment_service import analyze_portfolio_public, market_fear_greed_from_social, analyze_symbol_public  # noqa: E402
+from insider_service import get_insider_summary, get_congress_trades, get_sec_form4  # noqa: E402
+from history_service import portfolio_history  # noqa: E402
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -283,18 +285,47 @@ async def macro_news():
 async def sentiment_portfolio():
     symbols = await _get_held_symbols()
     clean = [s.replace("-USD", "") for s in symbols]
-    # Serialize to avoid concurrent LLM request limits on free tier keys
-    results = await analyze_portfolio_sentiment(clean)
+    results = await analyze_portfolio_public(clean)
     if results:
         avg_score = round(sum(r["score"] for r in results) / len(results), 1)
     else:
         avg_score = 50
-    fear_greed = await get_fear_greed()
+    fear_greed = await market_fear_greed_from_social()
     return {
         "per_symbol": results,
         "average_score": avg_score,
         "fear_greed": fear_greed,
     }
+
+
+@api_router.get("/sentiment/{symbol}")
+async def sentiment_symbol(symbol: str):
+    return await analyze_symbol_public(symbol)
+
+
+# ---------- ROUTES: INSIDER FLOW ----------
+@api_router.get("/insider/summary")
+async def insider_summary():
+    symbols = await _get_held_symbols()
+    clean = [s.replace("-USD", "") for s in symbols]
+    return await get_insider_summary(clean)
+
+
+@api_router.get("/insider/congress")
+async def congress_route(symbol: Optional[str] = None, limit: int = 80):
+    return {"trades": await get_congress_trades(limit=limit, symbol_filter=symbol)}
+
+
+@api_router.get("/insider/sec-form4")
+async def sec_form4_route(symbol: Optional[str] = None, limit: int = 40):
+    return {"filings": await get_sec_form4(limit=limit, symbol_filter=symbol)}
+
+
+# ---------- ROUTES: HISTORY ----------
+@api_router.get("/portfolio/history")
+async def portfolio_history_route(range: str = "1M"):
+    docs = await db.holdings.find({}, {"_id": 0}).to_list(1000)
+    return await portfolio_history(docs, range.upper())
 
 
 # ---------- MIDDLEWARE ----------

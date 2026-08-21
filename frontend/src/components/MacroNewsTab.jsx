@@ -27,7 +27,11 @@ export default function MacroNewsTab() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(load, 60 * 1000);
+    return () => clearInterval(t);
+  }, []);
 
   const activeTheme = THEMES.find((t) => t.id === theme) || THEMES[0];
   const filtered = data.articles.filter((a) => activeTheme.match(`${a.title} ${a.description || ""}`));

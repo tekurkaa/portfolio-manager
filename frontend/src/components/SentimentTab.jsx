@@ -70,10 +70,10 @@ export default function SentimentTab() {
       <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm flex items-center justify-between">
         <div>
           <div className="text-xs font-mono tracking-widest uppercase text-amber-500 flex items-center gap-2">
-            <Gauge className="w-4 h-4" /> Public Sentiment Monitor
+            <Gauge className="w-4 h-4" /> Public Sentiment · Reddit + StockTwits
           </div>
           <div className="text-[11px] text-gray-500 font-mono mt-0.5">
-            LLM-analyzed news sentiment per ticker + market fear/greed
+            Live from r/wallstreetbets · r/stocks · r/investing · StockTwits
           </div>
         </div>
         <button
@@ -124,7 +124,7 @@ export default function SentimentTab() {
         <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
           <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
-            Per-Symbol Sentiment · AI-Analyzed
+            Per-Symbol Sentiment · Reddit + StockTwits
           </span>
         </div>
         {loading ? (
@@ -156,6 +156,7 @@ export default function SentimentTab() {
                 <div className="flex items-center gap-3 text-[10px] font-mono text-gray-500 mb-2">
                   <span className="text-emerald-500">▲ {s.bull_pct}% bull</span>
                   <span className="text-rose-500">▼ {s.bear_pct}% bear</span>
+                  <span className="text-gray-500">· {s.post_count} reddit posts · {s.stocktwits_msg_count} stocktwits</span>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed">{s.reasoning}</p>
                 {s.top_themes?.length > 0 && (
@@ -164,6 +165,16 @@ export default function SentimentTab() {
                       <span key={i} className="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 bg-[#161C26] border border-[#222C3D] text-gray-400 rounded-sm">
                         {t}
                       </span>
+                    ))}
+                  </div>
+                )}
+                {s.top_posts?.length > 0 && (
+                  <div className="mt-3 border-t border-[#1A2232] pt-2 space-y-1" data-testid={`top-posts-${s.symbol}`}>
+                    {s.top_posts.slice(0, 3).map((p, i) => (
+                      <a key={i} href={p.url} target="_blank" rel="noreferrer"
+                        className="block text-[11px] text-gray-400 hover:text-amber-400 truncate">
+                        <span className="font-mono text-gray-600">r/{p.subreddit} · ▲{p.score} · 💬{p.num_comments}</span> {p.title}
+                      </a>
                     ))}
                   </div>
                 )}

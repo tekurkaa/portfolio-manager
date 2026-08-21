@@ -1,0 +1,96 @@
+"""Portfolio historical value calculation using yfinance historical prices."""
+import asyncio
+import logging
+from typing import List, Dict, Any
+from datetime import datetime, timedelta, timezone
+
+import yfinance as yf
+import pandas as pd
+
+logger = logging.getLogger(__name__)
+
+# range -> (period, interval)
+RANGE_MAP = {
+    "1D": ("2d", "5m"),
+    "1W": ("7d", "30m"),
+    "1M": ("1mo", "1d"),
+    "3M": ("3mo", "1d"),
+    "YTD": ("ytd", "1d"),
+    "1Y": ("1y", "1d"),
+    "5Y": ("5y", "1wk"),
+    "ALL": ("max", "1mo"),
+}
+
+
+def _normalize(sym: str) -> str:
+    s = sym.upper().strip()
+    common = {"BTC","ETH","SOL","DOGE","ADA","XRP","MATIC","AVAX","DOT","LINK","LTC","BCH","ATOM","NEAR","APT","SHIB","UNI","TRX","ARB","OP","USDC","USDT","BNB"}
+    if s in common:
+        return f"{s}-USD"
+    return s
+
+
+def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[str, Any]:
+    period, interval = RANGE_MAP.get(range_key, RANGE_MAP["1M"])
+    symbols = [_normalize(h["symbol"]) for h in holdings]
+    qty_map = {_normalize(h["symbol"]): float(h["quantity"]) for h in holdings}
+    if not symbols:
+        return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
+    try:
+        df = yf.download(
+            tickers=symbols, period=period, interval=interval,
+            group_by="ticker", auto_adjust=False, progress=False, threads=True,
+        )
+    except Exception as e:
+        logger.warning(f"yf.download failed: {e}")
+        return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
+
+    # Build per-symbol close series
+    series_map = {}
+    if len(symbols) == 1:
+        s = symbols[0]
+        if "Close" in df.columns:
+            series_map[s] = df["Close"].dropna()
+    else:
+        for s in symbols:
+            try:
+                col = df[s]["Close"].dropna() if s in df.columns.get_level_values(0) else None
+                if col is not None and not col.empty:
+                    series_map[s] = col
+            except Exception:
+                continue
+
+    if not series_map:
+        return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
+
+    # Align on union index and forward-fill
+    all_index = None
+    for s, ser in series_map.items():
+        all_index = ser.index if all_index is None else all_index.union(ser.index)
+    total = pd.Series(0.0, index=all_index)
+    for s, ser in series_map.items():
+        aligned = ser.reindex(all_index).ffill().bfill()
+        total = total.add(aligned * qty_map.get(s, 0), fill_value=0)
+
+    points = [
+        {"t": ts.isoformat(), "v": round(float(v), 2)}
+        for ts, v in zip(total.index, total.values)
+        if not pd.isna(v)
+    ]
+    if not points:
+        return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
+    return {
+        "range": range_key,
+        "points": points,
+        "start": points[0]["t"],
+        "end": points[-1]["t"],
+        "start_value": points[0]["v"],
+        "end_value": points[-1]["v"],
+        "change": round(points[-1]["v"] - points[0]["v"], 2),
+        "change_pct": round(((points[-1]["v"] - points[0]["v"]) / points[0]["v"] * 100) if points[0]["v"] else 0, 3),
+    }
+
+
+async def portfolio_history(holdings: List[Dict[str, Any]], range_key: str = "1M") -> Dict[str, Any]:
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, _fetch_history_sync, holdings, range_key)

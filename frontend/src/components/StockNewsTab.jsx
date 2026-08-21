@@ -20,7 +20,11 @@ export default function StockNewsTab() {
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(load, 60 * 1000);
+    return () => clearInterval(t);
+  }, []);
 
   const tags = ["ALL", ...(data.symbols || [])];
   const filtered = filter === "ALL"

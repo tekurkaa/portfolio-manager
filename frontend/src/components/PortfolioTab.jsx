@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { api, fmtMoney, fmtPct, fmtNum, colorForPL } from "@/lib/api";
 import { toast } from "sonner";
 import { Upload, Plus, Trash2, RefreshCw, Sparkles, Bitcoin, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import { PortfolioHistoryChart, AllocationTreemap } from "@/components/PortfolioCharts";
 
 const AddHoldingForm = ({ onDone }) => {
   const [f, setF] = useState({ symbol: "", quantity: "", avg_cost: "", name: "" });
@@ -256,6 +257,14 @@ export default function PortfolioTab() {
             value={fmtMoney(s.total_cost)}
             sub="lifetime capital deployed"
           />
+        </div>
+      )}
+
+      {/* Charts */}
+      {rows.length > 0 && (
+        <div className="grid lg:grid-cols-2 gap-3" data-testid="portfolio-charts">
+          <PortfolioHistoryChart />
+          <AllocationTreemap holdings={data.holdings || []} />
         </div>
       )}
 

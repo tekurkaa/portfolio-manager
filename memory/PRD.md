@@ -33,3 +33,20 @@ Build a website for investment management with 4 tabs: (1) all investments - sto
 - P2: Custom watchlists (beyond holdings)
 - P2: Price alerts (email/push)
 - P3: Multi-portfolio/scenario compare
+
+## Iteration 2 (Feb 2026)
+### Added
+- Portfolio Value line chart with 8 time ranges (1D/1W/1M/3M/YTD/1Y/5Y/ALL) — simulates historical value using current holdings × historical prices via yfinance
+- Stock allocation treemap: size = position value, green = gain, red = loss
+- New "SMART MONEY" tab with US Congress trades (STOCK Act) + SEC Form 4 insider filings + top-traded tickers overlay, auto-refresh 5 min
+- Sentiment tab rewritten to use Reddit (r/wsb, r/stocks, r/investing) + StockTwits — no LLM key needed, bull/bear engagement-weighted scoring, top posts links, top themes
+- News tabs (Stock News + Macro News) now auto-refresh every 60s
+
+### Known Limitations
+- Congress trade S3 endpoints (housestockwatcher / senatestockwatcher) return 403 from this preview network — the tab shows a clear notice and falls back to SEC Form 4 which is fully live. To enable, plug in a Quiver Quant or FinancialModelingPrep API key.
+- Reddit blocks Emergent's container IPs — Reddit posts return 0. StockTwits carries the sentiment signal (30 messages/symbol with explicit bullish/bearish tags), so scores are still meaningful.
+
+### Optimizations for Alpha
+- Smart Money tab surfaces held-ticker matches (bought before market moves)
+- Sentiment shows engagement-weighted scores so viral bullish/bearish posts count more
+- All news auto-refreshes every 60s so you see market-moving headlines within a minute

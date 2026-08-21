@@ -1,144 +1,237 @@
-"""Public sentiment analysis via LLM - batched to minimize cost."""
-import os
-import json
-import logging
+"""Public sentiment from Reddit + StockTwits (no LLM, no API key needed)."""
 import asyncio
-from typing import List, Dict, Any
+import logging
+import re
+import time
+from typing import List, Dict, Any, Optional
 
-from emergentintegrations.llm.chat import LlmChat, UserMessage
-from news_service import _fetch_newsapi
+import httpx
 
 logger = logging.getLogger(__name__)
-EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
+
+_CACHE: Dict[str, Any] = {}
+_CACHE_TTL = 300  # 5 min
+
+BULL_WORDS = {
+    "buy", "long", "moon", "rocket", "bullish", "bull", "calls", "yolo",
+    "breakout", "rally", "surge", "beat", "beats", "raised", "upgrade",
+    "outperform", "strong", "growth", "profit", "gain", "gains", "up",
+    "hold", "hodl", "diamond", "squeeze", "green", "pump", "buying",
+}
+BEAR_WORDS = {
+    "sell", "short", "puts", "bearish", "bear", "crash", "dump", "drop",
+    "plunge", "miss", "missed", "downgrade", "underperform", "weak",
+    "loss", "losses", "down", "red", "bleed", "collapse", "warning",
+    "cut", "reduce", "selling", "overvalued",
+}
+
+HEADERS_REDDIT = {
+    "User-Agent": "TerminusInvest/1.0 (by u/investor)",
+    "Accept": "application/json",
+}
+HEADERS_ST = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/json",
+}
+
+SUBREDDITS = ["wallstreetbets", "stocks", "investing", "StockMarket"]
 
 
-def _default_row(symbol: str, count: int = 0) -> Dict[str, Any]:
-    return {
+def _score_text(text: str) -> Dict[str, int]:
+    if not text:
+        return {"bull": 0, "bear": 0}
+    words = re.findall(r"[a-zA-Z]+", text.lower())
+    bull = sum(1 for w in words if w in BULL_WORDS)
+    bear = sum(1 for w in words if w in BEAR_WORDS)
+    return {"bull": bull, "bear": bear}
+
+
+async def _fetch_reddit(client: httpx.AsyncClient, sub: str, symbol: str, limit: int = 15) -> List[Dict[str, Any]]:
+    url = f"https://www.reddit.com/r/{sub}/search.json"
+    params = {"q": symbol, "sort": "new", "limit": str(limit), "restrict_sr": "1", "t": "week"}
+    try:
+        r = await client.get(url, params=params, headers=HEADERS_REDDIT, timeout=10.0)
+        if r.status_code != 200:
+            return []
+        data = r.json()
+        posts = []
+        for c in data.get("data", {}).get("children", []):
+            p = c.get("data", {})
+            posts.append({
+                "title": p.get("title"),
+                "text": p.get("selftext", "")[:400],
+                "score": p.get("score", 0),
+                "num_comments": p.get("num_comments", 0),
+                "url": f"https://reddit.com{p.get('permalink', '')}",
+                "subreddit": sub,
+                "created_utc": p.get("created_utc"),
+                "author": p.get("author"),
+            })
+        return posts
+    except Exception as e:
+        logger.warning(f"reddit fetch fail {sub}/{symbol}: {e}")
+        return []
+
+
+async def _fetch_stocktwits(client: httpx.AsyncClient, symbol: str) -> Dict[str, Any]:
+    url = f"https://api.stocktwits.com/api/2/streams/symbol/{symbol}.json"
+    try:
+        r = await client.get(url, headers=HEADERS_ST, timeout=10.0)
+        if r.status_code != 200:
+            return {"messages": [], "bull": 0, "bear": 0}
+        data = r.json()
+        msgs = data.get("messages", []) or []
+        bull = 0
+        bear = 0
+        parsed = []
+        for m in msgs[:30]:
+            sent = ((m.get("entities") or {}).get("sentiment") or {})
+            b = sent.get("basic") if isinstance(sent, dict) else None
+            if b == "Bullish":
+                bull += 1
+            elif b == "Bearish":
+                bear += 1
+            parsed.append({
+                "body": m.get("body"),
+                "created_at": m.get("created_at"),
+                "user": (m.get("user") or {}).get("username"),
+                "sentiment": b,
+                "url": f"https://stocktwits.com/{(m.get('user') or {}).get('username','')}/message/{m.get('id','')}",
+            })
+        return {"messages": parsed, "bull": bull, "bear": bear}
+    except Exception as e:
+        logger.warning(f"stocktwits {symbol}: {e}")
+        return {"messages": [], "bull": 0, "bear": 0}
+
+
+async def analyze_symbol_public(symbol: str) -> Dict[str, Any]:
+    """Reddit + StockTwits sentiment for one ticker."""
+    now = time.time()
+    key = f"pub-{symbol.upper()}"
+    if key in _CACHE:
+        d, exp = _CACHE[key]
+        if exp > now:
+            return d
+    async with httpx.AsyncClient() as client:
+        reddit_tasks = [_fetch_reddit(client, s, symbol) for s in SUBREDDITS]
+        st_task = _fetch_stocktwits(client, symbol)
+        reddit_lists, st = await asyncio.gather(asyncio.gather(*reddit_tasks), st_task)
+    posts: List[Dict[str, Any]] = []
+    for lst in reddit_lists:
+        posts.extend(lst)
+
+    # Score posts
+    reddit_bull = 0
+    reddit_bear = 0
+    total_engagement = 0
+    for p in posts:
+        s = _score_text(f"{p.get('title','')} {p.get('text','')}")
+        # weight by engagement (score + comments) to reflect visibility
+        weight = 1 + min((p.get("score", 0) + p.get("num_comments", 0)) / 50, 5)
+        reddit_bull += s["bull"] * weight
+        reddit_bear += s["bear"] * weight
+        total_engagement += p.get("score", 0) + p.get("num_comments", 0)
+
+    # Combine reddit + stocktwits
+    bull_total = reddit_bull + st["bull"] * 3   # stocktwits explicit tag is stronger signal
+    bear_total = reddit_bear + st["bear"] * 3
+    denom = bull_total + bear_total
+    if denom > 0:
+        score = round((bull_total / denom) * 100)
+    else:
+        score = 50
+    bull_pct = round((bull_total / denom * 100) if denom else 50)
+    bear_pct = 100 - bull_pct
+
+    if score >= 75: label = "Very Bullish"
+    elif score >= 60: label = "Bullish"
+    elif score >= 40: label = "Neutral"
+    elif score >= 25: label = "Bearish"
+    else: label = "Very Bearish"
+
+    posts.sort(key=lambda p: (p.get("score", 0) + p.get("num_comments", 0)), reverse=True)
+    top = posts[:6]
+
+    # Top themes: most common significant words in top posts
+    text_blob = " ".join(p.get("title", "") for p in posts[:30]).lower()
+    words = re.findall(r"[a-zA-Z]{4,}", text_blob)
+    stop = {"this","that","with","from","have","will","they","what","when","your","stock","stocks","shares","price","market","today","about","just","like","been","were","much","also","think","would","could","should"}
+    freq: Dict[str, int] = {}
+    for w in words:
+        if w in stop or w == symbol.lower():
+            continue
+        freq[w] = freq.get(w, 0) + 1
+    top_themes = [w for w, _ in sorted(freq.items(), key=lambda x: x[1], reverse=True)[:5]]
+
+    result = {
         "symbol": symbol.upper(),
-        "score": 50,
-        "label": "Neutral",
-        "bull_pct": 50,
-        "bear_pct": 50,
-        "reasoning": "Insufficient data or LLM unavailable.",
-        "top_themes": [],
-        "article_count": count,
+        "score": score,
+        "label": label,
+        "bull_pct": bull_pct,
+        "bear_pct": bear_pct,
+        "reddit_bull_signals": round(reddit_bull, 1),
+        "reddit_bear_signals": round(reddit_bear, 1),
+        "stocktwits_bull": st["bull"],
+        "stocktwits_bear": st["bear"],
+        "post_count": len(posts),
+        "stocktwits_msg_count": len(st.get("messages", [])),
+        "top_posts": top,
+        "top_themes": top_themes,
+        "reasoning": f"{len(posts)} Reddit posts + {len(st.get('messages', []))} StockTwits msgs · engagement {total_engagement}",
     }
+    _CACHE[key] = (result, now + _CACHE_TTL)
+    return result
 
 
-async def analyze_portfolio_sentiment(symbols: List[str]) -> List[Dict[str, Any]]:
-    """Batch sentiment analysis: single LLM call for all symbols."""
+async def analyze_portfolio_public(symbols: List[str]) -> List[Dict[str, Any]]:
     if not symbols:
         return []
-    symbols = [s.upper() for s in symbols][:10]
-    # Fetch news for each symbol
-    tasks = [_fetch_newsapi(f'"{s}" AND (stock OR shares OR crypto OR investors OR earnings)', page_size=5, days=5) for s in symbols]
-    news_per_sym = await asyncio.gather(*tasks)
-    per_symbol_news = {s: arts for s, arts in zip(symbols, news_per_sym)}
-
-    # If no LLM key or no news at all, return defaults
-    if not EMERGENT_LLM_KEY:
-        return [_default_row(s, len(per_symbol_news[s])) for s in symbols]
-
-    # Build one prompt with all symbols
-    blocks = []
-    for s in symbols:
-        arts = per_symbol_news[s][:5]
-        if not arts:
-            blocks.append(f"### {s}\n(no recent headlines)\n")
-            continue
-        lines = "\n".join(f"- {a.get('title','')}: {a.get('description') or ''}" for a in arts)
-        blocks.append(f"### {s}\n{lines}\n")
-
-    prompt = (
-        "Analyze investor sentiment for each ticker below based on the headlines. "
-        "Respond ONLY with valid JSON: a single JSON array where each element matches "
-        '{"symbol": <ticker>, "score": <0-100 int>, "label": <"Very Bearish"|"Bearish"|"Neutral"|"Bullish"|"Very Bullish">, '
-        '"bull_pct": <0-100>, "bear_pct": <0-100, bull+bear=100>, '
-        '"reasoning": <1 sentence max 25 words>, "top_themes": [<3-4 short phrases>]}\n\n'
-        + "\n".join(blocks)
-    )
-    try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id="portfolio-sentiment",
-            system_message="You output ONLY a valid JSON array. No markdown, no code fences, no prose.",
-        ).with_model("anthropic", "claude-sonnet-4-6")
-        resp = await chat.send_message(UserMessage(text=prompt))
-        text = str(resp).strip()
-        if text.startswith("```"):
-            parts = text.split("```")
-            text = parts[1] if len(parts) > 1 else text
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip()
-        # If wrapped in an object, try to find the array
-        parsed = json.loads(text)
-        if isinstance(parsed, dict):
-            for v in parsed.values():
-                if isinstance(v, list):
-                    parsed = v
-                    break
-        by_sym = {p["symbol"].upper(): p for p in parsed if isinstance(p, dict) and p.get("symbol")}
-        results = []
-        for s in symbols:
-            p = by_sym.get(s)
-            count = len(per_symbol_news[s])
-            if not p:
-                results.append(_default_row(s, count))
-                continue
-            results.append({
-                "symbol": s,
-                "score": int(p.get("score", 50)),
-                "label": str(p.get("label", "Neutral")),
-                "bull_pct": int(p.get("bull_pct", 50)),
-                "bear_pct": int(p.get("bear_pct", 50)),
-                "reasoning": str(p.get("reasoning", "")),
-                "top_themes": list(p.get("top_themes", []))[:5],
-                "article_count": count,
-            })
-        return results
-    except Exception as e:
-        logger.warning(f"Batch sentiment failed: {e}")
-        return [_default_row(s, len(per_symbol_news[s])) for s in symbols]
+    # Serialize to avoid rate limits
+    results = []
+    for s in symbols[:12]:
+        try:
+            results.append(await analyze_symbol_public(s))
+        except Exception as e:
+            logger.warning(f"pub sentiment {s}: {e}")
+    return results
 
 
-async def get_fear_greed() -> Dict[str, Any]:
-    """Estimate market fear & greed via LLM (single call)."""
-    articles = await _fetch_newsapi(
-        '("stock market" OR "S&P 500" OR VIX OR "market sentiment")',
-        page_size=12, days=2,
-    )
-    default = {"score": 50, "label": "Neutral", "reasoning": "Analysis unavailable."}
-    if not EMERGENT_LLM_KEY or not articles:
-        return default
-    headlines = "\n".join(f"- {a.get('title','')}" for a in articles[:12])
-    prompt = (
-        "Estimate the current US equity market Fear & Greed Index based on these headlines. "
-        'Respond ONLY as JSON: {"score": <0-100, 0=Extreme Fear, 100=Extreme Greed>, '
-        '"label": <"Extreme Fear"|"Fear"|"Neutral"|"Greed"|"Extreme Greed">, '
-        '"reasoning": <1 sentence, max 20 words>}\n\n'
-        f"HEADLINES:\n{headlines}"
-    )
-    try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id="fear-greed",
-            system_message="You output ONLY valid JSON.",
-        ).with_model("anthropic", "claude-sonnet-4-6")
-        resp = await chat.send_message(UserMessage(text=prompt))
-        text = str(resp).strip()
-        if text.startswith("```"):
-            parts = text.split("```")
-            text = parts[1] if len(parts) > 1 else text
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip()
-        parsed = json.loads(text)
-        return {
-            "score": int(parsed.get("score", 50)),
-            "label": str(parsed.get("label", "Neutral")),
-            "reasoning": str(parsed.get("reasoning", "")),
-        }
-    except Exception as e:
-        logger.warning(f"Fear/greed failed: {e}")
-        return default
+async def market_fear_greed_from_social() -> Dict[str, Any]:
+    """Approximate market fear/greed from r/wallstreetbets front-page sentiment."""
+    now = time.time()
+    if "fg" in _CACHE:
+        d, exp = _CACHE["fg"]
+        if exp > now:
+            return d
+    async with httpx.AsyncClient() as client:
+        try:
+            r = await client.get(
+                "https://www.reddit.com/r/wallstreetbets/hot.json?limit=25",
+                headers=HEADERS_REDDIT, timeout=10.0,
+            )
+            data = r.json() if r.status_code == 200 else {}
+        except Exception as e:
+            logger.warning(f"wsb fg: {e}")
+            data = {}
+    bull = 0
+    bear = 0
+    for c in (data.get("data", {}) or {}).get("children", []):
+        p = c.get("data", {})
+        s = _score_text(f"{p.get('title','')} {p.get('selftext','')[:200]}")
+        w = 1 + min((p.get("score", 0)) / 200, 5)
+        bull += s["bull"] * w
+        bear += s["bear"] * w
+    denom = bull + bear
+    score = round((bull / denom * 100) if denom else 50)
+    if score >= 75: label = "Extreme Greed"
+    elif score >= 60: label = "Greed"
+    elif score >= 40: label = "Neutral"
+    elif score >= 25: label = "Fear"
+    else: label = "Extreme Fear"
+    result = {
+        "score": score,
+        "label": label,
+        "reasoning": f"Derived from top {int(bull+bear)} bull/bear signals on r/wallstreetbets hot",
+    }
+    _CACHE["fg"] = (result, now + _CACHE_TTL)
+    return result
