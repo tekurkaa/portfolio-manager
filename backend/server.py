@@ -1,0 +1,314 @@
+from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException
+from dotenv import load_dotenv
+from starlette.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
+import os
+import io
+import csv
+import logging
+from pathlib import Path
+from pydantic import BaseModel, Field
+from typing import List, Optional, Literal
+import uuid
+from datetime import datetime, timezone
+
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
+from quotes import get_quote, get_quotes, get_market_indices, is_crypto  # noqa: E402
+from news_service import get_stock_news, get_macro_news  # noqa: E402
+from sentiment_service import analyze_portfolio_sentiment, get_fear_greed  # noqa: E402
+
+mongo_url = os.environ['MONGO_URL']
+client = AsyncIOMotorClient(mongo_url)
+db = client[os.environ['DB_NAME']]
+
+app = FastAPI(title="Investment Terminal API")
+api_router = APIRouter(prefix="/api")
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# ---------- MODELS ----------
+class Holding(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    symbol: str
+    name: Optional[str] = None
+    quantity: float
+    avg_cost: float
+    asset_type: Literal["stock", "crypto"] = "stock"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class HoldingCreate(BaseModel):
+    symbol: str
+    name: Optional[str] = None
+    quantity: float
+    avg_cost: float
+    asset_type: Optional[Literal["stock", "crypto"]] = None
+
+
+class HoldingUpdate(BaseModel):
+    quantity: Optional[float] = None
+    avg_cost: Optional[float] = None
+    name: Optional[str] = None
+
+
+# ---------- ROUTES: PORTFOLIO ----------
+def _serialize_holding(h: dict) -> dict:
+    h.pop("_id", None)
+    if isinstance(h.get("created_at"), datetime):
+        h["created_at"] = h["created_at"].isoformat()
+    return h
+
+
+@api_router.get("/health")
+async def health():
+    return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
+
+
+@api_router.get("/portfolio/holdings")
+async def list_holdings():
+    docs = await db.holdings.find({}, {"_id": 0}).to_list(1000)
+    symbols = [d["symbol"] for d in docs]
+    quotes = await get_quotes(symbols) if symbols else {}
+    enriched = []
+    total_value = 0.0
+    total_cost = 0.0
+    total_day_change = 0.0
+    for d in docs:
+        q = quotes.get(d["symbol"].upper())
+        price = q["price"] if q else d.get("avg_cost", 0)
+        prev_close = q["previous_close"] if q and q.get("previous_close") else price
+        value = price * d["quantity"]
+        cost_basis = d["avg_cost"] * d["quantity"]
+        pl = value - cost_basis
+        pl_pct = (pl / cost_basis * 100) if cost_basis else 0
+        day_change = (price - prev_close) * d["quantity"] if prev_close else 0
+        total_value += value
+        total_cost += cost_basis
+        total_day_change += day_change
+        enriched.append({
+            **d,
+            "price": price,
+            "previous_close": prev_close,
+            "value": round(value, 2),
+            "cost_basis": round(cost_basis, 2),
+            "pl": round(pl, 2),
+            "pl_pct": round(pl_pct, 3),
+            "day_change": round(day_change, 2),
+            "day_change_pct": round((q.get("change_percent") if q else 0) or 0, 3),
+            "quote_source": q["source"] if q else "cost",
+            "live": q is not None,
+        })
+    total_pl = total_value - total_cost
+    total_pl_pct = (total_pl / total_cost * 100) if total_cost else 0
+    day_pct = (total_day_change / (total_value - total_day_change) * 100) if (total_value - total_day_change) else 0
+    return {
+        "holdings": enriched,
+        "summary": {
+            "total_value": round(total_value, 2),
+            "total_cost": round(total_cost, 2),
+            "total_pl": round(total_pl, 2),
+            "total_pl_pct": round(total_pl_pct, 3),
+            "day_change": round(total_day_change, 2),
+            "day_change_pct": round(day_pct, 3),
+            "count": len(enriched),
+            "stock_count": sum(1 for h in enriched if h["asset_type"] == "stock"),
+            "crypto_count": sum(1 for h in enriched if h["asset_type"] == "crypto"),
+        },
+    }
+
+
+@api_router.post("/portfolio/holdings")
+async def create_holding(data: HoldingCreate):
+    asset_type = data.asset_type or ("crypto" if is_crypto(data.symbol) else "stock")
+    h = Holding(
+        symbol=data.symbol.upper().strip(),
+        name=data.name,
+        quantity=data.quantity,
+        avg_cost=data.avg_cost,
+        asset_type=asset_type,
+    )
+    doc = h.model_dump()
+    doc["created_at"] = doc["created_at"].isoformat()
+    await db.holdings.insert_one(doc)
+    return _serialize_holding(doc)
+
+
+@api_router.patch("/portfolio/holdings/{holding_id}")
+async def update_holding(holding_id: str, data: HoldingUpdate):
+    update = {k: v for k, v in data.model_dump().items() if v is not None}
+    if not update:
+        raise HTTPException(400, "No fields to update")
+    result = await db.holdings.update_one({"id": holding_id}, {"$set": update})
+    if result.matched_count == 0:
+        raise HTTPException(404, "Holding not found")
+    doc = await db.holdings.find_one({"id": holding_id}, {"_id": 0})
+    return _serialize_holding(doc) if doc else {}
+
+
+@api_router.delete("/portfolio/holdings/{holding_id}")
+async def delete_holding(holding_id: str):
+    result = await db.holdings.delete_one({"id": holding_id})
+    if result.deleted_count == 0:
+        raise HTTPException(404, "Holding not found")
+    return {"ok": True, "id": holding_id}
+
+
+@api_router.delete("/portfolio/holdings")
+async def clear_holdings():
+    await db.holdings.delete_many({})
+    return {"ok": True}
+
+
+@api_router.post("/portfolio/upload-csv")
+async def upload_csv(file: UploadFile = File(...)):
+    """Parse a Robinhood-exported CSV. Flexible column matching."""
+    content = await file.read()
+    try:
+        text = content.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        text = content.decode("latin-1")
+    reader = csv.DictReader(io.StringIO(text))
+    imported = []
+    errors = []
+    for row in reader:
+        norm = {k.strip().lower(): (v.strip() if isinstance(v, str) else v) for k, v in row.items() if k}
+        # Try several column name variants
+        symbol = (
+            norm.get("symbol") or norm.get("ticker") or norm.get("instrument")
+            or norm.get("stock") or norm.get("asset")
+        )
+        qty = (
+            norm.get("quantity") or norm.get("shares") or norm.get("qty")
+            or norm.get("amount") or norm.get("units")
+        )
+        avg = (
+            norm.get("average cost") or norm.get("avg cost") or norm.get("avg_cost")
+            or norm.get("cost basis per share") or norm.get("cost basis")
+            or norm.get("purchase price") or norm.get("price")
+        )
+        name = norm.get("description") or norm.get("name") or None
+        if not symbol or not qty or not avg:
+            continue
+        try:
+            def _n(v):
+                return float(str(v).replace("$", "").replace(",", "").strip())
+            quantity = _n(qty)
+            avg_cost = _n(avg)
+            if quantity <= 0 or avg_cost <= 0:
+                continue
+            sym_up = symbol.upper().strip()
+            asset_type = "crypto" if is_crypto(sym_up) else "stock"
+            h = Holding(symbol=sym_up, name=name, quantity=quantity,
+                        avg_cost=avg_cost, asset_type=asset_type)
+            doc = h.model_dump()
+            doc["created_at"] = doc["created_at"].isoformat()
+            # upsert by symbol so re-upload merges
+            existing = await db.holdings.find_one({"symbol": sym_up})
+            if existing:
+                await db.holdings.update_one(
+                    {"symbol": sym_up},
+                    {"$set": {"quantity": quantity, "avg_cost": avg_cost, "name": name or existing.get("name")}},
+                )
+            else:
+                await db.holdings.insert_one(doc)
+            imported.append(sym_up)
+        except Exception as e:
+            errors.append(f"{symbol}: {e}")
+    return {"imported": imported, "count": len(imported), "errors": errors}
+
+
+@api_router.post("/portfolio/seed-demo")
+async def seed_demo():
+    """Load a demo Robinhood-style portfolio."""
+    await db.holdings.delete_many({})
+    demo = [
+        ("AAPL", "Apple Inc.", 25, 152.30, "stock"),
+        ("NVDA", "NVIDIA Corp.", 12, 420.50, "stock"),
+        ("TSLA", "Tesla Inc.", 8, 245.20, "stock"),
+        ("MSFT", "Microsoft Corp.", 10, 305.10, "stock"),
+        ("AMZN", "Amazon.com", 15, 132.80, "stock"),
+        ("GOOGL", "Alphabet Inc.", 18, 128.40, "stock"),
+        ("META", "Meta Platforms", 7, 315.60, "stock"),
+        ("BTC-USD", "Bitcoin", 0.35, 42800.00, "crypto"),
+        ("ETH-USD", "Ethereum", 4.2, 2350.00, "crypto"),
+        ("SOL-USD", "Solana", 30, 105.00, "crypto"),
+    ]
+    for sym, name, qty, avg, atype in demo:
+        h = Holding(symbol=sym, name=name, quantity=qty, avg_cost=avg, asset_type=atype)
+        doc = h.model_dump()
+        doc["created_at"] = doc["created_at"].isoformat()
+        await db.holdings.insert_one(doc)
+    return {"ok": True, "count": len(demo)}
+
+
+# ---------- ROUTES: MARKET ----------
+@api_router.get("/market/indices")
+async def market_indices():
+    return {"indices": await get_market_indices()}
+
+
+@api_router.get("/market/quote/{symbol}")
+async def market_quote(symbol: str):
+    q = await get_quote(symbol)
+    if not q:
+        raise HTTPException(404, f"No quote for {symbol}")
+    return q
+
+
+# ---------- ROUTES: NEWS ----------
+async def _get_held_symbols() -> List[str]:
+    docs = await db.holdings.find({}, {"_id": 0, "symbol": 1}).to_list(1000)
+    return sorted({d["symbol"] for d in docs})
+
+
+@api_router.get("/news/stocks")
+async def stock_news():
+    symbols = await _get_held_symbols()
+    # Strip -USD suffix for cleaner queries
+    clean = [s.replace("-USD", "") for s in symbols]
+    return await get_stock_news(clean)
+
+
+@api_router.get("/news/macro")
+async def macro_news():
+    return await get_macro_news()
+
+
+# ---------- ROUTES: SENTIMENT ----------
+@api_router.get("/sentiment/portfolio")
+async def sentiment_portfolio():
+    symbols = await _get_held_symbols()
+    clean = [s.replace("-USD", "") for s in symbols]
+    # Serialize to avoid concurrent LLM request limits on free tier keys
+    results = await analyze_portfolio_sentiment(clean)
+    if results:
+        avg_score = round(sum(r["score"] for r in results) / len(results), 1)
+    else:
+        avg_score = 50
+    fear_greed = await get_fear_greed()
+    return {
+        "per_symbol": results,
+        "average_score": avg_score,
+        "fear_greed": fear_greed,
+    }
+
+
+# ---------- MIDDLEWARE ----------
+app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    client.close()

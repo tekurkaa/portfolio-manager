@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-primary: #0A0D12;
+    --bg-secondary: #121721;
+    --bg-panel: #161C26;
+    --bg-header: #1A2232;
+    --bg-table-header: #0E131F;
+    --border-grid: #222C3D;
+    --accent-amber: #F59E0B;
+    --accent-green: #10B981;
+    --accent-red: #EF4444;
+    --accent-blue: #3B82F6;
+    --accent-cyan: #06B6D4;
+    --text-primary: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@layer base {
+    :root {
+        --background: 220 22% 6%;
+        --foreground: 220 14% 96%;
+        --card: 220 22% 10%;
+        --card-foreground: 220 14% 96%;
+        --popover: 220 22% 8%;
+        --popover-foreground: 220 14% 96%;
+        --primary: 38 92% 50%;
+        --primary-foreground: 220 22% 6%;
+        --secondary: 220 22% 14%;
+        --secondary-foreground: 220 14% 96%;
+        --muted: 220 22% 14%;
+        --muted-foreground: 220 9% 60%;
+        --accent: 220 22% 14%;
+        --accent-foreground: 38 92% 50%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 220 14% 96%;
+        --border: 220 26% 19%;
+        --input: 220 26% 19%;
+        --ring: 38 92% 50%;
+        --radius: 0.25rem;
+        --chart-1: 158 64% 42%;
+        --chart-2: 0 84% 60%;
+        --chart-3: 38 92% 50%;
+        --chart-4: 199 89% 48%;
+        --chart-5: 187 85% 43%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Terminal ticker scroll animation */
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.ticker-scroll {
+    animation: ticker-scroll 60s linear infinite;
+}
+.ticker-scroll:hover { animation-play-state: paused; }
+
+/* Subtle price pulse */
+@keyframes price-pulse-green {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(16, 185, 129, 0.14); }
+}
+@keyframes price-pulse-red {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(239, 68, 68, 0.14); }
+}
+.pulse-green { animation: price-pulse-green 1.2s ease-out; }
+.pulse-red { animation: price-pulse-red 1.2s ease-out; }
+
+/* Grid grain */
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(34, 44, 61, 0.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 44, 61, 0.4) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-grid); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-amber); }
+
+@layer base {
+    [data-debug-wrapper="true"] { display: contents !important; }
+}

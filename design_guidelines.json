@@ -1,0 +1,129 @@
+{
+  "project_name": "Bloomberg Terminal-Inspired Investment Dashboard",
+  "archetype": "ARCHETYPE 4: SWISS & HIGH-CONTRAST / TERMINAL DATA DENSITY",
+  "theme": "dark",
+  "theme_details": {
+    "background_primary": "#0A0D12",
+    "background_secondary": "#121721",
+    "surface_card": "#161C26",
+    "border_color": "#222C3D",
+    "accent_amber": "#F59E0B",
+    "accent_green": "#10B981",
+    "accent_red": "#EF4444",
+    "accent_blue": "#3B82F6",
+    "text_primary": "#F3F4F6",
+    "text_secondary": "#9CA3AF",
+    "text_muted": "#6B7280",
+    "monospace_numeric": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Cabinet Grotesk, Outfit, sans-serif",
+      "h1": "text-2xl sm:text-3xl font-bold tracking-tight text-amber-500 uppercase",
+      "h2": "text-lg sm:text-xl font-semibold tracking-tight text-gray-100",
+      "h3": "text-base font-semibold text-gray-200",
+      "h4": "text-sm font-medium text-gray-300"
+    },
+    "body": {
+      "font_family": "Inter, sans-serif",
+      "text": "text-xs sm:text-sm text-gray-300 leading-normal"
+    },
+    "numerics_and_tickers": {
+      "font_family": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace",
+      "ticker": "font-mono font-bold uppercase tracking-wider text-amber-400",
+      "price_positive": "font-mono text-emerald-400 font-semibold",
+      "price_negative": "font-mono text-rose-500 font-semibold",
+      "price_neutral": "font-mono text-gray-300"
+    }
+  },
+  "colors": {
+    "background": "#0A0D12",
+    "card_bg": "#121721",
+    "panel_header": "#1A2232",
+    "table_header": "#0E131F",
+    "border_grid": "#222C3D",
+    "amber_primary": "#F59E0B",
+    "amber_glow": "rgba(245, 158, 11, 0.15)",
+    "green_up": "#10B981",
+    "red_down": "#EF4444",
+    "blue_macro": "#3B82F6",
+    "cyan_crypto": "#06B6D4"
+  },
+  "visual_enhancers": {
+    "terminal_header": "High-density ticker bar at top with real-time green/red gain indicators and market indices (S&P 500, NASDAQ, BTC, ETH, GOLD, 10Y BOND)",
+    "grid_borders": "1px solid #222C3D clean terminal grid separation with sharp/minimal radius rounded-sm or rounded-none",
+    "glass_blur": "backdrop-blur-md bg-[#121721]/90",
+    "badges": "Sharp rectangular or pill badges with high-contrast text and low-opacity color tint (e.g., bg-emerald-950/80 text-emerald-400 border border-emerald-800/50)",
+    "data_density": "Tight padding (px-3 py-2 for tables, p-3 for metric widgets) to maximize scanability without clutter"
+  },
+  "component_name": {
+    "header_ticker": "TopTickerBar",
+    "nav_tabs": "TerminalTabNavigation",
+    "portfolio_view": "PortfolioTab",
+    "robinhood_importer": "RobinhoodCsvImporter",
+    "stock_news_view": "StockNewsTab",
+    "macro_news_view": "MacroNewsTab",
+    "sentiment_view": "PublicSentimentTab",
+    "holding_table": "HoldingsDataTable",
+    "allocation_chart": "PortfolioAllocationChart",
+    "sentiment_gauge": "SentimentBullBearGauge"
+  },
+  "grids": {
+    "dashboard_mode": "MODE B: High Density Grid (Terminal Data Correlation)",
+    "layout_cols": "grid-cols-1 lg:grid-cols-12 gap-4",
+    "summary_widgets": "lg:col-span-3",
+    "main_chart": "lg:col-span-6 row-span-2",
+    "side_feed": "lg:col-span-3 row-span-2"
+  },
+  "layouts": {
+    "structure": "Fixed dark terminal bar -> Main Navigation Header -> 4 Tab Views -> Sticky live ticker status bar / summary footer",
+    "tab_1_portfolio": "Robinhood CSV import trigger + Portfolio summary metrics (Total Value, Daily P/L, Total P/L, Cash) + Holdings table (Stocks & Crypto with filter) + Asset Allocation chart + Performance sparklines",
+    "tab_2_stock_news": "Filterable news timeline auto-matched to held tickers (AAPL, NVDA, TSLA, BTC, etc.) with sentiment tags and AI summary breakdown",
+    "tab_3_macro_news": "Macro intelligence monitor covering Tariffs, Central Banks/Fed rates, Bond yields, Gold/Oil commodities, and Geopolitics with market impact badges",
+    "tab_4_sentiment": "Bullish vs Bearish market sentiment dashboard with gauge meters, Social sentiment index (Reddit/X sentiment), fear & greed gauge, and stock-by-stock breakdown"
+  },
+  "motion": {
+    "transitions": "Fast, crisp micro-interactions: transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease",
+    "ticker_pulse": "Subtle emerald/red highlight pulse when prices refresh",
+    "tab_switch": "Instant tab render with quick opacity fade-in (100ms)"
+  },
+  "accessibility": {
+    "contrast": "APCA & WCAG AA compliant contrast ratio (> 4.5:1 for numeric values on dark surfaces)",
+    "data_testids": "All interactive buttons, tab selectors, CSV file inputs, filter pills, and search boxes MUST have descriptive data-testid attributes (e.g. data-testid='tab-portfolio-button', data-testid='robinhood-csv-upload-input', data-testid='stock-news-filter-select')",
+    "keyboard_nav": "Full keyboard access for tab switching and table row selection"
+  },
+  "media": {
+    "icons": "Lucide React icons with 16px to 20px size for compact technical visual markers"
+  },
+  "3d_libraries": {
+    "charts": "Recharts / Shadcn charts with dark theme customizations (#10B981 for gain, #EF4444 for loss, #F59E0B for amber alerts)",
+    "gauge_meters": "Custom SVG semi-circle gauges for sentiment (Bullish/Bearish ratio)"
+  },
+  "image_urls": [
+    {
+      "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NjZ8MHwxfHNlYXJjaHxfHNlYXJjaDF8fHN0b2NrJTIwbWFya2V0JTIwdHJhZGluZyUyMGNoYXJ0cyUyMHRlcm1pbmFsfGVufDB8fHx8MTc4NzMzNTQ2N3ww&ixlib=rb-4.1.0&q=85",
+      "category": "chart_hero",
+      "description": "Candlestick dark trading chart background overlay"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NjZ8MHwxfHNlYXJjaHwzfHxzdG9jayUyMG1hcmtldCUyMHRyYWRpbmclMjBjaGFydHMlMjB0ZXJtaW5hbHxlbnwwfHx8fDE3ODczMzU0Njd8MA&ixlib=rb-4.1.0&q=85",
+      "category": "crypto_hero",
+      "description": "Crypto market analytics dark monitor screen"
+    }
+  ],
+  "instructions_to_main_agent": [
+    "Build a Bloomberg Terminal inspired investment management dashboard with dark theme (#0A0D12 base background, #121721 panels, amber #F59E0B accents, green #10B981 gain, red #EF4444 loss).",
+    "Implement the 4 mandatory tabs: 1. Portfolio (Stocks + Crypto, Robinhood CSV import, P/L, table, charts), 2. Stock News (filtered to user's held symbols), 3. Macro News (Tariffs, Fed rates, Bonds, Gold, Geopolitics), 4. Public Sentiment (Bull/Bear gauges, social sentiment summary per stock).",
+    "Provide CSV file import functionality supporting Robinhood export format (Symbol, Description, Quantity, Average Cost, Last Price, Value) as well as manual stock/crypto addition and pre-loaded sample Robinhood portfolio data.",
+    "Use monospace font for all prices, percentages, quantities, P/L metrics, and stock symbols to give an authentic trading terminal feel.",
+    "Ensure tables have sortable columns, search/filter inputs, tight padding, and clear left-aligned structure.",
+    "Ensure all interactive elements have data-testid attributes."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Never use full-screen bright gradients on dark themes.",
+    "Do not center-align the app container. Maintain left-aligned, structured data density.",
+    "Avoid generic centered layouts; use structured grids with high information density.",
+    "Always set explicit hover text colors (e.g. hover:bg-slate-800 hover:text-white).",
+    "All interactive elements MUST include data-testid attributes in kebab-case."
+  ]
+}
