@@ -5,6 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import io
 import csv
+import asyncio
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
@@ -21,6 +22,8 @@ from sentiment_service import analyze_portfolio_public, market_fear_greed_from_s
 from insider_service import get_insider_summary, get_congress_trades, get_sec_form4  # noqa: E402
 from history_service import portfolio_history  # noqa: E402
 from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
+from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
+from sentiment_service import analyze_symbol_public  # noqa: E402
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -346,11 +349,72 @@ async def options_symbol(symbol: str):
 async def alpha_signal_route():
     symbols = await _get_held_symbols()
     clean = [s.replace("-USD", "") for s in symbols]
-    # get sentiment scores
     from sentiment_service import analyze_portfolio_public
     sent_results = await analyze_portfolio_public(clean)
     sent_map = {r["symbol"]: r["score"] for r in sent_results}
     return {"signals": await alpha_signal(clean, sent_map)}
+
+
+@api_router.get("/signal/backtest")
+async def signal_backtest_route():
+    symbols = await _get_held_symbols()
+    clean = [s.replace("-USD", "") for s in symbols]
+    return {"backtests": await backtest_portfolio(clean)}
+
+
+# ---------- ROUTES: WATCHLIST ----------
+class WatchlistSymbol(BaseModel):
+    symbol: str
+
+
+@api_router.get("/watchlist")
+async def watchlist_list():
+    docs = await db.watchlist.find({}, {"_id": 0}).to_list(200)
+    return {"symbols": sorted({d["symbol"] for d in docs})}
+
+
+@api_router.post("/watchlist")
+async def watchlist_add(data: WatchlistSymbol):
+    sym = data.symbol.upper().strip()
+    if not sym:
+        raise HTTPException(400, "symbol required")
+    await db.watchlist.update_one({"symbol": sym}, {"$set": {"symbol": sym}}, upsert=True)
+    return {"ok": True, "symbol": sym}
+
+
+@api_router.delete("/watchlist/{symbol}")
+async def watchlist_remove(symbol: str):
+    await db.watchlist.delete_one({"symbol": symbol.upper()})
+    return {"ok": True}
+
+
+@api_router.get("/watchlist/signals")
+async def watchlist_signals():
+    docs = await db.watchlist.find({}, {"_id": 0}).to_list(200)
+    symbols = sorted({d["symbol"] for d in docs})
+    if not symbols:
+        return {"signals": []}
+    # sentiment via stocktwits (fast, no auth)
+    sent_map = {}
+    tasks = [analyze_symbol_public(s) for s in symbols[:15]]
+    sent_results = await asyncio.gather(*tasks)
+    for r in sent_results:
+        sent_map[r["symbol"]] = r["score"]
+    signals = await alpha_signal(symbols, sent_map)
+    # add quotes
+    quotes = await get_quotes(symbols)
+    for s in signals:
+        q = quotes.get(s["symbol"])
+        if q:
+            s["price"] = q["price"]
+            s["change_pct"] = q["change_percent"]
+    return {"signals": signals}
+
+
+@api_router.get("/watchlist/congress/{symbol}")
+async def watchlist_congress(symbol: str):
+    from insider_service import get_trades_for_symbol
+    return {"symbol": symbol.upper(), "trades": await get_trades_for_symbol(symbol, 20)}
 
 
 # ---------- MIDDLEWARE ----------

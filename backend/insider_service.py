@@ -1,39 +1,34 @@
-"""Insider / smart money flow tracking.
-Congress trades from House Stock Watcher + Senate Stock Watcher (free public JSON).
-SEC insider Form 4 filings via EDGAR RSS.
-"""
+"""Insider / Congress trade tracking via Kadoa (GitHub raw JSON — free, no keys)."""
 import asyncio
 import logging
 import time
 import xml.etree.ElementTree as ET
 from typing import List, Dict, Any, Optional
-from datetime import datetime, timezone
 
 import httpx
 
 logger = logging.getLogger(__name__)
 
 _CACHE: Dict[str, Any] = {}
-_CACHE_TTL = 600  # 10 min
+_CACHE_TTL = 900  # 15 min
 
-HOUSE_URL = "https://house-stock-watcher-data.s3-us-west-2.amazonaws.com/data/all_transactions.json"
-SENATE_URL = "https://senate-stock-watcher-data.s3-us-west-2.amazonaws.com/aggregate/all_transactions.json"
+KADOA_BASE = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data"
+KADOA_TICKER = KADOA_BASE + "/ticker/{sym}.json"
+KADOA_STATS = KADOA_BASE + "/stats.json"
 SEC_FORM4_URL = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=4&company=&dateb=&owner=include&count=100&output=atom"
 
-HEADERS = {
-    "User-Agent": "TerminusInvest/1.0 research@terminus.local",
-    "Accept": "application/json, text/xml",
-}
+HEADERS = {"User-Agent": "TerminusInvest/1.0 research@example.com", "Accept": "application/json"}
+SEC_HEADERS = {"User-Agent": "TerminusInvest/1.0 research@example.com", "Accept": "application/xml"}
 
 
-async def _cached_get(client: httpx.AsyncClient, url: str, key: str) -> Optional[Any]:
+async def _cached_get(client: httpx.AsyncClient, url: str, key: str, headers=None) -> Optional[Any]:
     now = time.time()
     if key in _CACHE:
         data, exp = _CACHE[key]
         if exp > now:
             return data
     try:
-        r = await client.get(url, headers=HEADERS, timeout=20.0)
+        r = await client.get(url, headers=headers or HEADERS, timeout=25.0)
         if r.status_code != 200:
             logger.warning(f"{key} HTTP {r.status_code}")
             return None
@@ -44,68 +39,78 @@ async def _cached_get(client: httpx.AsyncClient, url: str, key: str) -> Optional
         return None
 
 
-def _parse_amount(a: str) -> Optional[str]:
-    if not a:
-        return None
-    return a.replace("$", "").strip()
+def _politician_from_filer(filer_id: str) -> Dict[str, str]:
+    """kadoa filer_id: house_ed_case / senate_thomasr_tillis / oge_donald_trump"""
+    if not filer_id:
+        return {"chamber": "?", "politician": "?"}
+    parts = filer_id.split("_", 1)
+    if len(parts) != 2:
+        return {"chamber": "?", "politician": filer_id}
+    chamber_key = parts[0].lower()
+    name_raw = parts[1].replace("_", " ").title()
+    chamber = {"house": "House", "senate": "Senate", "oge": "Executive"}.get(chamber_key, chamber_key.title())
+    return {"chamber": chamber, "politician": name_raw}
 
 
-async def get_congress_trades(limit: int = 60, symbol_filter: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Fetch latest congress trades (House + Senate) unified.
-    NOTE: The House/Senate Stock Watcher S3 endpoints are blocked from some networks (403).
-    Returns empty list gracefully when unreachable.
-    """
-    async with httpx.AsyncClient() as client:
-        house_r, senate_r = await asyncio.gather(
-            _cached_get(client, HOUSE_URL, "house"),
-            _cached_get(client, SENATE_URL, "senate"),
-        )
-    out: List[Dict[str, Any]] = []
-    if house_r and house_r.status_code == 200:
-        try:
-            for t in house_r.json():
-                out.append({
-                    "chamber": "House",
-                    "politician": t.get("representative") or t.get("member"),
-                    "party": t.get("party"),
-                    "symbol": (t.get("ticker") or "").upper().replace("$", ""),
-                    "asset": t.get("asset_description") or t.get("asset"),
-                    "type": t.get("type") or t.get("transaction_type"),
-                    "amount": _parse_amount(t.get("amount")),
-                    "date": t.get("transaction_date") or t.get("date"),
-                    "disclosed": t.get("disclosure_date"),
-                    "source": "House Stock Watcher",
-                })
-        except Exception as e:
-            logger.warning(f"house parse: {e}")
-    if senate_r and senate_r.status_code == 200:
-        try:
-            for t in senate_r.json():
-                out.append({
-                    "chamber": "Senate",
-                    "politician": t.get("senator") or t.get("member"),
-                    "party": t.get("party"),
-                    "symbol": (t.get("ticker") or "").upper().replace("--", "").replace("$", ""),
-                    "asset": t.get("asset_description") or t.get("asset"),
-                    "type": t.get("type") or t.get("transaction_type"),
-                    "amount": _parse_amount(t.get("amount")),
-                    "date": t.get("transaction_date") or t.get("date"),
-                    "disclosed": t.get("disclosure_date"),
-                    "source": "Senate Stock Watcher",
-                })
-        except Exception as e:
-            logger.warning(f"senate parse: {e}")
-    out.sort(key=lambda x: x.get("date") or "", reverse=True)
+def _normalize_trade(t: Dict[str, Any]) -> Dict[str, Any]:
+    who = _politician_from_filer(t.get("filer_id", ""))
+    return {
+        "chamber": who["chamber"],
+        "politician": who["politician"],
+        "symbol": (t.get("ticker") or "").upper(),
+        "asset": t.get("asset_name"),
+        "type": t.get("transaction_type"),
+        "amount": t.get("amount_range_label"),
+        "amount_low": t.get("amount_range_low"),
+        "amount_high": t.get("amount_range_high"),
+        "date": t.get("transaction_date"),
+        "disclosed": t.get("filing_date") or t.get("notification_date"),
+        "comment": t.get("comment"),
+        "source": "Kadoa · " + (t.get("source_id") or "congress").replace("_", " "),
+    }
+
+
+async def get_trades_for_symbol(symbol: str, limit: int = 50) -> List[Dict[str, Any]]:
+    sym = symbol.upper().strip()
+    async with httpx.AsyncClient(follow_redirects=True) as client:
+        r = await _cached_get(client, KADOA_TICKER.format(sym=sym), f"kadoa-{sym}")
+    if not r:
+        return []
+    try:
+        trades = r.json().get("trades", [])
+        normalized = [_normalize_trade(t) for t in trades]
+        normalized.sort(key=lambda x: x.get("date") or "", reverse=True)
+        return normalized[:limit]
+    except Exception as e:
+        logger.warning(f"parse kadoa {sym}: {e}")
+        return []
+
+
+async def get_congress_trades(limit: int = 60, symbol_filter: Optional[str] = None,
+                              held_symbols: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+    """Fetch recent congress trades. Prioritizes user's held tickers + a set of common S&P names."""
     if symbol_filter:
-        s = symbol_filter.upper()
-        out = [x for x in out if x["symbol"] == s]
-    return out[:limit]
+        return await get_trades_for_symbol(symbol_filter, limit)
+
+    # Fetch held tickers first (most relevant to user), plus most-traded S&P names
+    default_syms = ["AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA", "AMD",
+                    "JPM", "BAC", "V", "MA", "WMT", "XOM", "CVX", "PFE", "MRK", "UNH",
+                    "HD", "DIS", "NFLX", "CRM", "ORCL", "INTC", "QCOM", "ADBE"]
+    held = [s.upper() for s in (held_symbols or [])]
+    symbols = list(dict.fromkeys(held + default_syms))[:25]
+
+    tasks = [get_trades_for_symbol(s, 15) for s in symbols]
+    results = await asyncio.gather(*tasks)
+    all_trades: List[Dict[str, Any]] = []
+    for arr in results:
+        all_trades.extend(arr)
+    all_trades.sort(key=lambda x: x.get("date") or "", reverse=True)
+    return all_trades[:limit]
 
 
 async def get_sec_form4(limit: int = 40, symbol_filter: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Latest SEC Form 4 (insider) filings via EDGAR RSS."""
     async with httpx.AsyncClient() as client:
-        r = await _cached_get(client, SEC_FORM4_URL, "sec-form4")
+        r = await _cached_get(client, SEC_FORM4_URL, "sec-form4", headers=SEC_HEADERS)
     if not r:
         return []
     out: List[Dict[str, Any]] = []
@@ -119,15 +124,8 @@ async def get_sec_form4(limit: int = 40, symbol_filter: Optional[str] = None) ->
             title = title_el.text if title_el is not None else ""
             link = link_el.get("href") if link_el is not None else None
             updated = updated_el.text if updated_el is not None else None
-            # Titles are like "4 - Company Name (0001234567) (Reporting)"
             company = title.split(" - ", 1)[1] if " - " in title else title
-            out.append({
-                "title": title,
-                "company": company,
-                "url": link,
-                "filed_at": updated,
-                "form": "4",
-            })
+            out.append({"title": title, "company": company, "url": link, "filed_at": updated, "form": "4"})
     except Exception as e:
         logger.warning(f"SEC parse: {e}")
     if symbol_filter:
@@ -137,22 +135,21 @@ async def get_sec_form4(limit: int = 40, symbol_filter: Optional[str] = None) ->
 
 
 async def get_insider_summary(user_symbols: List[str]) -> Dict[str, Any]:
-    """Aggregated snapshot: recent congress + SEC insider activity, tagged when hitting held tickers."""
-    held = {s.upper() for s in user_symbols}
+    held = [s.upper() for s in user_symbols]
     congress, form4 = await asyncio.gather(
-        get_congress_trades(limit=120),
+        get_congress_trades(limit=120, held_symbols=held),
         get_sec_form4(limit=60),
     )
-    # tag hits
+    held_set = set(held)
     for c in congress:
-        c["hit"] = c.get("symbol") in held
-    # aggregate per-symbol congress activity (last 30 items)
+        c["hit"] = c.get("symbol") in held_set
+
     per_sym: Dict[str, Dict[str, Any]] = {}
     for c in congress[:200]:
         sym = c.get("symbol") or ""
         if not sym:
             continue
-        d = per_sym.setdefault(sym, {"symbol": sym, "buys": 0, "sells": 0, "trades": 0, "held": sym in held})
+        d = per_sym.setdefault(sym, {"symbol": sym, "buys": 0, "sells": 0, "trades": 0, "held": sym in held_set})
         t = (c.get("type") or "").lower()
         d["trades"] += 1
         if "purchase" in t or "buy" in t:
@@ -165,5 +162,5 @@ async def get_insider_summary(user_symbols: List[str]) -> Dict[str, Any]:
         "form4": form4[:40],
         "top_activity": top_activity,
         "held_matches": [c for c in congress if c.get("hit")][:30],
-        "notice": None if congress else "Congress trade feeds are unreachable from this environment (S3 blocks preview networks). SEC Form 4 insider filings are live below. To enable congress trades, provide a Quiver Quantitative or Financial Modeling Prep API key.",
+        "notice": None,
     }

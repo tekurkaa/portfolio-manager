@@ -2,15 +2,25 @@ import { useEffect, useState } from "react";
 import { api, fmtMoney, fmtPct, colorForPL } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Treemap } from "recharts";
 
-const RANGES = ["1D", "1W", "1M", "3M", "YTD", "1Y", "5Y", "ALL"];
+const RANGES = [
+  { key: "1D", label: "TODAY", sub: "Live" },
+  { key: "1W", label: "1W", sub: "Past Week" },
+  { key: "1M", label: "1M", sub: "Past Month" },
+  { key: "3M", label: "3M", sub: "Past 3 Months" },
+  { key: "YTD", label: "YTD", sub: "Year to Date" },
+  { key: "1Y", label: "1Y", sub: "Past Year" },
+  { key: "5Y", label: "5Y", sub: "Past 5 Years" },
+  { key: "ALL", label: "ALL", sub: "All Time" },
+];
 
-const fmtT = (t) => {
+const fmtT = (t, isIntraday) => {
   const d = new Date(t);
+  if (isIntraday) return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "2-digit" });
 };
 
 export function PortfolioHistoryChart() {
-  const [range, setRange] = useState("1M");
+  const [range, setRange] = useState("1D");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,39 +36,44 @@ export function PortfolioHistoryChart() {
 
   const up = (data?.change ?? 0) >= 0;
   const stroke = up ? "#10B981" : "#EF4444";
+  const active = RANGES.find((r) => r.key === range) || RANGES[0];
+  const isIntraday = range === "1D";
 
   return (
     <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="portfolio-history-chart">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
         <div>
-          <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase">Portfolio Value · {range}</div>
+          <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase">Portfolio Value</div>
           {data && (
-            <div className="flex items-baseline gap-3 mt-1">
-              <span className="text-2xl font-mono font-bold text-gray-100">{fmtMoney(data.end_value)}</span>
-              <span className={`text-sm font-mono ${colorForPL(data.change)}`}>
-                {data.change >= 0 ? "+" : ""}{fmtMoney(data.change)} ({fmtPct(data.change_pct)})
-              </span>
-            </div>
+            <>
+              <div className="text-3xl font-mono font-bold text-gray-100 mt-1" data-testid="chart-current-value">
+                {fmtMoney(data.end_value)}
+              </div>
+              <div className={`text-sm font-mono mt-0.5 ${colorForPL(data.change)}`} data-testid="chart-change">
+                {data.change >= 0 ? "▲" : "▼"} {fmtMoney(Math.abs(data.change))} ({fmtPct(data.change_pct)})
+                <span className="text-gray-500 ml-2">· {active.sub}</span>
+              </div>
+            </>
           )}
         </div>
         <div className="flex flex-wrap gap-1">
           {RANGES.map((r) => (
             <button
-              key={r}
-              onClick={() => setRange(r)}
-              data-testid={`range-${r}`}
-              className={`text-[11px] font-mono px-2 py-1 rounded-sm border ${
-                range === r
+              key={r.key}
+              onClick={() => setRange(r.key)}
+              data-testid={`range-${r.key}`}
+              className={`text-[11px] font-mono font-semibold px-2.5 py-1 rounded-sm border ${
+                range === r.key
                   ? "border-amber-500 text-amber-500 bg-amber-500/10"
                   : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
               }`}
-            >{r}</button>
+            >{r.label}</button>
           ))}
         </div>
       </div>
       <div style={{ width: "100%", height: 260 }}>
         {loading ? (
-          <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">Loading history...</div>
+          <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">Loading {active.sub}...</div>
         ) : !data?.points?.length ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center" data-testid="history-empty">
             No historical data. Add positions first.
@@ -73,7 +88,7 @@ export function PortfolioHistoryChart() {
                 </linearGradient>
               </defs>
               <XAxis dataKey="t" tick={{ fill: "#6B7280", fontSize: 10, fontFamily: "monospace" }}
-                tickFormatter={fmtT} minTickGap={40} axisLine={{ stroke: "#222C3D" }} tickLine={false} />
+                tickFormatter={(t) => fmtT(t, isIntraday)} minTickGap={40} axisLine={{ stroke: "#222C3D" }} tickLine={false} />
               <YAxis tick={{ fill: "#6B7280", fontSize: 10, fontFamily: "monospace" }}
                 domain={["auto", "auto"]} axisLine={{ stroke: "#222C3D" }} tickLine={false}
                 tickFormatter={(v) => `$${(v/1000).toFixed(1)}k`} width={55} />
@@ -82,7 +97,7 @@ export function PortfolioHistoryChart() {
                 labelStyle={{ color: "#9CA3AF" }}
                 itemStyle={{ color: "#F3F4F6" }}
                 formatter={(v) => [fmtMoney(v), "Value"]}
-                labelFormatter={fmtT}
+                labelFormatter={(t) => fmtT(t, isIntraday)}
               />
               <Line type="monotone" dataKey="v" stroke={stroke} strokeWidth={2} dot={false} fill="url(#gradVal)" />
             </LineChart>

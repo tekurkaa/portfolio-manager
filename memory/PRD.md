@@ -60,3 +60,10 @@ Build a website for investment management with 4 tabs: (1) all investments - sto
 
 ### On Free Congress Alternatives
 - Tried Tracefour (no public API), Capitol Trades (rate-limits Emergent IPs), FMP/Quiver demos (401), House disclosures-clerk (PDF only). All free tier congress feeds are either blocked from AWS-backed preview networks or require paid keys. SEC Form 4 remains the reliable free insider source and is live.
+
+## Iteration 4 (Feb 2026)
+### Added
+- **Live US Congress trades via Kadoa GitHub raw JSON** (per-ticker files at raw.githubusercontent.com/kadoa-org/congress-trading-monitor). Fully free, no keys, no S3 blocks. Fetches trades for held tickers + top S&P names. Includes House + Senate + Executive Branch (OGE). Fresh through 2026-08-13.
+- **Signal Backtest panel** in Alpha tab: For every holding, evaluates how a momentum-based BUY (mom ≥ +3%) or SELL (mom ≤ -3%) signal would have performed 5/10/20 trading days later over last 9 months. Shows avg return · win rate · sample count.
+- **New Watchlist tab**: Add any ticker (SPY, COIN, PLTR etc.) → runs full Alpha Signal (momentum + StockTwits sentiment + options tilt) with live prices. Click any row → drawer with congress trades for that symbol.
+- **Robinhood-style portfolio chart**: TODAY (intraday 5m), 1W, 1M, 3M, YTD, 1Y, 5Y, ALL. Big current value + change with directional triangle + descriptive subtitle ("Past Month" / "Year to Date" / etc.). Intraday x-axis shows times, others show dates.

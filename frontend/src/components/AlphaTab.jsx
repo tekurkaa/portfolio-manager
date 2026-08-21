@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api, fmtNum } from "@/lib/api";
 import { toast } from "sonner";
 import { RefreshCw, Zap, Activity, Target } from "lucide-react";
+import BacktestPanel from "@/components/BacktestPanel";
 
 const signalColor = (sig) => {
   if (sig === "BUY") return "text-emerald-400 border-emerald-800 bg-emerald-950/40";
@@ -176,6 +177,7 @@ export default function AlphaTab() {
       </div>
       <AlphaSignals />
       <OptionsFlow />
+      <BacktestPanel />
     </div>
   );
 }
