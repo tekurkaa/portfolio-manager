@@ -10,13 +10,15 @@ import SentimentTab from "@/components/SentimentTab";
 import InsiderFlowTab from "@/components/InsiderFlowTab";
 import AlphaTab from "@/components/AlphaTab";
 import WatchlistTab from "@/components/WatchlistTab";
+import ScannerTab from "@/components/ScannerTab";
 import Login from "@/components/Login";
 import AuthCallback from "@/components/AuthCallback";
-import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut } from "lucide-react";
+import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut, Radar } from "lucide-react";
 
 const TABS = [
   { id: "portfolio", label: "PORTFOLIO", icon: LayoutGrid },
   { id: "alpha", label: "ALPHA", icon: Zap },
+  { id: "scanner", label: "SCANNER", icon: Radar },
   { id: "watchlist", label: "WATCHLIST", icon: Eye },
   { id: "stock-news", label: "STOCK NEWS", icon: Newspaper },
   { id: "macro-news", label: "MACRO", icon: Globe2 },
@@ -135,6 +137,7 @@ function App() {
       <main className="p-3 sm:p-5" data-testid="tab-content">
         {active === "portfolio" && <PortfolioTab />}
         {active === "alpha" && <AlphaTab />}
+        {active === "scanner" && <ScannerTab />}
         {active === "watchlist" && <WatchlistTab />}
         {active === "stock-news" && <StockNewsTab />}
         {active === "macro-news" && <MacroNewsTab />}

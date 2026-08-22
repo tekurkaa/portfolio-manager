@@ -25,6 +25,7 @@ from signal_service import get_portfolio_options_flow, get_options_flow, alpha_s
 from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
 from sentiment_service import analyze_symbol_public  # noqa: E402
 from auth import get_current_user, exchange_session, logout_session  # noqa: E402
+from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -447,6 +448,47 @@ async def watchlist_signals(uid: str = Depends(current_user_id)):
 async def watchlist_congress(symbol: str):
     from insider_service import get_trades_for_symbol
     return {"symbol": symbol.upper(), "trades": await get_trades_for_symbol(symbol, 20)}
+
+
+# ---------- ROUTES: BREAKOUT SCANNER ----------
+class NotifyPref(BaseModel):
+    email: Optional[str] = None
+    enabled: Optional[bool] = None
+
+
+@api_router.get("/scanner/breakouts")
+async def scanner_breakouts_route(uid: str = Depends(current_user_id)):
+    # Include user's watchlist as extras
+    wl = await db.watchlist.find({"user_id": uid}, {"_id": 0, "symbol": 1}).to_list(200)
+    extras = [d["symbol"] for d in wl]
+    return await scan_breakouts(extras)
+
+
+@api_router.post("/scanner/notify")
+async def scanner_notify_route(user=Depends(current_user)):
+    pref = await db.notify_prefs.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
+    to_email = pref.get("email") or user["email"]
+    # scan
+    wl = await db.watchlist.find({"user_id": user["user_id"]}, {"_id": 0, "symbol": 1}).to_list(200)
+    extras = [d["symbol"] for d in wl]
+    scan = await scan_breakouts(extras, top_n=10)
+    html = build_digest_html(scan, to_email)
+    result = await send_digest_email(to_email, html)
+    return {**result, "candidates_count": len(scan.get("candidates", []))}
+
+
+@api_router.get("/scanner/prefs")
+async def scanner_prefs_get(user=Depends(current_user)):
+    pref = await db.notify_prefs.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
+    return {"email": pref.get("email") or user["email"], "enabled": pref.get("enabled", False)}
+
+
+@api_router.post("/scanner/prefs")
+async def scanner_prefs_set(data: NotifyPref, user=Depends(current_user)):
+    update = {k: v for k, v in data.model_dump().items() if v is not None}
+    update["user_id"] = user["user_id"]
+    await db.notify_prefs.update_one({"user_id": user["user_id"]}, {"$set": update}, upsert=True)
+    return update
 
 
 # ---------- MIDDLEWARE ----------
