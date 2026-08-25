@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { api } from "@/lib/api";
+import { api, setToken } from "@/lib/api";
 
 export default function AuthCallback({ onDone }) {
   const processed = useRef(false);
@@ -13,6 +13,7 @@ export default function AuthCallback({ onDone }) {
     if (!sid) { onDone(false); return; }
     api.post("/auth/callback", { session_id: sid })
       .then((r) => {
+        if (r.data?.session_token) setToken(r.data.session_token);
         window.history.replaceState(null, "", window.location.pathname);
         onDone(true, r.data);
       })

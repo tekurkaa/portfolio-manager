@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
-import { api } from "@/lib/api";
+import { api, setToken, getToken } from "@/lib/api";
 import TopTickerBar from "@/components/TopTickerBar";
 import PortfolioTab from "@/components/PortfolioTab";
 import StockNewsTab from "@/components/StockNewsTab";
@@ -52,6 +52,7 @@ function App() {
 
   const handleLogout = async () => {
     try { await api.post("/auth/logout"); } catch {}
+    setToken(null); // Clear localStorage token
     setUser(false);
     toast.success("Signed out");
   };

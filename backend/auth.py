@@ -50,6 +50,8 @@ async def get_current_user(request: Request, db) -> dict:
 
 
 COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "false").lower() == "true"
+# Cross-origin cookies (Vercel → Render) require samesite=none + secure=true.
+# Local dev uses samesite=lax (no HTTPS needed).
 COOKIE_SAMESITE = "none" if COOKIE_SECURE else "lax"
 
 

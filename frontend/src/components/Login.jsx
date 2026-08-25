@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Terminal, LogIn, UserCheck } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, setToken } from "@/lib/api";
 import { toast } from "sonner";
 
 export default function Login({ onLoginSuccess }) {
@@ -20,6 +20,8 @@ export default function Login({ onLoginSuccess }) {
         email: email.trim() || "trader@terminus.local",
         name: email.split("@")[0] || "Senior Trader",
       });
+      // Persist token for cross-origin Authorization header auth
+      if (res.data?.session_token) setToken(res.data.session_token);
       toast.success("Welcome back to Terminus!");
       if (onLoginSuccess) {
         onLoginSuccess(res.data);
