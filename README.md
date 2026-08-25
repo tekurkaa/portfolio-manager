@@ -2,11 +2,13 @@
 
 > Real-time quantitative investment terminal, institutional breakout scanner, multi-source news aggregator, alpha signals engine, and automated daily email digest.
 
+🔗 **Live Production URL**: [https://portfolio-manager-by-atv.vercel.app/](https://portfolio-manager-by-atv.vercel.app/)
+
 ---
 
 ## ⚡ Overview
 
-**Terminus** is a high-performance, full-stack financial market terminal designed for active equity traders, quantitative analysts, and portfolio managers. It combines sub-second live exchange market feeds, predictive alpha generation models, congressional trading intelligence, and automated breakout alerts in a sleek, dark-mode terminal interface.
+**Terminus / Portfolio Manager** is a high-performance, full-stack financial market terminal designed for active equity traders, quantitative analysts, and portfolio managers. It combines sub-second live exchange market feeds, predictive alpha generation models, congressional trading intelligence, and automated breakout alerts in a sleek, dark-mode terminal interface.
 
 ---
 
