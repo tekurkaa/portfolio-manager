@@ -163,27 +163,27 @@ The project includes a full unit and integration test suite covering API routes,
 1. Import repository on [Vercel](https://vercel.com/new).
 2. Set **Root Directory** to `frontend`.
 3. Set **Framework Preset** to `Create React App`.
-4. Add Environment Variable:
-   ```env
-   REACT_APP_BACKEND_URL=https://your-backend-url.onrender.com
-   ```
+4. **No additional env vars needed** — `frontend/.env.production` is committed and automatically points to the Render backend.
+   - If you redeploy the backend under a different URL, update `frontend/.env.production` accordingly.
 5. Click **Deploy**.
 
 ### Deploy Backend to Render / Railway / Fly.io
 1. Create a new Web Service pointing to `backend/`.
 2. Build Command: `pip install -r requirements.txt`
 3. Start Command: `uvicorn server:app --host 0.0.0.0 --port $PORT`
-4. Set Environment Variables:
+4. Set Environment Variables on Render:
    ```env
    MONGO_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/portfolio_manager?retryWrites=true&w=majority
    DB_NAME=portfolio_manager
-   CORS_ORIGINS=https://your-app.vercel.app
+   CORS_ORIGINS=https://portfolio-manager-by-atv.vercel.app
    COOKIE_SECURE=true
    ALPHA_VANTAGE_API_KEY=BUYS3Q4CWL278X63
    NEWSAPI_KEY=8c149e153bcf41d19f868bb248113321
    RESEND_API_KEY=re_Yoe8xeMf_AHzQJWhx8mXM2S3GcYdLaoAt
    RESEND_FROM=Terminus <onboarding@resend.dev>
    ```
+
+> **Important**: `COOKIE_SECURE=true` is required on Render because the frontend (Vercel) and backend (Render) are on different domains. This sets the cookie to `samesite=none; Secure`, which is necessary for cross-origin cookie acceptance. The app also uses `Authorization: Bearer` header-based auth as a fallback, so even if cookies are blocked by the browser, sessions will still work.
 
 ---
 
