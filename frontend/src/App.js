@@ -64,7 +64,7 @@ function App() {
       </div>
     );
   }
-  if (user === false) return <Login />;
+  if (user === false) return <Login onLoginSuccess={(u) => setUser(u)} />;
 
   return (
     <div className="App min-h-screen" data-testid="app-root">

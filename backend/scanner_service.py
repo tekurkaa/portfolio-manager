@@ -5,7 +5,11 @@ to surface high-probability BUY candidates BEFORE they break out.
 import os
 import asyncio
 import logging
+from pathlib import Path
 from typing import List, Dict, Any, Optional
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent / ".env")
 
 import httpx
 import yfinance as yf

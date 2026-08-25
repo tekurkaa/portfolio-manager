@@ -24,12 +24,11 @@ from history_service import portfolio_history  # noqa: E402
 from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
 from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
 from sentiment_service import analyze_symbol_public  # noqa: E402
-from auth import get_current_user, exchange_session, logout_session  # noqa: E402
+from auth import get_current_user, exchange_session, logout_session, create_dev_session  # noqa: E402
 from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
+from db import get_database  # noqa: E402
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = get_database()
 
 app = FastAPI(title="Investment Terminal API")
 api_router = APIRouter(prefix="/api")
@@ -53,9 +52,19 @@ class SessionExchange(BaseModel):
     session_id: str
 
 
+class DevLoginRequest(BaseModel):
+    email: Optional[str] = "trader@terminus.local"
+    name: Optional[str] = "Senior Trader"
+
+
 @api_router.post("/auth/callback")
 async def auth_callback(data: SessionExchange, response: Response):
     return await exchange_session(data.session_id, db, response)
+
+
+@api_router.post("/auth/dev-login")
+async def auth_dev_login(data: DevLoginRequest, response: Response):
+    return await create_dev_session(data.email or "trader@terminus.local", data.name or "Senior Trader", db, response)
 
 
 @api_router.get("/auth/me")
@@ -474,13 +483,23 @@ async def scanner_notify_route(user=Depends(current_user)):
     scan = await scan_breakouts(extras, top_n=10)
     html = build_digest_html(scan, to_email)
     result = await send_digest_email(to_email, html)
+    if result.get("sent"):
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        await db.notify_prefs.update_one(
+            {"user_id": user["user_id"]},
+            {"$set": {"last_sent_date": today_str}}
+        )
     return {**result, "candidates_count": len(scan.get("candidates", []))}
 
 
 @api_router.get("/scanner/prefs")
 async def scanner_prefs_get(user=Depends(current_user)):
     pref = await db.notify_prefs.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
-    return {"email": pref.get("email") or user["email"], "enabled": pref.get("enabled", False)}
+    return {
+        "email": pref.get("email") or user["email"],
+        "enabled": pref.get("enabled", False),
+        "last_sent_date": pref.get("last_sent_date"),
+    }
 
 
 @api_router.post("/scanner/prefs")
@@ -503,6 +522,36 @@ app.add_middleware(
 )
 
 
+async def _daily_scheduler_loop():
+    """Background task to automatically send daily breakout digests to opted-in users."""
+    while True:
+        try:
+            today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            prefs = await db.notify_prefs.find({"enabled": True}, {"_id": 0}).to_list(100)
+            for p in prefs:
+                if p.get("last_sent_date") != today_str and p.get("email"):
+                    logger.info(f"Auto-triggering daily breakout email for {p['email']}")
+                    wl = await db.watchlist.find({"user_id": p.get("user_id")}, {"_id": 0, "symbol": 1}).to_list(200)
+                    extras = [d["symbol"] for d in wl]
+                    scan = await scan_breakouts(extras, top_n=10)
+                    html = build_digest_html(scan, p["email"])
+                    res = await send_digest_email(p["email"], html)
+                    if res.get("sent"):
+                        await db.notify_prefs.update_one(
+                            {"user_id": p["user_id"]},
+                            {"$set": {"last_sent_date": today_str}}
+                        )
+        except Exception as e:
+            logger.warning(f"Daily email scheduler loop error: {e}")
+        await asyncio.sleep(3600)  # Check hourly
+
+
+@app.on_event("startup")
+async def startup_scheduler():
+    asyncio.create_task(_daily_scheduler_loop())
+
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    if hasattr(db, "client") and db.client:
+        db.client.close()

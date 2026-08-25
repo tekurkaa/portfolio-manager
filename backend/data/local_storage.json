@@ -1,0 +1,179 @@
+{
+  "users": [
+    {
+      "user_id": "user_7f21834c89b7",
+      "email": "trader@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-08-24 16:57:18.370910+00:00"
+    },
+    {
+      "user_id": "user_45b3b10a99cb",
+      "email": "atharvtekurkar@gmail.com",
+      "name": "Atharv",
+      "picture": null,
+      "created_at": "2026-08-24 17:10:00.360734+00:00"
+    }
+  ],
+  "user_sessions": [
+    {
+      "session_token": "sess_5b65f696ac35451380a2793f436eb110",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 16:57:18.371489+00:00",
+      "created_at": "2026-08-24 16:57:18.371498+00:00"
+    },
+    {
+      "session_token": "sess_2acec4dbb3c6432589277d2754222382",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 16:57:24.788256+00:00",
+      "created_at": "2026-08-24 16:57:24.788265+00:00"
+    },
+    {
+      "session_token": "sess_e28bb53134ec48aaa91eae136d2bef36",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 16:58:11.386146+00:00",
+      "created_at": "2026-08-24 16:58:11.386160+00:00"
+    },
+    {
+      "session_token": "sess_55c827f6dea647c9beb4a16c8b4a3fd1",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 16:58:18.458628+00:00",
+      "created_at": "2026-08-24 16:58:18.458652+00:00"
+    },
+    {
+      "session_token": "sess_b9020f1e271d483fa2bd724aa84a8a5b",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 17:01:29.485983+00:00",
+      "created_at": "2026-08-24 17:01:29.485993+00:00"
+    },
+    {
+      "session_token": "sess_c4d453b81a3247afac467dac85eca240",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-08-31 17:08:57.289823+00:00",
+      "created_at": "2026-08-24 17:08:57.289832+00:00"
+    },
+    {
+      "session_token": "sess_ccc3a6eeec164d37aac466d7610ec705",
+      "user_id": "user_45b3b10a99cb",
+      "expires_at": "2026-08-31 17:10:00.361181+00:00",
+      "created_at": "2026-08-24 17:10:00.361188+00:00"
+    },
+    {
+      "session_token": "sess_1ebc48ae8ab44a1f99bc475c66ee9893",
+      "user_id": "user_45b3b10a99cb",
+      "expires_at": "2026-08-31 17:10:45.645070+00:00",
+      "created_at": "2026-08-24 17:10:45.645078+00:00"
+    }
+  ],
+  "holdings": [
+    {
+      "id": "ea4ccb18-d0e0-4477-bc5e-6d26f479b6ed",
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "quantity": 25.0,
+      "avg_cost": 152.3,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791339+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "5999610c-1a4c-45d9-b1ff-66322897e129",
+      "symbol": "NVDA",
+      "name": "NVIDIA Corp.",
+      "quantity": 12.0,
+      "avg_cost": 420.5,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791733+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "ef79a65d-6a57-47a6-a06d-b670b940e372",
+      "symbol": "TSLA",
+      "name": "Tesla Inc.",
+      "quantity": 8.0,
+      "avg_cost": 245.2,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791947+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "82d7109c-afd1-4d83-a297-8554fae464f8",
+      "symbol": "MSFT",
+      "name": "Microsoft Corp.",
+      "quantity": 10.0,
+      "avg_cost": 305.1,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792165+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "69017439-f9d3-423c-9998-eda4f91f2889",
+      "symbol": "AMZN",
+      "name": "Amazon.com",
+      "quantity": 15.0,
+      "avg_cost": 132.8,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792375+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "5fc1dcb3-07be-437b-a80e-259a1371ec5c",
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc.",
+      "quantity": 18.0,
+      "avg_cost": 128.4,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792594+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "f5a3a86d-6a37-49fb-af46-2befab2ed790",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "quantity": 7.0,
+      "avg_cost": 315.6,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792814+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "5e456657-a5d6-4cc0-907c-22c3942d373a",
+      "symbol": "BTC-USD",
+      "name": "Bitcoin",
+      "quantity": 0.35,
+      "avg_cost": 42800.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793280+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "d73a8f41-f69d-4b19-aded-fb3f7dcb7043",
+      "symbol": "ETH-USD",
+      "name": "Ethereum",
+      "quantity": 4.2,
+      "avg_cost": 2350.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793646+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "6631e98b-c2ce-4320-9f6d-535fc5e551a1",
+      "symbol": "SOL-USD",
+      "name": "Solana",
+      "quantity": 30.0,
+      "avg_cost": 105.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793922+00:00",
+      "user_id": "user_7f21834c89b7"
+    }
+  ],
+  "notify_prefs": [
+    {
+      "user_id": "user_45b3b10a99cb",
+      "email": "atharvtekurkar@gmail.com",
+      "enabled": true,
+      "last_sent_date": "2026-08-25"
+    }
+  ],
+  "watchlist": []
+}

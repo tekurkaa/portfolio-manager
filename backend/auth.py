@@ -49,6 +49,22 @@ async def get_current_user(request: Request, db) -> dict:
     return user
 
 
+COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "false").lower() == "true"
+COOKIE_SAMESITE = "none" if COOKIE_SECURE else "lax"
+
+
+def _set_auth_cookie(response: Response, session_token: str):
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        max_age=SESSION_DAYS * 24 * 60 * 60,
+        path="/",
+        secure=COOKIE_SECURE,
+        httponly=True,
+        samesite=COOKIE_SAMESITE,
+    )
+
+
 async def exchange_session(session_id: str, db, response: Response) -> dict:
     """Exchange Emergent session_id → user + session_token cookie."""
     async with httpx.AsyncClient() as client:
@@ -89,20 +105,50 @@ async def exchange_session(session_id: str, db, response: Response) -> dict:
         upsert=True,
     )
 
-    response.set_cookie(
-        key="session_token",
-        value=session_token,
-        max_age=SESSION_DAYS * 24 * 60 * 60,
-        path="/",
-        secure=True,
-        httponly=True,
-        samesite="none",
+    _set_auth_cookie(response, session_token)
+    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
+
+
+async def create_dev_session(email: str, name: str, db, response: Response) -> dict:
+    """Create or login as a local user without external OAuth."""
+    email = email.strip().lower()
+    name = name.strip() or email.split("@")[0].capitalize()
+    session_token = f"sess_{uuid.uuid4().hex}"
+
+    existing = await db.users.find_one({"email": email}, {"_id": 0})
+    if existing:
+        user_id = existing["user_id"]
+        await db.users.update_one({"user_id": user_id}, {"$set": {"name": name}})
+        picture = existing.get("picture")
+    else:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        picture = None
+        await db.users.insert_one({
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "created_at": datetime.now(timezone.utc),
+        })
+
+    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)
+    await db.user_sessions.update_one(
+        {"session_token": session_token},
+        {"$set": {
+            "user_id": user_id,
+            "session_token": session_token,
+            "expires_at": expires_at,
+            "created_at": datetime.now(timezone.utc),
+        }},
+        upsert=True,
     )
-    return {"user_id": user_id, "email": email, "name": name, "picture": picture}
+
+    _set_auth_cookie(response, session_token)
+    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
 
 
 async def logout_session(request: Request, db, response: Response):
     token = _extract_token(request)
     if token:
         await db.user_sessions.delete_one({"session_token": token})
-    response.delete_cookie("session_token", path="/", samesite="none", secure=True)
+    response.delete_cookie("session_token", path="/", samesite=COOKIE_SAMESITE, secure=COOKIE_SECURE)
