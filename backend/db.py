@@ -7,7 +7,7 @@ import json
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from motor.motor_asyncio import AsyncIOMotorClient
 import pymongo
 
@@ -96,9 +96,12 @@ class LocalCollection:
 
     async def insert_one(self, doc: Dict[str, Any]) -> InsertOneResult:
         stored = dict(doc)
+        if "_id" not in stored and "id" not in stored:
+            import uuid
+            stored["_id"] = str(uuid.uuid4())
         self.db._get_collection_data(self.name).append(stored)
         self.db._save()
-        return InsertOneResult(stored.get("id") or stored.get("_id"))
+        return InsertOneResult(stored.get("_id") or stored.get("id"))
 
     async def insert_many(self, docs: List[Dict[str, Any]]) -> None:
         for doc in docs:
@@ -119,7 +122,7 @@ class LocalCollection:
             new_doc.update(set_vals)
             items.append(new_doc)
             self.db._save()
-            return UpdateResult(matched_count=0, modified_count=1, upserted_id=new_doc.get("id"))
+            return UpdateResult(matched_count=0, modified_count=1, upserted_id=new_doc.get("id") or new_doc.get("_id"))
         return UpdateResult(matched_count=0, modified_count=0)
 
     async def delete_one(self, filter_dict: Dict[str, Any]) -> DeleteResult:
@@ -142,15 +145,15 @@ class LocalCollection:
 
 
 class LocalDatabase:
-    def __init__(self, filepath: Path = LOCAL_DB_FILE):
-        self._filepath = filepath
+    def __init__(self, filepath: Union[str, Path] = LOCAL_DB_FILE):
+        self._filepath = Path(filepath)
         self._data: Dict[str, List[Dict[str, Any]]] = {}
         self._collections: Dict[str, LocalCollection] = {}
         self._load()
 
     def _load(self):
         try:
-            DATA_DIR.mkdir(parents=True, exist_ok=True)
+            self._filepath.parent.mkdir(parents=True, exist_ok=True)
             if self._filepath.exists():
                 with open(self._filepath, "r", encoding="utf-8") as f:
                     self._data = json.load(f)
@@ -162,7 +165,7 @@ class LocalDatabase:
 
     def _save(self):
         try:
-            DATA_DIR.mkdir(parents=True, exist_ok=True)
+            self._filepath.parent.mkdir(parents=True, exist_ok=True)
             with open(self._filepath, "w", encoding="utf-8") as f:
                 json.dump(self._data, f, indent=2, default=str)
         except Exception as e:
