@@ -1,6 +1,19 @@
 import axios from "axios";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+// Production Render backend URL — hardcoded as fallback if env var not set
+const RENDER_BACKEND = "https://portfolio-manager-2yyr.onrender.com";
+const ENV_BACKEND = process.env.REACT_APP_BACKEND_URL;
+// If the env var is set and isn't localhost, use it. If we're not on localhost, use Render.
+const isLocal = typeof window !== "undefined" && (
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+);
+const BACKEND_URL = ENV_BACKEND && !ENV_BACKEND.includes("localhost")
+  ? ENV_BACKEND
+  : isLocal
+  ? (ENV_BACKEND || "http://localhost:8000")
+  : RENDER_BACKEND;
+
 export const API = `${BACKEND_URL.replace(/\/$/, "")}/api`;
 
 export const api = axios.create({ baseURL: API, timeout: 90000, withCredentials: true });
@@ -53,3 +66,4 @@ export const timeAgo = (iso) => {
   const days = Math.floor(hrs / 24);
   return `${days}d ago`;
 };
+
