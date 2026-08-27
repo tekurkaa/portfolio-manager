@@ -74,17 +74,19 @@ async def exchange_session(session_id: str, db, response: Response) -> dict:
     if r.status_code != 200:
         raise HTTPException(status_code=401, detail=f"Session exchange failed: {r.status_code}")
     data = r.json()
-    email = data.get("email")
-    name = data.get("name")
+    raw_email = data.get("email") or ""
+    email = raw_email.strip().lower()
+    name = (data.get("name") or "").strip() or email.split("@")[0].capitalize()
     picture = data.get("picture")
     session_token = data.get("session_token")
     if not (email and session_token):
         raise HTTPException(status_code=401, detail="Invalid session data")
 
+    # Match user case-insensitively so accounts are never duplicated or reset
     existing = await db.users.find_one({"email": email}, {"_id": 0})
     if existing:
         user_id = existing["user_id"]
-        await db.users.update_one({"user_id": user_id}, {"$set": {"name": name, "picture": picture}})
+        await db.users.update_one({"user_id": user_id}, {"$set": {"name": name, "picture": picture, "email": email}})
     else:
         user_id = f"user_{uuid.uuid4().hex[:12]}"
         await db.users.insert_one({

@@ -65,58 +65,52 @@
       "created_at": "2026-08-24 17:10:45.645078+00:00"
     },
     {
-      "session_token": "sess_b70ee6193add49c8b325a1c26b02dea7",
+      "session_token": "sess_31fb7ed8187748a1b72869df419b4a24",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:28:28.948694+00:00",
-      "created_at": "2026-08-25 02:28:28.948706+00:00"
+      "expires_at": "2026-09-01 03:20:49.696535+00:00",
+      "created_at": "2026-08-25 03:20:49.696578+00:00"
     },
     {
-      "session_token": "sess_f59ea1d965354edd87cca873b9bb2d39",
+      "session_token": "sess_2fca9158d9fb45e3b4f290597be2c7a1",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:28:29.432018+00:00",
-      "created_at": "2026-08-25 02:28:29.432028+00:00"
+      "expires_at": "2026-09-01 03:27:27.031640+00:00",
+      "created_at": "2026-08-25 03:27:27.031648+00:00"
     },
     {
-      "session_token": "sess_6c2d7faf458e4656ba22ef89ac15b498",
+      "session_token": "sess_5dee4a48410548949a68732fdc1f45af",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:28:30.374757+00:00",
-      "created_at": "2026-08-25 02:28:30.374765+00:00"
+      "expires_at": "2026-09-01 03:38:39.654024+00:00",
+      "created_at": "2026-08-25 03:38:39.654037+00:00"
     },
     {
-      "session_token": "sess_816d78a29ea742e19a15b7272be09360",
+      "session_token": "sess_d2a3a6dfebc0497e93aafb02273586b9",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:08.846181+00:00",
-      "created_at": "2026-08-25 02:29:08.846196+00:00"
+      "expires_at": "2026-09-01 03:38:40.093549+00:00",
+      "created_at": "2026-08-25 03:38:40.093560+00:00"
     },
     {
-      "session_token": "sess_ab977397644c409c956cb1319a85f40a",
+      "session_token": "sess_16ed29ea4ed34a99bb78c8fd947c9f7a",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:09.282195+00:00",
-      "created_at": "2026-08-25 02:29:09.282206+00:00"
+      "expires_at": "2026-09-01 03:38:40.758785+00:00",
+      "created_at": "2026-08-25 03:38:40.758795+00:00"
     },
     {
-      "session_token": "sess_841339e6a7e24804962f5c695be5dc4d",
+      "session_token": "sess_6c70bb0634984028b021bc8762ec244b",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:09.931355+00:00",
-      "created_at": "2026-08-25 02:29:09.931364+00:00"
+      "expires_at": "2026-09-03 02:24:35.064594+00:00",
+      "created_at": "2026-08-27 02:24:35.064605+00:00"
     },
     {
-      "session_token": "sess_87e452401520406c9a1927e4dc99b1fa",
+      "session_token": "sess_f58db2dfe64e4f689dc2934fe23acdeb",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:41.451629+00:00",
-      "created_at": "2026-08-25 02:29:41.451640+00:00"
+      "expires_at": "2026-09-03 02:24:35.724120+00:00",
+      "created_at": "2026-08-27 02:24:35.724131+00:00"
     },
     {
-      "session_token": "sess_6c792f455d9b41ad8c2b02926b64be27",
+      "session_token": "sess_a87bb34dedff44aa93610e8f2d10ccb6",
       "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:41.882450+00:00",
-      "created_at": "2026-08-25 02:29:41.882463+00:00"
-    },
-    {
-      "session_token": "sess_941129dea0a74d8b9a46de585cdb4921",
-      "user_id": "user_7f21834c89b7",
-      "expires_at": "2026-09-01 02:29:42.522252+00:00",
-      "created_at": "2026-08-25 02:29:42.522260+00:00"
+      "expires_at": "2026-09-03 02:24:37.781123+00:00",
+      "created_at": "2026-08-27 02:24:37.781132+00:00"
     }
   ],
   "holdings": [
@@ -219,6 +213,146 @@
       "asset_type": "crypto",
       "created_at": "2026-08-24T16:57:24.793922+00:00",
       "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "f192a020-9c6f-4c6c-b65a-86fdb3c6fa66",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "created_at": "2026-08-25T03:20:49.705989+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "52a0dba0-9869-497c-af1e-5d5e3bc3c687",
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "quantity": 5.0,
+      "avg_cost": 800.0,
+      "asset_type": "stock",
+      "created_at": "2026-08-25T03:27:27.038163+00:00",
+      "user_id": "user_7f21834c89b7"
+    },
+    {
+      "id": "8ef48130-7422-4310-9dd1-738e9cd1b548",
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "quantity": 25.0,
+      "avg_cost": 152.3,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791339+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "b2a455ba-0b80-45f4-9820-4ae6d517d0b7",
+      "symbol": "NVDA",
+      "name": "NVIDIA Corp.",
+      "quantity": 12.0,
+      "avg_cost": 420.5,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791733+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "e24d9ad6-53ef-4819-9c9b-d13873b53899",
+      "symbol": "TSLA",
+      "name": "Tesla Inc.",
+      "quantity": 8.0,
+      "avg_cost": 245.2,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.791947+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "9820bf10-1055-40f5-98c9-d93d0871f95c",
+      "symbol": "MSFT",
+      "name": "Microsoft Corp.",
+      "quantity": 10.0,
+      "avg_cost": 305.1,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792165+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "ee69ad38-aa5e-41e8-9701-04b8c57698c5",
+      "symbol": "AMZN",
+      "name": "Amazon.com",
+      "quantity": 15.0,
+      "avg_cost": 132.8,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792375+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "f028d710-f899-4366-91cb-ed04b3c98768",
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc.",
+      "quantity": 18.0,
+      "avg_cost": 128.4,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792594+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "acc6c44d-3136-44d2-af89-8a4dac614edb",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "quantity": 7.0,
+      "avg_cost": 315.6,
+      "asset_type": "stock",
+      "created_at": "2026-08-24T16:57:24.792814+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "aa7349c9-0a2f-46cc-a5ca-81ec345ea59a",
+      "symbol": "BTC-USD",
+      "name": "Bitcoin",
+      "quantity": 0.35,
+      "avg_cost": 42800.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793280+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "96e2e584-9c74-45c3-9e6c-3ffe13fff5dc",
+      "symbol": "ETH-USD",
+      "name": "Ethereum",
+      "quantity": 4.2,
+      "avg_cost": 2350.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793646+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "e2db6a40-7959-4312-a798-edd305d8f97d",
+      "symbol": "SOL-USD",
+      "name": "Solana",
+      "quantity": 30.0,
+      "avg_cost": 105.0,
+      "asset_type": "crypto",
+      "created_at": "2026-08-24T16:57:24.793922+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "b53dff53-f4ec-44d2-850c-8023d30de0bd",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "created_at": "2026-08-25T03:20:49.705989+00:00",
+      "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "227518f9-fcc4-4769-a291-697a35738638",
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "quantity": 5.0,
+      "avg_cost": 800.0,
+      "asset_type": "stock",
+      "created_at": "2026-08-25T03:27:27.038163+00:00",
+      "user_id": "user_45b3b10a99cb"
     }
   ],
   "notify_prefs": [

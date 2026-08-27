@@ -14,6 +14,10 @@ export default function AuthCallback({ onDone }) {
     api.post("/auth/callback", { session_id: sid })
       .then((r) => {
         if (r.data?.session_token) setToken(r.data.session_token);
+        if (r.data?.email) {
+          localStorage.setItem("pm_last_email", r.data.email);
+          localStorage.setItem("pm_last_auth_provider", "google");
+        }
         window.history.replaceState(null, "", window.location.pathname);
         onDone(true, r.data);
       })

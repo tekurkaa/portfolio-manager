@@ -113,7 +113,8 @@ def _serialize_holding(h: dict) -> dict:
 
 @api_router.get("/health")
 async def health():
-    return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
+    engine = getattr(db, "_engine_type", "unknown")
+    return {"status": "ok", "db_engine": engine, "time": datetime.now(timezone.utc).isoformat()}
 
 
 @api_router.get("/portfolio/holdings")

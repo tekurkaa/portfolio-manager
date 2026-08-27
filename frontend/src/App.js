@@ -40,9 +40,23 @@ function App() {
   useEffect(() => {
     if (user === "callback") return; // AuthCallback handles it
     if (user && user !== null) return;
-    api.get("/auth/me")
-      .then((r) => setUser(r.data))
-      .catch(() => setUser(false));
+    
+    let cancelled = false;
+    const verifyAuth = async (retries = 2) => {
+      try {
+        const r = await api.get("/auth/me");
+        if (!cancelled) setUser(r.data);
+      } catch (err) {
+        // If we have a token and it was a network/500 error (cold start), retry once
+        if (retries > 0 && getToken() && (err.code === "ECONNABORTED" || !err.response || err.response.status >= 500)) {
+          setTimeout(() => { if (!cancelled) verifyAuth(retries - 1); }, 2500);
+        } else {
+          if (!cancelled) setUser(false);
+        }
+      }
+    };
+    verifyAuth();
+    return () => { cancelled = true; };
   }, []);
 
   const handleAuthDone = (ok, data) => {

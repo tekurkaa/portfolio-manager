@@ -65,7 +65,12 @@ class LocalCollection:
         for k, v in filter_dict.items():
             if k == "_id":
                 continue
-            if doc.get(k) != v:
+            doc_val = doc.get(k)
+            # Case-insensitive comparison for emails
+            if k == "email" and isinstance(doc_val, str) and isinstance(v, str):
+                if doc_val.strip().lower() != v.strip().lower():
+                    return False
+            elif doc_val != v:
                 return False
         return True
 
@@ -189,16 +194,22 @@ def get_database():
     """Initializes and returns the database: Mongo if reachable, otherwise persistent local store."""
     mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
     db_name = os.environ.get("DB_NAME", "portfolio_manager")
+    is_remote = "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
+    probe_timeout = 5000 if is_remote else 1200
 
     try:
         # Quick sync probe to test if MongoDB is reachable
-        sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=1000)
+        sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=probe_timeout)
         sync_client.server_info()  # Will throw ServerSelectionTimeoutError if not reachable
         sync_client.close()
 
         logger.info(f"Connected to MongoDB at {mongo_url} ({db_name})")
-        async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=2000)
-        return async_client[db_name]
+        async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=probe_timeout)
+        db_instance = async_client[db_name]
+        db_instance._engine_type = "mongodb"
+        return db_instance
     except Exception as e:
         logger.info(f"MongoDB not available ({e}). Using embedded persistent local database at {LOCAL_DB_FILE}")
-        return LocalDatabase(LOCAL_DB_FILE)
+        db_instance = LocalDatabase(LOCAL_DB_FILE)
+        db_instance._engine_type = "local_json"
+        return db_instance
