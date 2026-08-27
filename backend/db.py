@@ -218,40 +218,52 @@ def get_database():
 
     if is_remote:
         # --- Production / Atlas mode ---
-        # Retry aggressively: we must use MongoDB so data survives restarts.
-        timeouts = [8000, 15000, 25000]  # ms — 3 attempts, ~48s total
+        # Retry aggressively using two TLS strategies:
+        #   Strategy A: certifi CA bundle (secure, preferred)
+        #   Strategy B: tlsAllowInvalidCertificates (fallback if CA bundle fails)
+        # We must use MongoDB so data survives Render restarts.
+        strategies = [
+            {"tlsCAFile": certifi.where(), "label": "certifi CA"},
+            {"tlsAllowInvalidCertificates": True, "label": "tlsInsecure"},
+        ]
+        timeouts = [10000, 20000, 25000]
         last_err = None
-        for attempt, timeout_ms in enumerate(timeouts, start=1):
-            try:
-                logger.info(f"Connecting to MongoDB Atlas (attempt {attempt}/{len(timeouts)}, timeout={timeout_ms}ms)...")
-                sync_client = pymongo.MongoClient(
-                    mongo_url,
-                    serverSelectionTimeoutMS=timeout_ms,
-                    tlsCAFile=certifi.where(),
-                )
-                sync_client.server_info()
-                sync_client.close()
-                async_client = AsyncIOMotorClient(
-                    mongo_url,
-                    serverSelectionTimeoutMS=timeout_ms,
-                    tlsCAFile=certifi.where(),
-                )
-                db_instance = async_client[db_name]
-                db_instance._engine_type = "mongodb"
-                logger.info(f"✓ Connected to MongoDB Atlas ({db_name}) on attempt {attempt}")
-                return db_instance
-            except Exception as e:
-                last_err = e
-                logger.warning(f"Atlas connection attempt {attempt} failed: {e}")
-                if attempt < len(timeouts):
-                    time.sleep(2)  # brief pause before retry
 
-        # All retries exhausted — crash loudly so Render restarts the dyno
-        # rather than silently losing all user data to ephemeral local JSON.
+        for strat in strategies:
+            label = strat.pop("label")
+            for attempt, timeout_ms in enumerate(timeouts, start=1):
+                try:
+                    logger.info(
+                        f"Connecting to MongoDB Atlas [strategy={label}, "
+                        f"attempt={attempt}/{len(timeouts)}, timeout={timeout_ms}ms]..."
+                    )
+                    sync_client = pymongo.MongoClient(
+                        mongo_url,
+                        serverSelectionTimeoutMS=timeout_ms,
+                        **strat,
+                    )
+                    sync_client.server_info()
+                    sync_client.close()
+                    async_client = AsyncIOMotorClient(
+                        mongo_url,
+                        serverSelectionTimeoutMS=timeout_ms,
+                        **strat,
+                    )
+                    db_instance = async_client[db_name]
+                    db_instance._engine_type = "mongodb"
+                    logger.info(f"✓ Connected to MongoDB Atlas ({db_name}) via {label} on attempt {attempt}")
+                    return db_instance
+                except Exception as e:
+                    last_err = e
+                    logger.warning(f"Atlas [{label}] attempt {attempt} failed: {type(e).__name__}: {e}")
+                    if attempt < len(timeouts):
+                        time.sleep(2)
+
+        # All strategies exhausted
         raise RuntimeError(
-            f"FATAL: Could not connect to MongoDB Atlas after {len(timeouts)} attempts. "
+            f"FATAL: Could not connect to MongoDB Atlas after all strategies. "
             f"Last error: {last_err}. "
-            "Check MONGO_URL environment variable on Render and Atlas network access list."
+            "Check MONGO_URL on Render and Atlas Network Access (allow 0.0.0.0/0)."
         )
     else:
         # --- Local dev mode ---
