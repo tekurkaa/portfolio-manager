@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 from motor.motor_asyncio import AsyncIOMotorClient
+import certifi
 import pymongo
 
 logger = logging.getLogger(__name__)
@@ -223,10 +224,18 @@ def get_database():
         for attempt, timeout_ms in enumerate(timeouts, start=1):
             try:
                 logger.info(f"Connecting to MongoDB Atlas (attempt {attempt}/{len(timeouts)}, timeout={timeout_ms}ms)...")
-                sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=timeout_ms)
+                sync_client = pymongo.MongoClient(
+                    mongo_url,
+                    serverSelectionTimeoutMS=timeout_ms,
+                    tlsCAFile=certifi.where(),
+                )
                 sync_client.server_info()
                 sync_client.close()
-                async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=timeout_ms)
+                async_client = AsyncIOMotorClient(
+                    mongo_url,
+                    serverSelectionTimeoutMS=timeout_ms,
+                    tlsCAFile=certifi.where(),
+                )
                 db_instance = async_client[db_name]
                 db_instance._engine_type = "mongodb"
                 logger.info(f"✓ Connected to MongoDB Atlas ({db_name}) on attempt {attempt}")
@@ -248,10 +257,18 @@ def get_database():
         # --- Local dev mode ---
         # Quick probe, fall back gracefully to local JSON.
         try:
-            sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=1200)
+            sync_client = pymongo.MongoClient(
+                mongo_url,
+                serverSelectionTimeoutMS=1200,
+                tlsCAFile=certifi.where(),
+            )
             sync_client.server_info()
             sync_client.close()
-            async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=1200)
+            async_client = AsyncIOMotorClient(
+                mongo_url,
+                serverSelectionTimeoutMS=1200,
+                tlsCAFile=certifi.where(),
+            )
             db_instance = async_client[db_name]
             db_instance._engine_type = "mongodb"
             logger.info(f"Connected to local MongoDB ({db_name})")
