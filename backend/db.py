@@ -1,11 +1,16 @@
 """Dual-mode Database Adapter: Connects to MongoDB if available,
 otherwise falls back automatically to a persistent local JSON document store.
 Ensures zero-friction local development without hanging on connection timeouts.
+
+IMPORTANT: If MONGO_URL points to a remote Atlas cluster, MongoDB is ALWAYS used
+(with retries). Local JSON is only ever used for local dev (no MONGO_URL set or
+MONGO_URL points to localhost/127.0.0.1).
 """
 import os
 import json
 import asyncio
 import logging
+import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -190,26 +195,69 @@ class LocalDatabase:
         return getattr(self, name)
 
 
+def _is_remote_mongo(mongo_url: str) -> bool:
+    """Returns True if the URL points to a remote (non-localhost) MongoDB."""
+    return "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
+
+
 def get_database():
-    """Initializes and returns the database: Mongo if reachable, otherwise persistent local store."""
+    """Initializes and returns the database.
+
+    Strategy:
+    - If MONGO_URL is set and points to a remote Atlas cluster, ALWAYS connect
+      to MongoDB — retrying up to 3 times with increasing timeouts. Never
+      silently fall back to local JSON when Atlas is the intended backend, because
+      that local JSON is ephemeral on Render and causes data loss on restarts.
+    - If MONGO_URL is not set or points to localhost, try MongoDB quickly and
+      fall back to the persistent local JSON store for local dev convenience.
+    """
     mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
     db_name = os.environ.get("DB_NAME", "portfolio_manager")
-    is_remote = "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
-    probe_timeout = 5000 if is_remote else 1200
+    is_remote = _is_remote_mongo(mongo_url)
 
-    try:
-        # Quick sync probe to test if MongoDB is reachable
-        sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=probe_timeout)
-        sync_client.server_info()  # Will throw ServerSelectionTimeoutError if not reachable
-        sync_client.close()
+    if is_remote:
+        # --- Production / Atlas mode ---
+        # Retry aggressively: we must use MongoDB so data survives restarts.
+        timeouts = [8000, 15000, 25000]  # ms — 3 attempts, ~48s total
+        last_err = None
+        for attempt, timeout_ms in enumerate(timeouts, start=1):
+            try:
+                logger.info(f"Connecting to MongoDB Atlas (attempt {attempt}/{len(timeouts)}, timeout={timeout_ms}ms)...")
+                sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=timeout_ms)
+                sync_client.server_info()
+                sync_client.close()
+                async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=timeout_ms)
+                db_instance = async_client[db_name]
+                db_instance._engine_type = "mongodb"
+                logger.info(f"✓ Connected to MongoDB Atlas ({db_name}) on attempt {attempt}")
+                return db_instance
+            except Exception as e:
+                last_err = e
+                logger.warning(f"Atlas connection attempt {attempt} failed: {e}")
+                if attempt < len(timeouts):
+                    time.sleep(2)  # brief pause before retry
 
-        logger.info(f"Connected to MongoDB at {mongo_url} ({db_name})")
-        async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=probe_timeout)
-        db_instance = async_client[db_name]
-        db_instance._engine_type = "mongodb"
-        return db_instance
-    except Exception as e:
-        logger.info(f"MongoDB not available ({e}). Using embedded persistent local database at {LOCAL_DB_FILE}")
-        db_instance = LocalDatabase(LOCAL_DB_FILE)
-        db_instance._engine_type = "local_json"
-        return db_instance
+        # All retries exhausted — crash loudly so Render restarts the dyno
+        # rather than silently losing all user data to ephemeral local JSON.
+        raise RuntimeError(
+            f"FATAL: Could not connect to MongoDB Atlas after {len(timeouts)} attempts. "
+            f"Last error: {last_err}. "
+            "Check MONGO_URL environment variable on Render and Atlas network access list."
+        )
+    else:
+        # --- Local dev mode ---
+        # Quick probe, fall back gracefully to local JSON.
+        try:
+            sync_client = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=1200)
+            sync_client.server_info()
+            sync_client.close()
+            async_client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=1200)
+            db_instance = async_client[db_name]
+            db_instance._engine_type = "mongodb"
+            logger.info(f"Connected to local MongoDB ({db_name})")
+            return db_instance
+        except Exception as e:
+            logger.info(f"Local MongoDB not available ({e}). Using embedded persistent local database at {LOCAL_DB_FILE}")
+            db_instance = LocalDatabase(LOCAL_DB_FILE)
+            db_instance._engine_type = "local_json"
+            return db_instance

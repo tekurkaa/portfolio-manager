@@ -114,7 +114,22 @@ def _serialize_holding(h: dict) -> dict:
 @api_router.get("/health")
 async def health():
     engine = getattr(db, "_engine_type", "unknown")
-    return {"status": "ok", "db_engine": engine, "time": datetime.now(timezone.utc).isoformat()}
+    # Show a masked version of the Mongo URL so we can debug misconfiguration
+    raw_url = os.environ.get("MONGO_URL", "not_set")
+    if "@" in raw_url:
+        # Atlas URL format: mongodb+srv://user:pass@cluster... → show only host
+        host_part = raw_url.split("@")[-1].split("/")[0]
+        masked_url = f"mongodb+srv://***@{host_part}"
+    elif raw_url == "not_set":
+        masked_url = "NOT SET (will use localhost default)"
+    else:
+        masked_url = raw_url  # localhost — nothing to hide
+    return {
+        "status": "ok",
+        "db_engine": engine,
+        "mongo_url_configured": masked_url,
+        "time": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 @api_router.get("/portfolio/holdings")
