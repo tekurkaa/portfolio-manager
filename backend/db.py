@@ -1,21 +1,20 @@
-"""Dual-mode Database Adapter: Connects to MongoDB if available,
-otherwise falls back automatically to a persistent local JSON document store.
-Ensures zero-friction local development without hanging on connection timeouts.
-
-IMPORTANT: If MONGO_URL points to a remote Atlas cluster, MongoDB is ALWAYS used
-(with retries). Local JSON is only ever used for local dev (no MONGO_URL set or
-MONGO_URL points to localhost/127.0.0.1).
+"""Triple-mode Database Adapter:
+  1. Atlas Data API (HTTPS/port 443) — preferred for production on Render.
+     Configured via ATLAS_APP_ID + ATLAS_DATA_API_KEY env vars.
+     Bypasses all port-27017 TLS wire-protocol issues.
+  2. PyMongo / Motor (port 27017) — used when MONGO_URL is set.
+     Works locally or when wire-protocol TLS is not an issue.
+  3. Local JSON file — fallback for zero-config local development.
 """
 import os
+import re
 import json
 import asyncio
 import logging
 import time
+import uuid
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
-from motor.motor_asyncio import AsyncIOMotorClient
-import certifi
-import pymongo
 
 logger = logging.getLogger(__name__)
 
@@ -23,25 +22,9 @@ DATA_DIR = Path(__file__).parent / "data"
 LOCAL_DB_FILE = DATA_DIR / "local_storage.json"
 
 
-class LocalCursor:
-    def __init__(self, items: List[Dict[str, Any]], projection: Optional[Dict[str, Any]] = None):
-        self._items = items
-        self._projection = projection or {}
-
-    async def to_list(self, length: int = 1000) -> List[Dict[str, Any]]:
-        result = []
-        for doc in self._items[:length]:
-            copied = dict(doc)
-            if self._projection:
-                if self._projection.get("_id") == 0:
-                    copied.pop("_id", None)
-                # Check if positive projection (e.g. {"symbol": 1})
-                pos_keys = [k for k, v in self._projection.items() if v == 1]
-                if pos_keys:
-                    copied = {k: copied[k] for k in pos_keys if k in copied}
-            result.append(copied)
-        return result
-
+# ---------------------------------------------------------------------------
+# Shared result types
+# ---------------------------------------------------------------------------
 
 class UpdateResult:
     def __init__(self, matched_count: int = 0, modified_count: int = 0, upserted_id: Any = None):
@@ -60,6 +43,182 @@ class InsertOneResult:
         self.inserted_id = inserted_id
 
 
+# ---------------------------------------------------------------------------
+# Mode 1: MongoDB Atlas Data API (HTTPS – no wire-protocol TLS)
+# ---------------------------------------------------------------------------
+
+class DataAPICursor:
+    """Lazy cursor that fetches on to_list()."""
+    def __init__(self, collection: "DataAPICollection", filter_dict: dict, projection: Optional[dict]):
+        self._collection = collection
+        self._filter = filter_dict
+        self._projection = projection
+
+    async def to_list(self, length: int = 1000) -> List[Dict[str, Any]]:
+        payload: Dict[str, Any] = {"filter": self._collection._normalize_filter(self._filter), "limit": length}
+        if self._projection:
+            payload["projection"] = self._projection
+        result = await self._collection._post("find", payload)
+        docs = result.get("documents", [])
+        return [self._fix_id(d) for d in docs]
+
+    @staticmethod
+    def _fix_id(doc: dict) -> dict:
+        if "_id" in doc and isinstance(doc["_id"], dict):
+            doc["_id"] = str(doc["_id"].get("$oid", ""))
+        return doc
+
+
+class DataAPICollection:
+    """MongoDB Atlas Data API collection — communicates over HTTPS."""
+
+    def __init__(self, name: str, db: "DataAPIDatabase"):
+        self.name = name
+        self.db = db
+
+    # --- helpers ---
+
+    def _normalize_filter(self, filter_dict: dict) -> dict:
+        """Make email comparisons case-insensitive via MongoDB $regex."""
+        if not filter_dict:
+            return {}
+        normalized = dict(filter_dict)
+        if "email" in normalized and isinstance(normalized["email"], str):
+            email = normalized["email"].strip().lower()
+            normalized["email"] = {"$regex": f"^{re.escape(email)}$", "$options": "i"}
+        return normalized
+
+    async def _post(self, action: str, payload: dict) -> dict:
+        import httpx
+        url = f"{self.db.base_url}/action/{action}"
+        full_payload = {
+            "dataSource": self.db.data_source,
+            "database": self.db.db_name,
+            "collection": self.name,
+            **payload,
+        }
+        async with httpx.AsyncClient(headers=self.db.headers, timeout=30.0) as client:
+            r = await client.post(url, json=full_payload)
+            r.raise_for_status()
+            return r.json()
+
+    @staticmethod
+    def _fix_id(doc: dict) -> dict:
+        if doc and "_id" in doc and isinstance(doc["_id"], dict):
+            doc["_id"] = str(doc["_id"].get("$oid", ""))
+        return doc
+
+    # --- collection interface (matches LocalCollection / Motor) ---
+
+    async def find_one(self, filter_dict: Optional[dict] = None, projection: Optional[dict] = None) -> Optional[dict]:
+        payload: Dict[str, Any] = {"filter": self._normalize_filter(filter_dict or {})}
+        if projection:
+            payload["projection"] = projection
+        result = await self._post("findOne", payload)
+        return self._fix_id(result.get("document")) if result.get("document") else None
+
+    def find(self, filter_dict: Optional[dict] = None, projection: Optional[dict] = None) -> DataAPICursor:
+        return DataAPICursor(self, filter_dict or {}, projection)
+
+    async def insert_one(self, doc: dict) -> InsertOneResult:
+        stored = dict(doc)
+        if "_id" not in stored and "id" not in stored:
+            stored["id"] = str(uuid.uuid4())
+        result = await self._post("insertOne", {"document": stored})
+        return InsertOneResult(result.get("insertedId") or stored.get("id"))
+
+    async def insert_many(self, docs: List[dict]) -> None:
+        await self._post("insertMany", {"documents": docs})
+
+    async def update_one(self, filter_dict: dict, update: dict, upsert: bool = False) -> UpdateResult:
+        result = await self._post("updateOne", {
+            "filter": self._normalize_filter(filter_dict),
+            "update": update,
+            "upsert": upsert,
+        })
+        return UpdateResult(
+            matched_count=result.get("matchedCount", 0),
+            modified_count=result.get("modifiedCount", 0),
+            upserted_id=result.get("upsertedId"),
+        )
+
+    async def delete_one(self, filter_dict: dict) -> DeleteResult:
+        result = await self._post("deleteOne", {"filter": self._normalize_filter(filter_dict)})
+        return DeleteResult(deleted_count=result.get("deletedCount", 0))
+
+    async def delete_many(self, filter_dict: dict) -> DeleteResult:
+        result = await self._post("deleteMany", {"filter": self._normalize_filter(filter_dict)})
+        return DeleteResult(deleted_count=result.get("deletedCount", 0))
+
+
+class DataAPIDatabase:
+    """Thin wrapper that holds connection config and vends DataAPICollection instances."""
+
+    def __init__(self, app_id: str, api_key: str, db_name: str = "portfolio_manager", data_source: str = "Cluster0"):
+        self.base_url = f"https://data.mongodb-api.com/app/{app_id}/endpoint/data/v1"
+        self.headers = {"Content-Type": "application/json", "apiKey": api_key}
+        self.db_name = db_name
+        self.data_source = data_source
+        self._engine_type = "data_api"
+        self._collections: Dict[str, DataAPICollection] = {}
+
+    def __getattr__(self, name: str) -> DataAPICollection:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        if name not in self._collections:
+            self._collections[name] = DataAPICollection(name, self)
+        return self._collections[name]
+
+    def __getitem__(self, name: str) -> DataAPICollection:
+        return getattr(self, name)
+
+    def probe(self) -> bool:
+        """Synchronous probe: sends a findOne to a throwaway collection."""
+        import httpx
+        try:
+            payload = {
+                "dataSource": self.data_source,
+                "database": self.db_name,
+                "collection": "_probe",
+                "filter": {},
+            }
+            r = httpx.post(
+                f"{self.base_url}/action/findOne",
+                json=payload,
+                headers=self.headers,
+                timeout=15.0,
+            )
+            # 200 = found or not found; 401 = bad API key; 404 = bad app_id
+            logger.info(f"Atlas Data API probe → HTTP {r.status_code}")
+            return r.status_code < 500
+        except Exception as e:
+            logger.warning(f"Atlas Data API probe failed: {e}")
+            return False
+
+
+# ---------------------------------------------------------------------------
+# Mode 3: Local JSON store (development / last-resort fallback)
+# ---------------------------------------------------------------------------
+
+class LocalCursor:
+    def __init__(self, items: List[Dict[str, Any]], projection: Optional[Dict[str, Any]] = None):
+        self._items = items
+        self._projection = projection or {}
+
+    async def to_list(self, length: int = 1000) -> List[Dict[str, Any]]:
+        result = []
+        for doc in self._items[:length]:
+            copied = dict(doc)
+            if self._projection:
+                if self._projection.get("_id") == 0:
+                    copied.pop("_id", None)
+                pos_keys = [k for k, v in self._projection.items() if v == 1]
+                if pos_keys:
+                    copied = {k: copied[k] for k in pos_keys if k in copied}
+            result.append(copied)
+        return result
+
+
 class LocalCollection:
     def __init__(self, name: str, db_adapter: "LocalDatabase"):
         self.name = name
@@ -72,7 +231,6 @@ class LocalCollection:
             if k == "_id":
                 continue
             doc_val = doc.get(k)
-            # Case-insensitive comparison for emails
             if k == "email" and isinstance(doc_val, str) and isinstance(v, str):
                 if doc_val.strip().lower() != v.strip().lower():
                     return False
@@ -108,7 +266,6 @@ class LocalCollection:
     async def insert_one(self, doc: Dict[str, Any]) -> InsertOneResult:
         stored = dict(doc)
         if "_id" not in stored and "id" not in stored:
-            import uuid
             stored["_id"] = str(uuid.uuid4())
         self.db._get_collection_data(self.name).append(stored)
         self.db._save()
@@ -123,14 +280,12 @@ class LocalCollection:
         items = self.db._get_collection_data(self.name)
         for doc in items:
             if self._matches(doc, filter_dict):
-                set_vals = update.get("$set", {})
-                doc.update(set_vals)
+                doc.update(update.get("$set", {}))
                 self.db._save()
                 return UpdateResult(matched_count=1, modified_count=1)
         if upsert:
             new_doc = dict(filter_dict)
-            set_vals = update.get("$set", {})
-            new_doc.update(set_vals)
+            new_doc.update(update.get("$set", {}))
             items.append(new_doc)
             self.db._save()
             return UpdateResult(matched_count=0, modified_count=1, upserted_id=new_doc.get("id") or new_doc.get("_id"))
@@ -196,97 +351,89 @@ class LocalDatabase:
         return getattr(self, name)
 
 
-def _is_remote_mongo(mongo_url: str) -> bool:
-    """Returns True if the URL points to a remote (non-localhost) MongoDB."""
-    return "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
-
+# ---------------------------------------------------------------------------
+# Factory
+# ---------------------------------------------------------------------------
 
 def get_database():
-    """Initializes and returns the database.
-
-    Strategy:
-    - If MONGO_URL is set and points to a remote Atlas cluster, ALWAYS connect
-      to MongoDB — retrying up to 3 times with increasing timeouts. Never
-      silently fall back to local JSON when Atlas is the intended backend, because
-      that local JSON is ephemeral on Render and causes data loss on restarts.
-    - If MONGO_URL is not set or points to localhost, try MongoDB quickly and
-      fall back to the persistent local JSON store for local dev convenience.
     """
+    Priority order:
+      1. Atlas Data API   — if ATLAS_APP_ID + ATLAS_DATA_API_KEY are set.
+                            Uses HTTPS (port 443). No wire-protocol TLS issues.
+      2. PyMongo / Motor  — if MONGO_URL is set to a remote Atlas URI.
+      3. Local JSON       — zero-config fallback for local development.
+    """
+    # ── 1. Atlas Data API ──────────────────────────────────────────────────
+    atlas_app_id  = os.environ.get("ATLAS_APP_ID", "").strip()
+    atlas_api_key = os.environ.get("ATLAS_DATA_API_KEY", "").strip()
+    db_name       = os.environ.get("DB_NAME", "portfolio_manager")
+    data_source   = os.environ.get("ATLAS_DATA_SOURCE", "Cluster0")
+
+    if atlas_app_id and atlas_api_key:
+        logger.info(f"Attempting Atlas Data API connection (app={atlas_app_id})...")
+        db_instance = DataAPIDatabase(atlas_app_id, atlas_api_key, db_name, data_source)
+        if db_instance.probe():
+            logger.info(f"✓ Atlas Data API connected (db={db_name}, source={data_source})")
+            return db_instance
+        else:
+            logger.error("Atlas Data API probe failed — check ATLAS_APP_ID and ATLAS_DATA_API_KEY.")
+            raise RuntimeError(
+                "FATAL: Atlas Data API is configured (ATLAS_APP_ID/ATLAS_DATA_API_KEY set) "
+                "but the probe request failed. "
+                "Check your App ID, API key, and that Data API is enabled in Atlas App Services."
+            )
+
+    # ── 2. PyMongo wire protocol ───────────────────────────────────────────
     mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-    db_name = os.environ.get("DB_NAME", "portfolio_manager")
-    is_remote = _is_remote_mongo(mongo_url)
+    is_remote = "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
 
     if is_remote:
-        # --- Production / Atlas mode ---
-        # Retry aggressively using two TLS strategies:
-        #   Strategy A: certifi CA bundle (secure, preferred)
-        #   Strategy B: tlsAllowInvalidCertificates (fallback if CA bundle fails)
-        # We must use MongoDB so data survives Render restarts.
-        strategies = [
-            {"tlsCAFile": certifi.where(), "label": "certifi CA"},
-            {"tlsAllowInvalidCertificates": True, "label": "tlsInsecure"},
-        ]
-        timeouts = [10000, 20000, 25000]
-        last_err = None
+        # Remote Atlas — must succeed; do NOT fall back to ephemeral local JSON.
+        try:
+            import certifi
+            from motor.motor_asyncio import AsyncIOMotorClient
+            import pymongo
 
-        for strat in strategies:
-            label = strat.pop("label")
-            for attempt, timeout_ms in enumerate(timeouts, start=1):
+            logger.info("Attempting PyMongo connection to MongoDB Atlas...")
+            for attempt, timeout_ms in enumerate([10000, 20000, 25000], start=1):
                 try:
-                    logger.info(
-                        f"Connecting to MongoDB Atlas [strategy={label}, "
-                        f"attempt={attempt}/{len(timeouts)}, timeout={timeout_ms}ms]..."
-                    )
-                    sync_client = pymongo.MongoClient(
-                        mongo_url,
-                        serverSelectionTimeoutMS=timeout_ms,
-                        **strat,
-                    )
-                    sync_client.server_info()
-                    sync_client.close()
-                    async_client = AsyncIOMotorClient(
-                        mongo_url,
-                        serverSelectionTimeoutMS=timeout_ms,
-                        **strat,
-                    )
-                    db_instance = async_client[db_name]
+                    sc = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=timeout_ms,
+                                             tlsCAFile=certifi.where())
+                    sc.server_info(); sc.close()
+                    ac = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=timeout_ms,
+                                           tlsCAFile=certifi.where())
+                    db_instance = ac[db_name]
                     db_instance._engine_type = "mongodb"
-                    logger.info(f"✓ Connected to MongoDB Atlas ({db_name}) via {label} on attempt {attempt}")
+                    logger.info(f"✓ PyMongo connected to Atlas ({db_name}) on attempt {attempt}")
                     return db_instance
                 except Exception as e:
-                    last_err = e
-                    logger.warning(f"Atlas [{label}] attempt {attempt} failed: {type(e).__name__}: {e}")
-                    if attempt < len(timeouts):
+                    logger.warning(f"PyMongo attempt {attempt} failed: {type(e).__name__}: {e}")
+                    if attempt < 3:
                         time.sleep(2)
+        except ImportError:
+            pass
 
-        # All strategies exhausted
         raise RuntimeError(
-            f"FATAL: Could not connect to MongoDB Atlas after all strategies. "
-            f"Last error: {last_err}. "
-            "Check MONGO_URL on Render and Atlas Network Access (allow 0.0.0.0/0)."
+            "FATAL: MONGO_URL is set to a remote Atlas URI but the connection failed. "
+            "To work around Render TLS issues, set ATLAS_APP_ID + ATLAS_DATA_API_KEY "
+            "to use the Atlas Data API over HTTPS instead."
         )
-    else:
-        # --- Local dev mode ---
-        # Quick probe, fall back gracefully to local JSON.
-        try:
-            sync_client = pymongo.MongoClient(
-                mongo_url,
-                serverSelectionTimeoutMS=1200,
-                tlsCAFile=certifi.where(),
-            )
-            sync_client.server_info()
-            sync_client.close()
-            async_client = AsyncIOMotorClient(
-                mongo_url,
-                serverSelectionTimeoutMS=1200,
-                tlsCAFile=certifi.where(),
-            )
-            db_instance = async_client[db_name]
-            db_instance._engine_type = "mongodb"
-            logger.info(f"Connected to local MongoDB ({db_name})")
-            return db_instance
-        except Exception as e:
-            logger.info(f"Local MongoDB not available ({e}). Using embedded persistent local database at {LOCAL_DB_FILE}")
-            db_instance = LocalDatabase(LOCAL_DB_FILE)
-            db_instance._engine_type = "local_json"
-            return db_instance
+
+    # ── 3. Local JSON ──────────────────────────────────────────────────────
+    try:
+        import certifi
+        from motor.motor_asyncio import AsyncIOMotorClient
+        import pymongo
+        sc = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=1200, tlsCAFile=certifi.where())
+        sc.server_info(); sc.close()
+        from motor.motor_asyncio import AsyncIOMotorClient
+        ac = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=1200, tlsCAFile=certifi.where())
+        db_instance = ac[db_name]
+        db_instance._engine_type = "mongodb"
+        logger.info(f"Connected to local MongoDB ({db_name})")
+        return db_instance
+    except Exception as e:
+        logger.info(f"Local MongoDB not available ({e}). Using local JSON at {LOCAL_DB_FILE}")
+        db_instance = LocalDatabase(LOCAL_DB_FILE)
+        db_instance._engine_type = "local_json"
+        return db_instance
