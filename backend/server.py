@@ -114,21 +114,15 @@ def _serialize_holding(h: dict) -> dict:
 @api_router.get("/health")
 async def health():
     engine = getattr(db, "_engine_type", "unknown")
-    raw_url = os.environ.get("MONGO_URL", "not_set")
-    atlas_app = os.environ.get("ATLAS_APP_ID", "")
-    if atlas_app:
-        source_info = f"data_api:app={atlas_app[:8]}..."
-    elif "@" in raw_url:
-        host_part = raw_url.split("@")[-1].split("/")[0]
-        source_info = f"mongodb+srv://***@{host_part}"
+    mongo_url = os.environ.get("MONGO_URL", "local")
+    if "@" in mongo_url:
+        host = mongo_url.split("@")[-1].split("/")[0]
+        source = f"atlas@{host}"
     else:
-        source_info = raw_url
-    return {
-        "status": "ok",
-        "db_engine": engine,
-        "db_source": source_info,
-        "time": datetime.now(timezone.utc).isoformat(),
-    }
+        source = mongo_url
+    return {"status": "ok", "db_engine": engine, "db_source": source,
+            "time": datetime.now(timezone.utc).isoformat()}
+
 
 
 @api_router.get("/portfolio/holdings")
@@ -567,6 +561,15 @@ async def _daily_scheduler_loop():
 @app.on_event("startup")
 async def startup_scheduler():
     asyncio.create_task(_daily_scheduler_loop())
+    # Non-crashing async DB ping — confirms Atlas connectivity at startup
+    if getattr(db, "_engine_type", "") == "mongodb":
+        try:
+            await db.command("ping")
+            logger.info("✓ MongoDB Atlas ping successful")
+        except Exception as e:
+            logger.error(f"✗ MongoDB Atlas ping failed: {e}")
+            logger.error("Portfolio data will not persist. Check MONGO_URL and Atlas Network Access.")
+
 
 
 @app.on_event("shutdown")
