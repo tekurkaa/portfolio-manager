@@ -10,9 +10,17 @@
     {
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
-      "name": "Atharv",
-      "picture": null,
+      "name": "Atharv Tekurkar",
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocL2yUCG2jAc_XA9w27M7FOY84zO6qzDZfJ7KNi9jdfnl0qifVIGpw=s96-c",
       "created_at": "2026-08-24 17:10:00.360734+00:00"
+    },
+    {
+      "user_id": "user_d8af5ace5f1e",
+      "email": "test@example.com",
+      "name": "Test",
+      "picture": null,
+      "created_at": "2026-09-12 16:10:48.382328+00:00",
+      "_id": "57cafec6-c4f6-47dd-a7e8-15f6924c1090"
     }
   ],
   "user_sessions": [
@@ -111,6 +119,18 @@
       "user_id": "user_7f21834c89b7",
       "expires_at": "2026-09-03 02:24:37.781123+00:00",
       "created_at": "2026-08-27 02:24:37.781132+00:00"
+    },
+    {
+      "session_token": "sess_ffe0cee078ff441ca57a58d95ceef6e1",
+      "user_id": "user_d8af5ace5f1e",
+      "expires_at": "2026-09-19 16:10:48.383421+00:00",
+      "created_at": "2026-09-12 16:10:48.383431+00:00"
+    },
+    {
+      "session_token": "dl0qecK3XLb8MPEs-8h1QtLHx9RGSKg_vQlRu7jzZ7k",
+      "user_id": "user_45b3b10a99cb",
+      "expires_at": "2026-09-19 20:48:25.377737+00:00",
+      "created_at": "2026-09-12 20:48:25.377745+00:00"
     }
   ],
   "holdings": [
@@ -353,6 +373,106 @@
       "asset_type": "stock",
       "created_at": "2026-08-25T03:27:27.038163+00:00",
       "user_id": "user_45b3b10a99cb"
+    },
+    {
+      "id": "d70faf12-e21f-4f59-807f-cc415de0938d",
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "quantity": 25.0,
+      "avg_cost": 152.3,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.217859+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "afb11862-d2d9-4791-9944-762ffcff099e",
+      "symbol": "NVDA",
+      "name": "NVIDIA Corp.",
+      "quantity": 12.0,
+      "avg_cost": 420.5,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.218817+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "6807a778-3104-4fa1-bca4-a5316f7d3b06",
+      "symbol": "TSLA",
+      "name": "Tesla Inc.",
+      "quantity": 8.0,
+      "avg_cost": 245.2,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.219574+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "edeae631-f61c-4709-8e9f-7c24374f50ea",
+      "symbol": "MSFT",
+      "name": "Microsoft Corp.",
+      "quantity": 10.0,
+      "avg_cost": 305.1,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.222887+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "67bec20c-ace8-4155-9579-8a16b61d7506",
+      "symbol": "AMZN",
+      "name": "Amazon.com",
+      "quantity": 15.0,
+      "avg_cost": 132.8,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.225936+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "630b079f-b542-4283-8d37-5efe65445445",
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc.",
+      "quantity": 18.0,
+      "avg_cost": 128.4,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.226819+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "dfabb4f5-3e4b-4379-92f4-55354c84de41",
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "quantity": 7.0,
+      "avg_cost": 315.6,
+      "asset_type": "stock",
+      "created_at": "2026-09-12T16:10:54.227578+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "7a773539-ff3e-45d9-8242-8db12878ba71",
+      "symbol": "BTC-USD",
+      "name": "Bitcoin",
+      "quantity": 0.35,
+      "avg_cost": 42800.0,
+      "asset_type": "crypto",
+      "created_at": "2026-09-12T16:10:54.228239+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "08deedc8-a2f4-4c41-9656-af38d0d309aa",
+      "symbol": "ETH-USD",
+      "name": "Ethereum",
+      "quantity": 4.2,
+      "avg_cost": 2350.0,
+      "asset_type": "crypto",
+      "created_at": "2026-09-12T16:10:54.228870+00:00",
+      "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "fee3a84a-d609-4791-acb6-94442c3ae1e6",
+      "symbol": "SOL-USD",
+      "name": "Solana",
+      "quantity": 30.0,
+      "avg_cost": 105.0,
+      "asset_type": "crypto",
+      "created_at": "2026-09-12T16:10:54.229528+00:00",
+      "user_id": "user_d8af5ace5f1e"
     }
   ],
   "notify_prefs": [
@@ -360,7 +480,7 @@
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
       "enabled": true,
-      "last_sent_date": "2026-08-25"
+      "last_sent_date": "2026-09-12"
     },
     {
       "user_id": "user_7f21834c89b7",
@@ -368,5 +488,77 @@
       "enabled": true
     }
   ],
-  "watchlist": []
+  "watchlist": [],
+  "chat_conversations": [
+    {
+      "user_id": "user_d8af5ace5f1e",
+      "conversation_id": "conv_c0a92666926c",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is the status of NVDA?",
+          "ts": "2026-09-12T16:10:48.956394+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for NVDA\n\n- **NVDA**: $218.29 (+0.243%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "macro",
+              "title": "Wall Street week ahead: Federal Reserve decision on interest rates, retail sales update",
+              "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQQ1pvVTBOV1FtQ0pwcGgzWks1RzZSSnh1Xy1oRzVrNklCQXhaaldrSWpxb3RHSmt1Ui0xZk11QWZpblFqa0pLTlRMb05GQ3lHSjh6akVMeGFJazlEZ2ExUVdVRXdUb2plbk9lVlFpdWZsNXIwTXZMVjBUZWVvWlR0dWJXS2kwNThfV1QtNi1VV1U1REV4WjBoSmhXTTBzVC14cmd2Y01n?oc=5",
+              "source": "Laredo Morning Times"
+            },
+            {
+              "type": "macro",
+              "title": "Market Minute: Toward synchronized global rate hikes \u2026 almost",
+              "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPeWFQSnp0YjQzRzNicWdoUWduWWJ4UjBJcll2Y1J6ZkFuTGJXQUp6Y1JwNW5udUxGcWtLMzByYWtaWGJJLUFlN0UwY3UtRERlbFk0UENVbE02bTBlcDFXNXBHY2p6NTZPa1FEMUJEX3lndy1RSUd3X2hqQTd2bHg4MFBaZTF6THFGQ3BRNjFack9QQWM?oc=5",
+              "source": "The Real Economy Blog"
+            },
+            {
+              "type": "macro",
+              "title": "Wall Street week ahead: Federal Reserve decision on interest rates, retail sales update",
+              "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxQZlpZQzBjYmxMb2RNVERqY3VhclJLcHBWZ2pmbXc2OTNtQnpZdDVWU2xITjhlc0lhWFV1VjV2cHMzSGxOMnBUbkVFbkdsREtiSEdzYW43d09TQzBCc2MzbVZkZ3NnUUZnakJQRmpsRHZUd01lTmNfZ1RqaU9GemhfOTIxRlowRUNheTZUaWxic25zOFp4VUJVWnBIV2ljb2xROGRWdFQ5NE5nZm9SRjh1Y0IxRmhpaHNVanphcTdleENyTVVYY1BLMjh5c3JianNYekFyTGdOUGljUmRjLTNncnUteWd3UnVaYlZzOG80VmdKNEpfQUJqV2pLTVA2azlnUVpsMWZZVUF2RHNFcGhaSnRmNA?oc=5",
+              "source": "Ottumwa Courier"
+            },
+            {
+              "type": "macro",
+              "title": "Wall Street week ahead: Federal Reserve decision on interest rates, retail sales update",
+              "url": "https://news.google.com/rss/articles/CBMijAJBVV95cUxOZEdqWFRxLXpmX1Z3TzVtbjFVZm5GeWhXWm1YblMweFpzVWpteXZ0aFptTGc4X1VDQkJJQ25WR2gxWE9YVnk0WktGM2tnd09DTTQwdGFTVEE0dTZOcFo0ZVU0WlV6WnpKRWZfZnY1MGhJZnRzOWV4MFdMdDBabWw3d042MlFVQzhZb1VzRUVaUW9WdXpCdk80X1gyS0dLLXA4WElZTmFpeVhGTGwwMmpQTFRoenlHV3RkNDNtdEk0TkpOSWZlVUdWZ3JTYTJ0Y2hSYVM5UjAySnBjNnBjaGlwYm9ISVJCbkx1dFY5eHRvRnIyejNYS0FEWGdJdzlDRFNLMUgwZTVHeWNLeGNB?oc=5",
+              "source": "Richmond Register"
+            },
+            {
+              "type": "macro",
+              "title": "Inflation stays hot in August as Iran war drives energy costs higher",
+              "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1RV1BfZnF3NFZrdFpsYVFFY21TNXhHbG9zN0cySjVaZnpKSWZoRE1pLUh6SXBuOWdjR2JEbGRhMHVXVjdqejhJV25iazQ5cGZMQjZqaTRrd3JpR2VpSEQ2aXlWaDcxN2dEZXk0?oc=5",
+              "source": "Axios"
+            },
+            {
+              "type": "macro",
+              "title": "Elevated Inflation Keeps Pressure on Fed to Raise Interest Rates",
+              "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE5IMFFtaTVreE9NQ2hRcW9hc0JHQ21zU2w1OUY3Nm85MHVuZXZMejVBN2xrUFZORm1mRjRvYTdpNDdVWUIxRENhTWxJd0lTWGxzdlBSQjhoN1gzd0duaWxXTWQybC1QSjNVelU2cVRQa0hmdGg3V040Ng?oc=5",
+              "source": "The New York Times"
+            },
+            {
+              "type": "macro",
+              "title": "Stubborn inflation raises prospect of Fed rate hike",
+              "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxONDZjRFRRQ0s2S0NwVjBLYkg4eVJERUwxU1FkaDdRQTZ4YVc4ZVFUeHh4aWs0LURPVmptMzJXdzhtZERHbDZUYjQwSmtuN0d6WnY0WGJ1RHJxN3MwWVM5Zy03TncxYm96cDJJcW12S3NnUDJndFl1S0FKd2ZxN0hfZWpCWmdzQ2NnVEHSAY8BQVVfeXFMT095VEQydEJhN2xtWm95SGNPVDdWMzZZOVZUSXFqWkNraVN4MzdYbWdEWnZjMDRwempSeGR0eElwUnU5NmF1aFF0UTRMUFZxMnY5X3ZmYWZOeG5wbjI4WFJkaTJmd3Z6bHliX2ZQOFNJdW5OenR6anRvR0NaYmd5bFZmLXhMQ1cwVWd2eUR6ZVU?oc=5",
+              "source": "The Hill"
+            },
+            {
+              "type": "macro",
+              "title": "Fed rate hike odds surge to 90% on monthly jump in core prices",
+              "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQSmJyWnJFSG1GbXlkWkRuSUdOcFNoZ2xWUjB4MWFIYXNKbWkwY3BvMFhyM0NHSGF2d0tPQWFONVUzTFdYdkdYWk1EaFZlemJYelZ5ZUdHWl9WVlJNa0tzZXFxdUpRYWNhTEpPb1F6bUppYXlydW5TQVdGTTVxVl9PeEtzYks0SUFnWFNzXzRfSzJaWTlWcnE2YnhMTldWZHVWRlh5allpWTh2ZXV4cU9lQ3ZSRndHMzZKQUJTTTBWd1h2OWM?oc=5",
+              "source": "Yahoo Finance"
+            }
+          ],
+          "tickers": [
+            "NVDA"
+          ],
+          "ts": "2026-09-12T16:10:48.956396+00:00"
+        }
+      ],
+      "updated_at": "2026-09-12T16:10:48.956402+00:00"
+    }
+  ]
 }

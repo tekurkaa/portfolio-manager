@@ -276,8 +276,16 @@ export default function ChatTab() {
               <Send className="w-3.5 h-3.5" /> Send
             </button>
           </div>
-          <div className="text-[10px] font-mono text-gray-600 mt-1.5">
-            Grounded in Reddit · StockTwits · NewsAPI · Kadoa Congress · yfinance options & prices. Not financial advice.
+          <div className="mt-2 pt-1.5 border-t border-[#1C2536] flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-gray-500" data-testid="chat-disclaimer-footer">
+            <div className="flex items-center gap-1.5 text-gray-400">
+              <span className="text-amber-500 font-bold text-xs">⚠</span>
+              <span className="text-gray-300">
+                This application is for informational purposes only and does not constitute financial advice.
+              </span>
+            </div>
+            <span className="text-gray-600 hidden md:inline">
+              Grounded in Reddit · StockTwits · NewsAPI · Kadoa Congress · yfinance
+            </span>
           </div>
         </div>
       </section>

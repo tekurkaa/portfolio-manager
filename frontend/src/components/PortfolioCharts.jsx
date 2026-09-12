@@ -13,10 +13,50 @@ const RANGES = [
   { key: "ALL", label: "ALL", sub: "All Time" },
 ];
 
-const fmtT = (t, isIntraday) => {
+const fmtChartDateTick = (t, range) => {
+  if (!t) return "";
   const d = new Date(t);
-  if (isIntraday) return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "2-digit" });
+  if (isNaN(d.getTime())) return "";
+
+  switch (range) {
+    case "1D":
+      return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    case "1W":
+      return d.toLocaleDateString([], { weekday: "short", month: "numeric", day: "numeric" });
+    case "1M":
+    case "3M":
+      return d.toLocaleDateString([], { month: "short", day: "numeric" });
+    case "YTD":
+    case "1Y":
+      return d.toLocaleDateString([], { month: "short", day: "numeric" });
+    case "5Y":
+    case "ALL":
+      return d.toLocaleDateString([], { month: "short", year: "2-digit" });
+    default:
+      return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  }
+};
+
+const fmtChartTooltipDate = (t, range) => {
+  if (!t) return "";
+  const d = new Date(t);
+  if (isNaN(d.getTime())) return "";
+
+  if (range === "1D" || range === "1W") {
+    return d.toLocaleString([], {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+  return d.toLocaleDateString([], {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
 export function PortfolioHistoryChart({ currentValue = null }) {
@@ -95,17 +135,30 @@ export function PortfolioHistoryChart({ currentValue = null }) {
                   <stop offset="100%" stopColor={stroke} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="t" tick={{ fill: "#6B7280", fontSize: 10, fontFamily: "monospace" }}
-                tickFormatter={(t) => fmtT(t, isIntraday)} minTickGap={40} axisLine={{ stroke: "#222C3D" }} tickLine={false} />
-              <YAxis tick={{ fill: "#6B7280", fontSize: 10, fontFamily: "monospace" }}
-                domain={["auto", "auto"]} axisLine={{ stroke: "#222C3D" }} tickLine={false}
-                tickFormatter={(v) => `$${(v/1000).toFixed(1)}k`} width={55} />
+              <XAxis
+                dataKey="t"
+                tick={{ fill: "#9CA3AF", fontSize: 10, fontFamily: "monospace" }}
+                tickFormatter={(t) => fmtChartDateTick(t, range)}
+                minTickGap={45}
+                axisLine={{ stroke: "#222C3D" }}
+                tickLine={{ stroke: "#374151" }}
+                tickMargin={6}
+                height={26}
+              />
+              <YAxis
+                tick={{ fill: "#6B7280", fontSize: 10, fontFamily: "monospace" }}
+                domain={["auto", "auto"]}
+                axisLine={{ stroke: "#222C3D" }}
+                tickLine={false}
+                tickFormatter={(v) => `$${(v/1000).toFixed(1)}k`}
+                width={55}
+              />
               <Tooltip
                 contentStyle={{ background: "#0E131F", border: "1px solid #222C3D", fontFamily: "monospace", fontSize: 11 }}
-                labelStyle={{ color: "#9CA3AF" }}
+                labelStyle={{ color: "#F59E0B", fontWeight: "bold" }}
                 itemStyle={{ color: "#F3F4F6" }}
                 formatter={(v) => [fmtMoney(v), "Value"]}
-                labelFormatter={(t) => fmtT(t, isIntraday)}
+                labelFormatter={(t) => fmtChartTooltipDate(t, range)}
               />
               <Line type="monotone" dataKey="v" stroke={stroke} strokeWidth={2} dot={false} fill="url(#gradVal)" />
             </LineChart>
