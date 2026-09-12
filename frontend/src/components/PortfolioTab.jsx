@@ -3,6 +3,8 @@ import { api, fmtMoney, fmtPct, fmtNum, colorForPL } from "@/lib/api";
 import { toast } from "sonner";
 import { Upload, Plus, Trash2, RefreshCw, Sparkles, Bitcoin, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 import { PortfolioHistoryChart, AllocationTreemap } from "@/components/PortfolioCharts";
+import PortfolioRiskAuditor, { assetRole, computeDividendKPI } from "@/components/PortfolioRiskAuditor";
+import AlphaReportCard from "@/components/AlphaReportCard";
 
 const AddHoldingForm = ({ onDone }) => {
   const [f, setF] = useState({ symbol: "", quantity: "", avg_cost: "", name: "" });
@@ -231,7 +233,7 @@ export default function PortfolioTab() {
 
       {/* Summary */}
       {s && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" data-testid="summary-grid">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3" data-testid="summary-grid">
           <SummaryCard
             label="Total Value"
             value={fmtMoney(s.total_value)}
@@ -257,13 +259,32 @@ export default function PortfolioTab() {
             value={fmtMoney(s.total_cost)}
             sub="lifetime capital deployed"
           />
+          {(() => {
+            const div = computeDividendKPI(data.holdings || [], s.total_value, s.total_cost);
+            return (
+              <SummaryCard
+                label="Projected Annual Cash Flow"
+                value={`${fmtMoney(div.annual)} / yr`}
+                sub={`Est. Monthly: ${fmtMoney(div.monthly)} · Yield on Cost: ${div.yieldOnCost.toFixed(2)}%`}
+                icon={DollarSign}
+              />
+            );
+          })()}
         </div>
+      )}
+
+      {/* Risk Auditor + Capital Efficiency */}
+      {s && data.holdings?.length > 0 && (
+        <>
+          <AlphaReportCard />
+          <PortfolioRiskAuditor holdings={data.holdings} summary={s} />
+        </>
       )}
 
       {/* Charts */}
       {rows.length > 0 && (
         <div className="grid lg:grid-cols-2 gap-3" data-testid="portfolio-charts">
-          <PortfolioHistoryChart />
+          <PortfolioHistoryChart currentValue={s?.total_value} />
           <AllocationTreemap holdings={data.holdings || []} />
         </div>
       )}
@@ -295,6 +316,7 @@ export default function PortfolioTab() {
                 {[
                   ["symbol", "SYMBOL"],
                   ["asset_type", "TYPE"],
+                  ["role", "ASSET ROLE"],
                   ["quantity", "QTY"],
                   ["avg_cost", "AVG COST"],
                   ["price", "PRICE"],
@@ -305,9 +327,11 @@ export default function PortfolioTab() {
                 ].map(([k, l]) => (
                   <th
                     key={k}
-                    onClick={() => clickSort(k)}
+                    onClick={() => k !== "role" && clickSort(k)}
                     data-testid={`sort-${k}`}
-                    className="px-3 py-2.5 font-mono text-[10px] tracking-widest text-gray-500 uppercase cursor-pointer hover:text-amber-500 select-none"
+                    className={`px-3 py-2.5 font-mono text-[10px] tracking-widest text-gray-500 uppercase select-none ${
+                      k !== "role" ? "cursor-pointer hover:text-amber-500" : ""
+                    }`}
                   >
                     {l} {sortBy.key === k && (sortBy.dir === "asc" ? "▲" : "▼")}
                   </th>
@@ -318,62 +342,73 @@ export default function PortfolioTab() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="loading-row">
+                  <td colSpan={11} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="loading-row">
                     Loading positions...
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="empty-row">
+                  <td colSpan={11} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="empty-row">
                     No positions. Import a Robinhood CSV, load the demo, or add manually.
                   </td>
                 </tr>
               ) : (
-                rows.map((h) => (
-                  <tr
-                    key={h.id}
-                    data-testid={`holding-row-${h.symbol}`}
-                    className="border-b border-[#1A2232] hover:bg-[#161C26] transition-colors"
-                  >
-                    <td className="px-3 py-2.5">
-                      <div className="flex items-center gap-2">
-                        {h.asset_type === "crypto" && <Bitcoin className="w-3.5 h-3.5 text-cyan-400" />}
-                        <span className="font-mono font-bold text-amber-400 tracking-wider">{h.symbol}</span>
-                      </div>
-                      {h.name && <div className="text-[10px] text-gray-500 truncate max-w-[160px]">{h.name}</div>}
-                    </td>
-                    <td className="px-3 py-2.5">
-                      <span
-                        className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border ${
-                          h.asset_type === "crypto"
-                            ? "border-cyan-800 text-cyan-400 bg-cyan-950/40"
-                            : "border-blue-800 text-blue-400 bg-blue-950/40"
-                        }`}
-                      >
-                        {h.asset_type}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5 font-mono text-gray-200">{fmtNum(h.quantity, 4)}</td>
-                    <td className="px-3 py-2.5 font-mono text-gray-400">{fmtMoney(h.avg_cost)}</td>
-                    <td className="px-3 py-2.5 font-mono text-gray-100 font-semibold">
-                      {fmtMoney(h.price)}
-                      {!h.live && <span className="text-[9px] text-gray-500 ml-1">(cost)</span>}
-                    </td>
-                    <td className={`px-3 py-2.5 font-mono ${colorForPL(h.day_change_pct)}`}>{fmtPct(h.day_change_pct)}</td>
-                    <td className="px-3 py-2.5 font-mono text-gray-100 font-semibold">{fmtMoney(h.value)}</td>
-                    <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl)}`}>{fmtMoney(h.pl)}</td>
-                    <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl_pct)}`}>{fmtPct(h.pl_pct)}</td>
-                    <td className="px-3 py-2.5">
-                      <button
-                        onClick={() => delOne(h.id, h.symbol)}
-                        data-testid={`delete-${h.symbol}-button`}
-                        className="text-gray-600 hover:text-rose-500 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                rows.map((h) => {
+                  const role = assetRole(h);
+                  return (
+                    <tr
+                      key={h.id}
+                      data-testid={`holding-row-${h.symbol}`}
+                      className="border-b border-[#1A2232] hover:bg-[#161C26] transition-colors"
+                    >
+                      <td className="px-3 py-2.5">
+                        <div className="flex items-center gap-2">
+                          {h.asset_type === "crypto" && <Bitcoin className="w-3.5 h-3.5 text-cyan-400" />}
+                          <span className="font-mono font-bold text-amber-400 tracking-wider">{h.symbol}</span>
+                        </div>
+                        {h.name && <div className="text-[10px] text-gray-500 truncate max-w-[160px]">{h.name}</div>}
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <span
+                          className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border ${
+                            h.asset_type === "crypto"
+                              ? "border-cyan-800 text-cyan-400 bg-cyan-950/40"
+                              : "border-blue-800 text-blue-400 bg-blue-950/40"
+                          }`}
+                        >
+                          {h.asset_type}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <span
+                          className={`text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm border ${role.cls}`}
+                          data-testid={`role-${h.symbol}`}
+                        >
+                          {role.label}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5 font-mono text-gray-200">{fmtNum(h.quantity, 4)}</td>
+                      <td className="px-3 py-2.5 font-mono text-gray-400">{fmtMoney(h.avg_cost)}</td>
+                      <td className="px-3 py-2.5 font-mono text-gray-100 font-semibold">
+                        {fmtMoney(h.price)}
+                        {!h.live && <span className="text-[9px] text-gray-500 ml-1">(cost)</span>}
+                      </td>
+                      <td className={`px-3 py-2.5 font-mono ${colorForPL(h.day_change_pct)}`}>{fmtPct(h.day_change_pct)}</td>
+                      <td className="px-3 py-2.5 font-mono text-gray-100 font-semibold">{fmtMoney(h.value)}</td>
+                      <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl)}`}>{fmtMoney(h.pl)}</td>
+                      <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl_pct)}`}>{fmtPct(h.pl_pct)}</td>
+                      <td className="px-3 py-2.5">
+                        <button
+                          onClick={() => delOne(h.id, h.symbol)}
+                          data-testid={`delete-${h.symbol}-button`}
+                          className="text-gray-600 hover:text-rose-500 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

@@ -26,6 +26,7 @@ from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
 from sentiment_service import analyze_symbol_public  # noqa: E402
 from auth import get_current_user, exchange_session, logout_session, create_dev_session  # noqa: E402
 from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
+from chat_service import chat_answer  # noqa: E402
 from db import get_database  # noqa: E402
 
 db = get_database()
@@ -380,9 +381,9 @@ async def sec_form4_route(symbol: Optional[str] = None, limit: int = 40):
 
 # ---------- ROUTES: HISTORY ----------
 @api_router.get("/portfolio/history")
-async def portfolio_history_route(range: str = "1M", uid: str = Depends(current_user_id)):
+async def portfolio_history_route(range: str = "1M", benchmark: Optional[str] = None, uid: str = Depends(current_user_id)):
     docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
-    return await portfolio_history(docs, range.upper())
+    return await portfolio_history(docs, range.upper(), benchmark=benchmark)
 
 
 # ---------- ROUTES: OPTIONS FLOW & ALPHA SIGNAL ----------
@@ -517,6 +518,105 @@ async def scanner_prefs_set(data: NotifyPref, user=Depends(current_user)):
     update["user_id"] = user["user_id"]
     await db.notify_prefs.update_one({"user_id": user["user_id"]}, {"$set": update}, upsert=True)
     return update
+
+
+# ---------- ROUTES: AI CHAT ----------
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatRequest(BaseModel):
+    conversation_id: Optional[str] = None
+    message: str
+
+
+async def _portfolio_snapshot(uid: str) -> tuple:
+    docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
+    held = sorted({d["symbol"].replace("-USD", "") for d in docs})
+    if not docs:
+        return held, {}
+    quotes = await get_quotes([d["symbol"] for d in docs])
+    total_value = 0.0
+    total_cost = 0.0
+    stock_count = 0
+    crypto_count = 0
+    for d in docs:
+        q = quotes.get(d["symbol"].upper())
+        price = q["price"] if q else d.get("avg_cost", 0)
+        total_value += price * d["quantity"]
+        total_cost += d["avg_cost"] * d["quantity"]
+        if d.get("asset_type") == "crypto":
+            crypto_count += 1
+        else:
+            stock_count += 1
+    pl = total_value - total_cost
+    pl_pct = (pl / total_cost * 100) if total_cost else 0
+    return held, {
+        "total_value": round(total_value, 2),
+        "total_cost": round(total_cost, 2),
+        "total_pl": round(pl, 2),
+        "total_pl_pct": round(pl_pct, 3),
+        "count": len(docs),
+        "stock_count": stock_count,
+        "crypto_count": crypto_count,
+    }
+
+
+@api_router.post("/chat/message")
+async def chat_message_route(data: ChatRequest, user=Depends(current_user)):
+    uid = user["user_id"]
+    conv_id = data.conversation_id or f"conv_{uuid.uuid4().hex[:12]}"
+    conv = await db.chat_conversations.find_one({"user_id": uid, "conversation_id": conv_id}, {"_id": 0}) or {"messages": []}
+    history = conv.get("messages", [])
+    held, summary = await _portfolio_snapshot(uid)
+    result = await chat_answer(data.message, history, held, summary, conv_id)
+
+    new_history = history + [
+        {"role": "user", "content": data.message, "ts": datetime.now(timezone.utc).isoformat()},
+        {"role": "assistant", "content": result["answer"], "sources": result.get("sources", []),
+         "tickers": result.get("extracted_tickers", []), "ts": datetime.now(timezone.utc).isoformat()},
+    ]
+    await db.chat_conversations.update_one(
+        {"user_id": uid, "conversation_id": conv_id},
+        {"$set": {"user_id": uid, "conversation_id": conv_id, "messages": new_history,
+                  "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True,
+    )
+    return {"conversation_id": conv_id, "answer": result["answer"], "sources": result.get("sources", []),
+            "extracted_tickers": result.get("extracted_tickers", [])}
+
+
+@api_router.get("/chat/conversations")
+async def chat_list_route(user=Depends(current_user)):
+    uid = user["user_id"]
+    convs = await db.chat_conversations.find({"user_id": uid}, {"_id": 0}).to_list(30)
+    convs.sort(key=lambda c: c.get("updated_at") or "", reverse=True)
+    return {"conversations": [{
+        "conversation_id": c["conversation_id"],
+        "updated_at": c.get("updated_at"),
+        "preview": (c.get("messages") or [{}])[0].get("content", "")[:80],
+        "message_count": len(c.get("messages", [])),
+    } for c in convs]}
+
+
+@api_router.get("/chat/conversations/{conversation_id}")
+async def chat_get_route(conversation_id: str, user=Depends(current_user)):
+    conv = await db.chat_conversations.find_one({"user_id": user["user_id"], "conversation_id": conversation_id}, {"_id": 0})
+    if not conv:
+        raise HTTPException(404, "conversation not found")
+    return conv
+
+
+@api_router.delete("/chat/conversations/{conversation_id}")
+async def chat_delete_route(conversation_id: str, user=Depends(current_user)):
+    await db.chat_conversations.delete_one({"user_id": user["user_id"], "conversation_id": conversation_id})
+    return {"ok": True}
+
+
+@app.get("/health")
+async def root_health():
+    return {"status": "ok"}
 
 
 # ---------- MIDDLEWARE ----------

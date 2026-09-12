@@ -19,7 +19,7 @@ const fmtT = (t, isIntraday) => {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "2-digit" });
 };
 
-export function PortfolioHistoryChart() {
+export function PortfolioHistoryChart({ currentValue = null }) {
   const [range, setRange] = useState("1D");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,15 @@ export function PortfolioHistoryChart() {
     return () => { alive = false; };
   }, [range]);
 
-  const up = (data?.change ?? 0) >= 0;
+  // Single source of truth: prefer live currentValue (from /api/portfolio/holdings)
+  // over historical bar-derived end_value. Rescale the historical change % accordingly
+  // so the "since range start" figure stays coherent.
+  const historicalEnd = data?.end_value ?? 0;
+  const displayedEnd = currentValue != null ? currentValue : historicalEnd;
+  const historicalStart = data?.start_value ?? 0;
+  const change = historicalStart ? displayedEnd - historicalStart : (data?.change ?? 0);
+  const changePct = historicalStart ? (change / historicalStart) * 100 : (data?.change_pct ?? 0);
+  const up = change >= 0;
   const stroke = up ? "#10B981" : "#EF4444";
   const active = RANGES.find((r) => r.key === range) || RANGES[0];
   const isIntraday = range === "1D";
@@ -47,10 +55,10 @@ export function PortfolioHistoryChart() {
           {data && (
             <>
               <div className="text-3xl font-mono font-bold text-gray-100 mt-1" data-testid="chart-current-value">
-                {fmtMoney(data.end_value)}
+                {fmtMoney(displayedEnd)}
               </div>
-              <div className={`text-sm font-mono mt-0.5 ${colorForPL(data.change)}`} data-testid="chart-change">
-                {data.change >= 0 ? "▲" : "▼"} {fmtMoney(Math.abs(data.change))} ({fmtPct(data.change_pct)})
+              <div className={`text-sm font-mono mt-0.5 ${colorForPL(change)}`} data-testid="chart-change">
+                {change >= 0 ? "▲" : "▼"} {fmtMoney(Math.abs(change))} ({fmtPct(changePct)})
                 <span className="text-gray-500 ml-2">· {active.sub}</span>
               </div>
             </>

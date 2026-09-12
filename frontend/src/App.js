@@ -11,12 +11,16 @@ import InsiderFlowTab from "@/components/InsiderFlowTab";
 import AlphaTab from "@/components/AlphaTab";
 import WatchlistTab from "@/components/WatchlistTab";
 import ScannerTab from "@/components/ScannerTab";
+import ChatTab from "@/components/ChatTab";
+import HowItWorksModal from "@/components/HowItWorksModal";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Login from "@/components/Login";
 import AuthCallback from "@/components/AuthCallback";
-import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut, Radar } from "lucide-react";
+import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut, Radar, Bot, Info } from "lucide-react";
 
 const TABS = [
   { id: "portfolio", label: "PORTFOLIO", icon: LayoutGrid },
+  { id: "chat", label: "AI CHAT", icon: Bot },
   { id: "alpha", label: "ALPHA", icon: Zap },
   { id: "scanner", label: "SCANNER", icon: Radar },
   { id: "watchlist", label: "WATCHLIST", icon: Eye },
@@ -29,6 +33,7 @@ const TABS = [
 function App() {
   const [active, setActive] = useState("portfolio");
   const [now, setNow] = useState(new Date());
+  const [howOpen, setHowOpen] = useState(false);
   // auth state: null = checking, false = anon, object = user
   const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
 
@@ -82,7 +87,7 @@ function App() {
   if (user === false) return <Login onLoginSuccess={(u) => setUser(u)} />;
 
   return (
-    <div className="App min-h-screen" data-testid="app-root">
+    <div className="App min-h-screen flex flex-col" data-testid="app-root">
       <Toaster theme="dark" position="top-right" richColors />
 
       {/* Terminal header */}
@@ -109,6 +114,13 @@ function App() {
           <span data-testid="clock-display" className="text-gray-300">
             {now.toISOString().slice(11, 19)} UTC
           </span>
+          <button
+            onClick={() => setHowOpen(true)}
+            data-testid="how-it-works-button"
+            className="flex items-center gap-1 text-gray-400 hover:text-amber-400 text-[10px] font-mono uppercase tracking-widest transition-colors border border-[#222C3D] px-2 py-1 rounded bg-[#121721]"
+          >
+            <Info className="w-3.5 h-3.5 text-amber-500" /> How it works
+          </button>
           <div className="flex items-center gap-2 pl-3 border-l border-[#222C3D]" data-testid="user-badge">
             {user.picture && <img src={user.picture} alt="" className="w-6 h-6 rounded-full border border-[#222C3D]" />}
             <span className="text-gray-300 hidden md:inline max-w-[140px] truncate">{user.email}</span>
@@ -149,21 +161,26 @@ function App() {
       </nav>
 
       {/* Content */}
-      <main className="p-3 sm:p-5" data-testid="tab-content">
-        {active === "portfolio" && <PortfolioTab />}
-        {active === "alpha" && <AlphaTab />}
-        {active === "scanner" && <ScannerTab />}
-        {active === "watchlist" && <WatchlistTab />}
-        {active === "stock-news" && <StockNewsTab />}
-        {active === "macro-news" && <MacroNewsTab />}
-        {active === "sentiment" && <SentimentTab />}
-        {active === "insider" && <InsiderFlowTab />}
+      <main className="p-3 sm:p-5 flex-1" data-testid="tab-content">
+        <ErrorBoundary>
+          {active === "portfolio" && <PortfolioTab />}
+          {active === "chat" && <ChatTab />}
+          {active === "alpha" && <AlphaTab />}
+          {active === "scanner" && <ScannerTab />}
+          {active === "watchlist" && <WatchlistTab />}
+          {active === "stock-news" && <StockNewsTab />}
+          {active === "macro-news" && <MacroNewsTab />}
+          {active === "sentiment" && <SentimentTab />}
+          {active === "insider" && <InsiderFlowTab />}
+        </ErrorBoundary>
       </main>
 
-      <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex justify-between">
-        <span>DATA: YAHOO FINANCE / ALPHA VANTAGE / NEWSAPI</span>
-        <span>ANALYSIS: CLAUDE SONNET 4.6</span>
+      <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex flex-col md:grid md:grid-cols-3 md:items-center gap-1 md:gap-2 text-center md:text-left mt-auto pb-[env(safe-area-inset-bottom)]">
+        <span className="md:justify-self-start truncate">DATA: YAHOO · GOOGLE NEWS · NEWSAPI · KADOA · SEC · STOCKTWITS</span>
+        <span className="md:justify-self-center md:text-center text-gray-400">Sources equivalent to <span className="text-amber-500">$24,000/yr</span> institutional terminals · yours costs nothing</span>
+        <span className="md:justify-self-end truncate">ANALYSIS: CLAUDE SONNET 4.6</span>
       </footer>
+      <HowItWorksModal open={howOpen} onClose={() => setHowOpen(false)} />
     </div>
   );
 }

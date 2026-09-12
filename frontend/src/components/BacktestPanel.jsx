@@ -65,13 +65,18 @@ export default function BacktestPanel() {
                     <td colSpan={6} className="px-3 py-2 text-gray-500 text-[11px]">{b.error}</td></tr>
                 );
               }
-              const B = b.buy, S = b.sell;
-              const Cell = ({ d }) => (
-                <td className="px-3 py-2 font-mono">
-                  <span className={cellColor(d.avg)}>{d.avg > 0 ? "+" : ""}{d.avg}%</span>
-                  <span className="text-gray-500 text-[10px] ml-1">· {d.win_rate}% · n={d.n}</span>
-                </td>
-              );
+              const B = b.buy || {}, S = b.sell || {};
+              const Cell = ({ d }) => {
+                if (!d || d.avg === undefined) {
+                  return <td className="px-3 py-2 font-mono text-gray-500">—</td>;
+                }
+                return (
+                  <td className="px-3 py-2 font-mono">
+                    <span className={cellColor(d.avg)}>{d.avg > 0 ? "+" : ""}{d.avg}%</span>
+                    <span className="text-gray-500 text-[10px] ml-1">· {d.win_rate ?? 0}% · n={d.n ?? 0}</span>
+                  </td>
+                );
+              };
               return (
                 <tr key={b.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26]" data-testid={`backtest-row-${b.symbol}`}>
                   <td className="px-3 py-2 font-mono font-bold text-amber-400">{b.symbol}</td>

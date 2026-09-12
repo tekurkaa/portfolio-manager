@@ -1,7 +1,7 @@
 """Portfolio historical value calculation using yfinance historical prices."""
 import asyncio
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
 
 import yfinance as yf
@@ -45,20 +45,25 @@ def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[
         logger.warning(f"yf.download failed: {e}")
         return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
 
-    # Build per-symbol close series
+    # Build per-symbol close series - handle MultiIndex vs flat
     series_map = {}
-    if len(symbols) == 1:
-        s = symbols[0]
-        if "Close" in df.columns:
-            series_map[s] = df["Close"].dropna()
-    else:
-        for s in symbols:
-            try:
-                col = df[s]["Close"].dropna() if s in df.columns.get_level_values(0) else None
-                if col is not None and not col.empty:
-                    series_map[s] = col
-            except Exception:
-                continue
+    is_multi = isinstance(df.columns, pd.MultiIndex)
+    for s in symbols:
+        try:
+            if is_multi:
+                # Try (Close, symbol) or (symbol, Close)
+                if ("Close", s) in df.columns:
+                    col = df[("Close", s)].dropna()
+                elif s in df.columns.get_level_values(0):
+                    col = df[s]["Close"].dropna()
+                else:
+                    continue
+            else:
+                col = df["Close"].dropna() if "Close" in df.columns else None
+            if col is not None and not col.empty:
+                series_map[s] = col
+        except Exception:
+            continue
 
     if not series_map:
         return {"range": range_key, "points": [], "start": None, "end": None, "start_value": 0, "end_value": 0}
@@ -91,6 +96,18 @@ def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[
     }
 
 
-async def portfolio_history(holdings: List[Dict[str, Any]], range_key: str = "1M") -> Dict[str, Any]:
+async def portfolio_history(holdings: List[Dict[str, Any]], range_key: str = "1M", benchmark: Optional[str] = None) -> Dict[str, Any]:
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _fetch_history_sync, holdings, range_key)
+    result = await loop.run_in_executor(None, _fetch_history_sync, holdings, range_key)
+    if benchmark and result.get("points"):
+        bench_holding = [{"symbol": benchmark.upper(), "quantity": 1.0}]
+        b = await loop.run_in_executor(None, _fetch_history_sync, bench_holding, range_key)
+        result["benchmark"] = {
+            "symbol": benchmark.upper(),
+            "start_value": b.get("start_value"),
+            "end_value": b.get("end_value"),
+            "change_pct": b.get("change_pct"),
+        }
+        if b.get("change_pct") is not None and result.get("change_pct") is not None:
+            result["alpha_vs_benchmark"] = round(result["change_pct"] - b["change_pct"], 3)
+    return result

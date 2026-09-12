@@ -22,7 +22,6 @@ import yfinance as yf
 logger = logging.getLogger(__name__)
 
 NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
-EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
@@ -136,6 +135,35 @@ async def _fetch_google_news_rss(query: str, tag: Optional[str] = None, max_resu
     return articles
 
 
+async def _fetch_google_news(query: str, when: str = "1d", limit: int = 15) -> List[Dict[str, Any]]:
+    """Google News RSS with time constraint."""
+    return await _fetch_google_news_rss(f"{query} when:{when}", max_results=limit)
+
+
+async def fetch_symbol_news_live(symbol: str) -> List[Dict[str, Any]]:
+    """Combined live news for symbol: Yahoo Finance + Google News + NewsAPI. Deduplicated & sorted newest first."""
+    yh, gn, na = await asyncio.gather(
+        _fetch_yfinance_news(symbol),
+        _fetch_google_news(f'"{symbol}"+stock', when="1d", limit=15),
+        _fetch_newsapi(f'"{symbol}"', page_size=10, days=1),
+        return_exceptions=True,
+    )
+    def _safe(v): return v if isinstance(v, list) else []
+    combined = _safe(yh) + _safe(gn) + _safe(na)
+    seen_urls, seen_titles = set(), set()
+    unique = []
+    for a in combined:
+        u = a.get("url") or ""
+        t = (a.get("title") or "").strip().lower()[:80]
+        if u in seen_urls or (t and t in seen_titles):
+            continue
+        if u: seen_urls.add(u)
+        if t: seen_titles.add(t)
+        unique.append(a)
+    unique.sort(key=lambda a: a.get("published_at") or "", reverse=True)
+    return unique
+
+
 # ---------- 3. NEWSAPI.ORG (OPTIONAL) ----------
 async def _fetch_newsapi(query: str, page_size: int = 15, days: int = 3) -> List[Dict[str, Any]]:
     if not NEWSAPI_KEY:
@@ -192,7 +220,7 @@ async def _llm_summarize(articles: List[Dict[str, Any]], focus: str) -> Optional
     )
 
     # 1. Anthropic API
-    anthropic_key = ANTHROPIC_API_KEY or (EMERGENT_LLM_KEY if EMERGENT_LLM_KEY.startswith("sk-ant-") else "")
+    anthropic_key = ANTHROPIC_API_KEY
     if anthropic_key:
         try:
             async with httpx.AsyncClient(timeout=20.0) as client:
@@ -218,7 +246,7 @@ async def _llm_summarize(articles: List[Dict[str, Any]], focus: str) -> Optional
             logger.warning(f"Anthropic summarization failed: {e}")
 
     # 2. OpenAI API
-    openai_key = OPENAI_API_KEY or (EMERGENT_LLM_KEY if EMERGENT_LLM_KEY.startswith("sk-") and not EMERGENT_LLM_KEY.startswith("sk-ant-") else "")
+    openai_key = OPENAI_API_KEY
     if openai_key:
         try:
             async with httpx.AsyncClient(timeout=20.0) as client:
@@ -245,7 +273,7 @@ async def _llm_summarize(articles: List[Dict[str, Any]], focus: str) -> Optional
             logger.warning(f"OpenAI summarization failed: {e}")
 
     # 3. Gemini API
-    gemini_key = GEMINI_API_KEY or (EMERGENT_LLM_KEY if EMERGENT_LLM_KEY.startswith("AIza") else "")
+    gemini_key = GEMINI_API_KEY
     if gemini_key:
         try:
             async with httpx.AsyncClient(timeout=20.0) as client:
