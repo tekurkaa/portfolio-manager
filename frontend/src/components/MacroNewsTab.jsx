@@ -38,8 +38,6 @@ export default function MacroNewsTab() {
 
   useEffect(() => {
     load();
-    const t = setInterval(() => load(true), 60 * 1000);
-    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

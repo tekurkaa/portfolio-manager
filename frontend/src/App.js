@@ -40,10 +40,11 @@ function App() {
   const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
   const [loadTime, setLoadTime] = useState(0);
 
-  // Set of tabs mounted in the DOM. Always starts with active tab to ensure immediate responsiveness.
+  // Set of tabs mounted in the DOM. Always starts with active tab.
+  // Other tabs mount ONLY on-demand when clicked by the user, completely eliminating background churn.
   const [mountedTabs, setMountedTabs] = useState(() => new Set(["portfolio"]));
 
-  // Ensure active tab is immediately mounted if user clicks it
+  // Ensure active tab is mounted when clicked
   useEffect(() => {
     setMountedTabs((prev) => {
       if (prev.has(active)) return prev;
@@ -52,26 +53,6 @@ function App() {
       return next;
     });
   }, [active]);
-
-  // Staggered background pre-mounting: mount 1 tab every 1.5s after user is logged in
-  // Prevents thundering herd on backend while guaranteeing zero-latency switching once loaded.
-  useEffect(() => {
-    if (!user || typeof user !== "object") return;
-    const unmounted = TABS.map((t) => t.id).filter((id) => !mountedTabs.has(id));
-    if (unmounted.length === 0) return;
-
-    const timer = setTimeout(() => {
-      setMountedTabs((prev) => {
-        const nextTarget = TABS.map((t) => t.id).find((id) => !prev.has(id));
-        if (!nextTarget) return prev;
-        const updated = new Set(prev);
-        updated.add(nextTarget);
-        return updated;
-      });
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, [mountedTabs, user]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -135,19 +116,42 @@ function App() {
   if (user === "callback") return <AuthCallback onDone={handleAuthDone} />;
   if (user === null) {
     return (
-      <div className="min-h-screen bg-[#0A0D12] flex flex-col items-center justify-center gap-3 p-4" data-testid="loading-terminal-screen">
-        <div className="flex items-center gap-2 text-amber-500 font-mono text-sm tracking-widest uppercase">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping inline-block mr-1" />
-          Loading terminal...
-        </div>
-        {loadTime >= 4 && (
-          <div className="text-gray-400 font-mono text-xs text-center max-w-sm border border-[#222C3D] bg-[#121721] px-3.5 py-2.5 rounded shadow-lg animate-fadeIn">
-            <span className="text-amber-400 font-semibold">Connecting to cloud server...</span>
-            <p className="text-gray-500 text-[11px] mt-1 leading-relaxed">
-              Render free-tier instances spin down when idle. Booting container ({loadTime}s elapsed)...
-            </p>
+      <div className="min-h-screen bg-[#0A0D12] flex flex-col">
+        {/* Terminal header */}
+        <header
+          className="border-b border-[#222C3D] bg-[#0E131F] px-4 py-2 flex items-center justify-between sticky top-0 z-40"
+          data-testid="app-header"
+        >
+          <div className="flex items-center gap-3">
+            <Terminal className="w-5 h-5 text-amber-500" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-amber-500 font-bold text-sm tracking-widest uppercase">
+                Terminus / Invest
+              </span>
+              <span className="text-[10px] text-gray-500 font-mono">
+                PERSONAL INVESTMENT COMMAND CENTER
+              </span>
+            </div>
           </div>
-        )}
+        </header>
+
+        {/* Priority 1: Ticker Bar loads at t=0 before anything else */}
+        <TopTickerBar />
+
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 p-4" data-testid="loading-terminal-screen">
+          <div className="flex items-center gap-2 text-amber-500 font-mono text-sm tracking-widest uppercase">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping inline-block mr-1" />
+            Loading terminal...
+          </div>
+          {loadTime >= 4 && (
+            <div className="text-gray-400 font-mono text-xs text-center max-w-sm border border-[#222C3D] bg-[#121721] px-3.5 py-2.5 rounded shadow-lg animate-fadeIn">
+              <span className="text-amber-400 font-semibold">Connecting to cloud server...</span>
+              <p className="text-gray-500 text-[11px] mt-1 leading-relaxed">
+                Render free-tier instances spin down when idle. Booting container ({loadTime}s elapsed)...
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

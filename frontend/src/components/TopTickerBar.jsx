@@ -53,8 +53,8 @@ export default function TopTickerBar() {
 
   useEffect(() => {
     load();
-    // Live update interval every 6 seconds for true real-time streaming
-    const t = setInterval(load, 6000);
+    // Live update interval every 15 seconds for real-time streaming without server congestion
+    const t = setInterval(load, 15000);
     return () => clearInterval(t);
   }, []);
 

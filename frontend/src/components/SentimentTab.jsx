@@ -78,8 +78,6 @@ export default function SentimentTab() {
 
   useEffect(() => {
     load();
-    const t = setInterval(() => load(true), 5 * 60 * 1000);
-    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

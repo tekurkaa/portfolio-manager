@@ -44,8 +44,6 @@ export default function ScannerTab() {
   };
   useEffect(() => {
     load();
-    const t = setInterval(() => load(true), 3 * 60 * 1000);
-    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -124,12 +122,21 @@ export default function ScannerTab() {
           <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">Top Breakout Candidates</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs" data-testid="scanner-table">
+          <table className="w-full text-xs min-w-[760px]" data-testid="scanner-table">
             <thead className="bg-[#0E131F] border-b border-[#222C3D]">
               <tr className="text-left">
-                {["#","SYMBOL","SIGNAL","SCORE","PRICE","MOM 5D","MOM 1M","VOL SURGE","52W%","OPT %","CGR ▲","DRIVERS"].map((h,i) => (
-                  <th key={i} className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
-                ))}
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap w-8">#</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SYMBOL</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap min-w-[110px] w-[110px]">SIGNAL</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SCORE</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">PRICE</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOM 5D</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOM 1M</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">VOL SURGE</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">52W%</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">OPT %</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">CGR ▲</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">DRIVERS</th>
               </tr>
             </thead>
             <tbody>
@@ -139,20 +146,26 @@ export default function ScannerTab() {
                 <tr><td colSpan={12} className="p-8 text-center text-gray-500 font-mono text-xs">No candidates. Try again during market hours.</td></tr>
               ) : data.candidates.map((c, i) => (
                 <tr key={c.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26]" data-testid={`scan-row-${c.symbol}`}>
-                  <td className="px-3 py-2 font-mono text-gray-600">{i+1}</td>
-                  <td className="px-3 py-2 font-mono font-bold text-amber-400 tracking-wider">{c.symbol}</td>
-                  <td className="px-3 py-2">
-                    <span className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-sm border ${signalColor(c.signal)}`}>{c.signal}</span>
+                  <td className="px-3 py-2 font-mono text-gray-600 whitespace-nowrap">{i+1}</td>
+                  <td className="px-3 py-2 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">{c.symbol}</td>
+                  <td className="px-3 py-2 whitespace-nowrap min-w-[110px] w-[110px]">
+                    <span className={`inline-flex items-center justify-center whitespace-nowrap text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm border shrink-0 ${signalColor(c.signal)}`}>
+                      {c.signal ? c.signal.replace(/\s+/g, '\u00A0') : ''}
+                    </span>
                   </td>
-                  <td className="px-3 py-2 font-mono text-gray-100 font-bold">{c.composite}</td>
-                  <td className="px-3 py-2 font-mono text-gray-200">${c.price}</td>
-                  <td className={`px-3 py-2 font-mono ${c.momentum_5d >= 0 ? "text-emerald-400" : "text-rose-500"}`}>{fmtPct(c.momentum_5d)}</td>
-                  <td className={`px-3 py-2 font-mono ${c.momentum_20d >= 0 ? "text-emerald-400" : "text-rose-500"}`}>{fmtPct(c.momentum_20d)}</td>
-                  <td className="px-3 py-2 font-mono text-cyan-400">{c.vol_surge}×</td>
-                  <td className="px-3 py-2 font-mono text-gray-300">{c.near_52w_high_pct}%</td>
-                  <td className="px-3 py-2 font-mono text-gray-300">{c.options_tilt}%</td>
-                  <td className="px-3 py-2 font-mono text-emerald-400">{c.congress_buys || 0}</td>
-                  <td className="px-3 py-2 text-gray-400 text-[11px]">{c.drivers?.join(" · ")}</td>
+                  <td className="px-3 py-2 font-mono text-gray-100 font-bold whitespace-nowrap">{c.composite}</td>
+                  <td className="px-3 py-2 font-mono text-gray-200 whitespace-nowrap">${c.price}</td>
+                  <td className={`px-3 py-2 font-mono whitespace-nowrap ${c.momentum_5d >= 0 ? "text-emerald-400" : "text-rose-500"}`}>{fmtPct(c.momentum_5d)}</td>
+                  <td className={`px-3 py-2 font-mono whitespace-nowrap ${c.momentum_20d >= 0 ? "text-emerald-400" : "text-rose-500"}`}>{fmtPct(c.momentum_20d)}</td>
+                  <td className="px-3 py-2 font-mono text-cyan-400 whitespace-nowrap">{c.vol_surge}×</td>
+                  <td className="px-3 py-2 font-mono text-gray-300 whitespace-nowrap">{c.near_52w_high_pct}%</td>
+                  <td className="px-3 py-2 font-mono text-gray-300 whitespace-nowrap">{c.options_tilt}%</td>
+                  <td className="px-3 py-2 font-mono text-emerald-400 whitespace-nowrap">{c.congress_buys || 0}</td>
+                  <td className="px-3 py-2">
+                    <div className="max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[340px] text-gray-400 text-[11px] break-words leading-relaxed">
+                      {c.drivers?.join(" · ")}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

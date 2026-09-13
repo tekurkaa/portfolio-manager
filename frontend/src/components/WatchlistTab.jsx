@@ -104,8 +104,6 @@ export default function WatchlistTab() {
 
   useEffect(() => {
     load();
-    const t = setInterval(() => load(true), 5 * 60 * 1000);
-    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -163,12 +161,19 @@ export default function WatchlistTab() {
 
       <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[760px]">
             <thead className="bg-[#0E131F] border-b border-[#222C3D]">
               <tr className="text-left">
-                {["SYMBOL","PRICE","DAY %","SIGNAL","COMPOSITE","MOMENTUM","SENTIMENT","OPTIONS","DRIVERS",""].map((h,i) => (
-                  <th key={i} className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
-                ))}
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SYMBOL</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">PRICE</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">DAY %</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap min-w-[110px] w-[110px]">SIGNAL</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">COMPOSITE</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOMENTUM</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SENTIMENT</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">OPTIONS</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">DRIVERS</th>
+                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase w-8"></th>
               </tr>
             </thead>
             <tbody>
@@ -181,18 +186,24 @@ export default function WatchlistTab() {
               ) : signals.map((s) => (
                 <tr key={s.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26] cursor-pointer" onClick={() => setDrawerSym(s.symbol)}
                   data-testid={`watchlist-row-${s.symbol}`}>
-                  <td className="px-3 py-2.5 font-mono font-bold text-amber-400 tracking-wider">{s.symbol}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-200">{s.price != null ? `$${fmtNum(s.price, 2)}` : "—"}</td>
-                  <td className={`px-3 py-2.5 font-mono ${colorForPL(s.change_pct)}`}>{s.change_pct != null ? fmtPct(s.change_pct) : "—"}</td>
-                  <td className="px-3 py-2.5">
-                    <span className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-sm border ${signalColor(s.signal)}`}>{s.signal}</span>
+                  <td className="px-3 py-2.5 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">{s.symbol}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-200 whitespace-nowrap">{s.price != null ? `$${fmtNum(s.price, 2)}` : "—"}</td>
+                  <td className={`px-3 py-2.5 font-mono whitespace-nowrap ${colorForPL(s.change_pct)}`}>{s.change_pct != null ? fmtPct(s.change_pct) : "—"}</td>
+                  <td className="px-3 py-2.5 whitespace-nowrap min-w-[110px] w-[110px]">
+                    <span className={`inline-flex items-center justify-center whitespace-nowrap text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm border shrink-0 ${signalColor(s.signal)}`}>
+                      {s.signal ? s.signal.replace(/\s+/g, '\u00A0') : ''}
+                    </span>
                   </td>
-                  <td className="px-3 py-2.5 font-mono text-gray-100 font-bold">{s.composite}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300">{s.momentum}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300">{s.sentiment}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300">{s.options_tilt}</td>
-                  <td className="px-3 py-2.5 text-gray-400 text-[11px]">{s.drivers?.join(" · ")}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-100 font-bold whitespace-nowrap">{s.composite}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.momentum}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.sentiment}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.options_tilt}</td>
                   <td className="px-3 py-2.5">
+                    <div className="max-w-[220px] md:max-w-[280px] lg:max-w-[360px] text-gray-400 text-[11px] break-words leading-relaxed">
+                      {s.drivers?.join(" · ")}
+                    </div>
+                  </td>
+                  <td className="px-3 py-2.5 whitespace-nowrap">
                     <button onClick={(e) => { e.stopPropagation(); remove(s.symbol); }}
                       data-testid={`watchlist-remove-${s.symbol}`}
                       className="text-gray-600 hover:text-rose-500">
