@@ -20,22 +20,32 @@ const typeColor = (t) => {
 export default function InsiderFlowTab() {
   const [data, setData] = useState({ congress: [], form4: [], top_activity: [], held_matches: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [tab, setTab] = useState("all");
   const [onlyHeld, setOnlyHeld] = useState(false);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.congress || data.congress.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/insider/summary");
-      setData(data);
-    } catch { toast.error("Failed to load insider flow"); }
-    finally { setLoading(false); }
+      const { data: res } = await api.get("/insider/summary");
+      setData(res);
+    } catch {
+      if (!isBackground) toast.error("Failed to load insider flow");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 5 * 60 * 1000);
+    const t = setInterval(() => load(true), 5 * 60 * 1000);
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const congress = onlyHeld ? data.congress.filter((c) => c.hit) : data.congress;
@@ -51,9 +61,9 @@ export default function InsiderFlowTab() {
             US Congress trades (STOCK Act) · SEC Form 4 insider filings · Auto-refresh 5 min
           </div>
         </div>
-        <button onClick={load} data-testid="refresh-insider"
+        <button onClick={() => load(true)} data-testid="refresh-insider"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm">
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh
+          <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
@@ -134,7 +144,7 @@ export default function InsiderFlowTab() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {loading && congress.length === 0 ? (
                   <tr><td colSpan={7} className="p-6 text-center text-gray-500 font-mono text-xs">Loading trades...</td></tr>
                 ) : congress.length === 0 ? (
                   <tr><td colSpan={7} className="p-6 text-center text-gray-500 font-mono text-xs">

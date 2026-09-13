@@ -53,17 +53,31 @@ const Gauge180 = ({ score, label }) => {
 export default function SentimentTab() {
   const [data, setData] = useState({ per_symbol: [], average_score: 50, fear_greed: null });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.per_symbol || data.per_symbol.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/sentiment/portfolio");
-      setData(data);
-    } catch { toast.error("Failed to load sentiment"); }
-    finally { setLoading(false); }
+      const { data: res } = await api.get("/sentiment/portfolio");
+      setData(res);
+    } catch {
+      if (!isBackground) toast.error("Failed to load sentiment");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 5 * 60 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div data-testid="sentiment-tab" className="space-y-4">
@@ -77,11 +91,11 @@ export default function SentimentTab() {
           </div>
         </div>
         <button
-          onClick={load}
+          onClick={() => load(true)}
           data-testid="refresh-sentiment"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh
+          <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
@@ -127,7 +141,7 @@ export default function SentimentTab() {
             Per-Symbol Sentiment · Reddit + StockTwits
           </span>
         </div>
-        {loading ? (
+        {loading && (!data.per_symbol || data.per_symbol.length === 0) ? (
           <div className="p-8 text-center text-gray-500 font-mono text-xs">Analyzing headlines...</div>
         ) : data.per_symbol?.length === 0 ? (
           <div className="p-8 text-center text-gray-500 font-mono text-xs">

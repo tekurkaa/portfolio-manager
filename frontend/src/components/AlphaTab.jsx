@@ -16,16 +16,30 @@ const barColor = (v) => (v >= 60 ? "bg-emerald-500" : v <= 40 ? "bg-rose-500" : 
 function AlphaSignals() {
   const [data, setData] = useState({ signals: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.signals || data.signals.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/signal/alpha");
-      setData(data);
-    } catch { toast.error("Failed to load alpha signals"); }
-    finally { setLoading(false); }
+      const { data: res } = await api.get("/signal/alpha");
+      setData(res);
+    } catch {
+      if (!isBackground) toast.error("Failed to load alpha signals");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
-  useEffect(() => { load(); const t = setInterval(load, 5 * 60 * 1000); return () => clearInterval(t); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 5 * 60 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden" data-testid="alpha-signals-panel">
@@ -36,9 +50,9 @@ function AlphaSignals() {
             Alpha Signal · Momentum × Sentiment × Options
           </span>
         </div>
-        <button onClick={load} data-testid="refresh-alpha"
+        <button onClick={() => load(true)} data-testid="refresh-alpha"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm">
-          <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} /> Refresh
+          <RefreshCw className={`w-3 h-3 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -51,7 +65,7 @@ function AlphaSignals() {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {loading && (!data.signals || data.signals.length === 0) ? (
               <tr><td colSpan={7} className="p-6 text-center text-gray-500 font-mono text-xs">Computing signals...</td></tr>
             ) : data.signals?.length === 0 ? (
               <tr><td colSpan={7} className="p-6 text-center text-gray-500 font-mono text-xs">No holdings. Add positions to see signals.</td></tr>
@@ -89,17 +103,31 @@ function AlphaSignals() {
 function OptionsFlow() {
   const [data, setData] = useState({ unusual: [], put_call_ratio: 0, total_call_volume: 0, total_put_volume: 0 });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [onlyUnusual, setOnlyUnusual] = useState(true);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.unusual || data.unusual.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/options/flow");
-      setData(data);
-    } catch { toast.error("Failed to load options flow"); }
-    finally { setLoading(false); }
+      const { data: res } = await api.get("/options/flow");
+      setData(res);
+    } catch {
+      if (!isBackground) toast.error("Failed to load options flow");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
-  useEffect(() => { load(); const t = setInterval(load, 5 * 60 * 1000); return () => clearInterval(t); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 5 * 60 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden" data-testid="options-flow-panel">
@@ -120,9 +148,9 @@ function OptionsFlow() {
             className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${
               onlyUnusual ? "border-cyan-500 text-cyan-400 bg-cyan-500/10" : "border-[#222C3D] text-gray-400"
             }`}>{onlyUnusual ? "Unusual only" : "All"}</button>
-          <button onClick={load} data-testid="refresh-options"
+          <button onClick={() => load(true)} data-testid="refresh-options"
             className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm">
-            <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3 h-3 ${loading || refreshing ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
@@ -136,7 +164,7 @@ function OptionsFlow() {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {loading && (!data.unusual || data.unusual.length === 0) ? (
               <tr><td colSpan={9} className="p-6 text-center text-gray-500 font-mono text-xs">Scanning options chains...</td></tr>
             ) : data.unusual?.length === 0 ? (
               <tr><td colSpan={9} className="p-6 text-center text-gray-500 font-mono text-xs">No unusual activity right now. Add stock positions.</td></tr>

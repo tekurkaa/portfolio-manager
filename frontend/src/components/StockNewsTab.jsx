@@ -6,24 +6,31 @@ import { toast } from "sonner";
 export default function StockNewsTab() {
   const [data, setData] = useState({ articles: [], summary: null, symbols: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState("ALL");
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.articles || data.articles.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/news/stocks");
-      setData(data || { articles: [], summary: null, symbols: [] });
+      const { data: res } = await api.get("/news/stocks");
+      setData(res || { articles: [], summary: null, symbols: [] });
     } catch (e) {
-      toast.error("Failed to load stock news");
+      if (!isBackground) toast.error("Failed to load stock news");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 60 * 1000);
+    const t = setInterval(() => load(true), 60 * 1000);
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tags = ["ALL", ...(data.symbols || [])];
@@ -43,11 +50,11 @@ export default function StockNewsTab() {
           </div>
         </div>
         <button
-          onClick={load}
+          onClick={() => load(true)}
           data-testid="refresh-stock-news"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh
+          <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
@@ -83,7 +90,7 @@ export default function StockNewsTab() {
       )}
 
       <div className="grid gap-3" data-testid="news-articles-list">
-        {loading ? (
+        {loading && (!data.articles || data.articles.length === 0) ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8">Loading news...</div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8" data-testid="empty-news">

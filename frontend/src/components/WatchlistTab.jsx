@@ -77,11 +77,16 @@ export default function WatchlistTab() {
   const [signals, setSignals] = useState([]);
   const [newSym, setNewSym] = useState("");
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [drawerSym, setDrawerSym] = useState(null);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && signals.length === 0) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
       const [wl, sig] = await Promise.all([
         api.get("/watchlist"),
@@ -89,11 +94,20 @@ export default function WatchlistTab() {
       ]);
       setSymbols(wl.data.symbols || []);
       setSignals(sig.data.signals || []);
-    } catch { toast.error("Failed to load watchlist"); }
-    finally { setLoading(false); }
+    } catch {
+      if (!isBackground) toast.error("Failed to load watchlist");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
-  useEffect(() => { load(); const t = setInterval(load, 5 * 60 * 1000); return () => clearInterval(t); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 5 * 60 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const add = async () => {
     const s = newSym.trim().toUpperCase();
@@ -139,9 +153,9 @@ export default function WatchlistTab() {
               className="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm disabled:opacity-50 flex items-center gap-1">
               <Plus className="w-3.5 h-3.5" /> Add
             </button>
-            <button onClick={load} data-testid="watchlist-refresh"
+            <button onClick={() => load(true)} data-testid="watchlist-refresh"
               className="border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm flex items-center gap-1">
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} />
             </button>
           </div>
         </div>
@@ -158,7 +172,7 @@ export default function WatchlistTab() {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
+              {loading && signals.length === 0 ? (
                 <tr><td colSpan={10} className="p-8 text-center text-gray-500 font-mono text-xs">Scanning watchlist...</td></tr>
               ) : signals.length === 0 ? (
                 <tr><td colSpan={10} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="watchlist-empty">

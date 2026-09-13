@@ -12,12 +12,17 @@ const signalColor = (s) => {
 export default function ScannerTab() {
   const [data, setData] = useState({ candidates: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [sending, setSending] = useState(false);
   const [email, setEmail] = useState("");
   const [enabled, setEnabled] = useState(false);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.candidates || data.candidates.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
       const [scan, prefs] = await Promise.all([
         api.get("/scanner/breakouts"),
@@ -26,10 +31,19 @@ export default function ScannerTab() {
       setData(scan.data);
       setEmail(prefs.data.email || "");
       setEnabled(!!prefs.data.enabled);
-    } catch { toast.error("Failed to scan"); }
-    finally { setLoading(false); }
+    } catch {
+      if (!isBackground) toast.error("Failed to scan");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 3 * 60 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const savePrefs = async () => {
     try {
@@ -62,9 +76,9 @@ export default function ScannerTab() {
               Scans {data.universe_size || 60}+ tickers (S&P + biotech + semis + AI + crypto). Momentum × volume surge × options × congress buys.
             </div>
           </div>
-          <button onClick={load} disabled={loading} data-testid="scan-refresh"
+          <button onClick={() => load(true)} disabled={loading || refreshing} data-testid="scan-refresh"
             className="flex items-center gap-1.5 border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm font-semibold disabled:opacity-50">
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Rescan
+            <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Rescan
           </button>
         </div>
       </div>
@@ -115,7 +129,7 @@ export default function ScannerTab() {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
+              {loading && (!data.candidates || data.candidates.length === 0) ? (
                 <tr><td colSpan={12} className="p-8 text-center text-gray-500 font-mono text-xs">Scanning {data.universe_size || 60}+ tickers · this takes 30-60s...</td></tr>
               ) : data.candidates?.length === 0 ? (
                 <tr><td colSpan={12} className="p-8 text-center text-gray-500 font-mono text-xs">No candidates. Try again during market hours.</td></tr>

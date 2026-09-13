@@ -120,7 +120,7 @@ export function PortfolioHistoryChart({ currentValue = null }) {
         </div>
       </div>
       <div style={{ width: "100%", height: 260 }}>
-        {loading ? (
+        {loading && !data?.points?.length ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">Loading {active.sub}...</div>
         ) : !data?.points?.length ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center" data-testid="history-empty">

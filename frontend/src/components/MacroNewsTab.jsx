@@ -16,21 +16,31 @@ const THEMES = [
 export default function MacroNewsTab() {
   const [data, setData] = useState({ articles: [], summary: null });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [theme, setTheme] = useState("ALL");
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.articles || data.articles.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/news/macro");
-      setData(data || { articles: [], summary: null });
-    } catch { toast.error("Failed to load macro news"); }
-    finally { setLoading(false); }
+      const { data: res } = await api.get("/news/macro");
+      setData(res || { articles: [], summary: null });
+    } catch {
+      if (!isBackground) toast.error("Failed to load macro news");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 60 * 1000);
+    const t = setInterval(() => load(true), 60 * 1000);
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeTheme = THEMES.find((t) => t.id === theme) || THEMES[0];
@@ -48,11 +58,11 @@ export default function MacroNewsTab() {
           </div>
         </div>
         <button
-          onClick={load}
+          onClick={() => load(true)}
           data-testid="refresh-macro-news"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh
+          <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
@@ -86,7 +96,7 @@ export default function MacroNewsTab() {
       </div>
 
       <div className="grid gap-3" data-testid="macro-articles-list">
-        {loading ? (
+        {loading && (!data.articles || data.articles.length === 0) ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8">Loading macro news...</div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8">No articles in this theme.</div>

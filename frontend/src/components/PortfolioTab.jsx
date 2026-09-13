@@ -130,24 +130,36 @@ const SummaryCard = ({ label, value, sub, subColor, icon: Icon }) => (
 export default function PortfolioTab() {
   const [data, setData] = useState({ holdings: [], summary: null });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showTradeImporter, setShowTradeImporter] = useState(false);
   const [sortBy, setSortBy] = useState({ key: "value", dir: "desc" });
   const [filter, setFilter] = useState("all");
   const fileRef = useRef(null);
 
-  const load = async () => {
+  const load = async (isBackground = false) => {
+    if (!isBackground && (!data.holdings || data.holdings.length === 0)) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     try {
-      const { data } = await api.get("/portfolio/holdings");
-      setData(data);
+      const { data: res } = await api.get("/portfolio/holdings");
+      setData(res);
     } catch (e) {
-      toast.error("Failed to load portfolio");
+      if (!isBackground) toast.error("Failed to load portfolio");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(true), 30 * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const upload = async (file) => {
     if (!file) return;
@@ -259,11 +271,11 @@ export default function PortfolioTab() {
               <Plus className="w-3.5 h-3.5" /> Manual
             </button>
             <button
-              onClick={load}
+              onClick={() => load(true)}
               data-testid="refresh-button"
               className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+              <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
             </button>
             {rows.length > 0 && (
               <button
@@ -400,7 +412,7 @@ export default function PortfolioTab() {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {loading && rows.length === 0 ? (
                     <tr>
                       <td colSpan={colCount} className="p-8 text-center text-gray-500 font-mono text-xs" data-testid="loading-row">
                         Loading positions...

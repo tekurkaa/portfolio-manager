@@ -208,18 +208,18 @@ function App() {
         })}
       </nav>
 
-      {/* Content */}
+      {/* Content — Keep all tabs mounted in parallel for zero-latency switching and background updates */}
       <main className="p-3 sm:p-5 flex-1" data-testid="tab-content">
         <ErrorBoundary>
-          {active === "portfolio" && <PortfolioTab />}
-          {active === "chat" && <ChatTab />}
-          {active === "alpha" && <AlphaTab />}
-          {active === "scanner" && <ScannerTab />}
-          {active === "watchlist" && <WatchlistTab />}
-          {active === "stock-news" && <StockNewsTab />}
-          {active === "macro-news" && <MacroNewsTab />}
-          {active === "sentiment" && <SentimentTab />}
-          {active === "insider" && <InsiderFlowTab />}
+          <div className={active === "portfolio" ? "block" : "hidden"} data-tab-container="portfolio"><PortfolioTab /></div>
+          <div className={active === "chat" ? "block" : "hidden"} data-tab-container="chat"><ChatTab /></div>
+          <div className={active === "alpha" ? "block" : "hidden"} data-tab-container="alpha"><AlphaTab /></div>
+          <div className={active === "scanner" ? "block" : "hidden"} data-tab-container="scanner"><ScannerTab /></div>
+          <div className={active === "watchlist" ? "block" : "hidden"} data-tab-container="watchlist"><WatchlistTab /></div>
+          <div className={active === "stock-news" ? "block" : "hidden"} data-tab-container="stock-news"><StockNewsTab /></div>
+          <div className={active === "macro-news" ? "block" : "hidden"} data-tab-container="macro-news"><MacroNewsTab /></div>
+          <div className={active === "sentiment" ? "block" : "hidden"} data-tab-container="sentiment"><SentimentTab /></div>
+          <div className={active === "insider" ? "block" : "hidden"} data-tab-container="insider"><InsiderFlowTab /></div>
         </ErrorBoundary>
       </main>
 
