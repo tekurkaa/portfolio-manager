@@ -109,14 +109,13 @@ def parse_quantity(raw: Any) -> float:
         return 0.0
 
 
+from asset_metadata_service import resolve_asset_metadata
+
+
 def detect_asset_type(symbol: str, description: str = "") -> str:
-    """Determines if the asset is crypto or stock."""
-    sym_clean = symbol.upper().replace("-USD", "").strip()
-    if sym_clean in KNOWN_CRYPTO or "-USD" in symbol.upper():
-        return "crypto"
-    if "crypto" in description.lower() or "bitcoin" in description.lower() or "ethereum" in description.lower():
-        return "crypto"
-    return "stock"
+    """Determines if the asset is crypto, etf, or stock."""
+    meta = resolve_asset_metadata(symbol, description)
+    return meta["asset_type"]
 
 
 def is_option_row(trans_code: str, description: str) -> bool:
@@ -317,7 +316,8 @@ def derive_holdings_fifo(trades: List[Dict[str, Any]], stats: Optional[Dict[str,
             avg_cost = total_cost / active_qty
             earliest_date = lot_queue[0]["trade_date"]
             desc = sym_trades[0].get("description") or symbol
-            asset_type = sym_trades[0].get("asset_type", "stock")
+            raw_atype = sym_trades[0].get("asset_type", "stock")
+            meta = resolve_asset_metadata(symbol, desc, raw_atype)
 
             total_active_lots += len(lot_queue)
 
@@ -326,7 +326,9 @@ def derive_holdings_fifo(trades: List[Dict[str, Any]], stats: Optional[Dict[str,
                 "name": desc,
                 "quantity": round(active_qty, 6),
                 "avg_cost": round(avg_cost, 4),
-                "asset_type": asset_type,
+                "asset_type": meta["asset_type"],
+                "is_broad_market": meta["is_broad_market"],
+                "sub_type": meta["sub_type"],
                 "date_of_purchase": earliest_date,
                 "lot_count": len(lot_queue),
                 "active_lots": [

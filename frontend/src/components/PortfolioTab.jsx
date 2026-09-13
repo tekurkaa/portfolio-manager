@@ -351,7 +351,7 @@ export default function PortfolioTab() {
 
       {/* Filters */}
       <div className="flex items-center gap-2" data-testid="filter-pills">
-        {["all", "stock", "crypto"].map((k) => (
+        {["all", "stock", "etf", "crypto"].map((k) => (
           <button
             key={k}
             onClick={() => setFilter(k)}
@@ -362,7 +362,7 @@ export default function PortfolioTab() {
                 : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
             }`}
           >
-            {k === "all" ? "All" : k === "stock" ? "Stocks" : "Crypto"}
+            {k === "all" ? "All" : k === "stock" ? "Stocks" : k === "etf" ? "ETFs" : "Crypto"}
           </button>
         ))}
       </div>
@@ -445,6 +445,8 @@ export default function PortfolioTab() {
                               className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border ${
                                 h.asset_type === "crypto"
                                   ? "border-cyan-800 text-cyan-400 bg-cyan-950/40"
+                                  : h.asset_type === "etf"
+                                  ? "border-purple-800 text-purple-400 bg-purple-950/40"
                                   : "border-blue-800 text-blue-400 bg-blue-950/40"
                               }`}
                             >

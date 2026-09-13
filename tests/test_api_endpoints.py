@@ -298,6 +298,62 @@ async def test_import_activity_preview_and_confirm():
 
         # Verify both previous VOO and new ETH exist
         merged_res = await client.get("/api/portfolio/holdings", cookies=cookies)
-        merged_symbols = [h["symbol"] for h in merged_res.json()["holdings"]]
+        holdings_list = merged_res.json()["holdings"]
+        merged_symbols = [h["symbol"] for h in holdings_list]
         assert "VOO" in merged_symbols
         assert "ETH" in merged_symbols
+
+        voo = next(h for h in holdings_list if h["symbol"] == "VOO")
+        assert voo["asset_type"] == "etf"
+        assert voo["is_broad_market"] is True
+        assert voo["sub_type"] == "broad_index"
+
+        eth = next(h for h in holdings_list if h["symbol"] == "ETH")
+        assert eth["asset_type"] == "crypto"
+        assert eth["is_broad_market"] is False
+        assert eth["sub_type"] == "blue_chip"
+
+
+@pytest.mark.asyncio
+async def test_asset_metadata_service_and_enrichment():
+    from asset_metadata_service import resolve_asset_metadata
+
+    # 1. Broad ETF
+    voo_meta = resolve_asset_metadata("VOO", "Vanguard S&P 500 ETF")
+    assert voo_meta["asset_type"] == "etf"
+    assert voo_meta["is_broad_market"] is True
+    assert voo_meta["sub_type"] == "broad_index"
+
+    qqq_meta = resolve_asset_metadata("QQQ")
+    assert qqq_meta["asset_type"] == "etf"
+    assert qqq_meta["is_broad_market"] is True
+
+    # 2. Thematic / Leveraged ETF
+    gld_meta = resolve_asset_metadata("GLD", "SPDR Gold Shares")
+    assert gld_meta["asset_type"] == "etf"
+    assert gld_meta["is_broad_market"] is False
+    assert gld_meta["sub_type"] == "leveraged_thematic"
+
+    soxl_meta = resolve_asset_metadata("SOXL", "Direxion Daily Semiconductor Bull 3X")
+    assert soxl_meta["asset_type"] == "etf"
+    assert soxl_meta["is_broad_market"] is False
+    assert soxl_meta["sub_type"] == "leveraged_thematic"
+
+    # 3. Crypto Blue Chip
+    btc_meta = resolve_asset_metadata("BTC-USD", "Bitcoin")
+    assert btc_meta["asset_type"] == "crypto"
+    assert btc_meta["is_broad_market"] is False
+    assert btc_meta["sub_type"] == "blue_chip"
+
+    # 4. Crypto Speculative (Altcoin)
+    doge_meta = resolve_asset_metadata("DOGE-USD", "Dogecoin")
+    assert doge_meta["asset_type"] == "crypto"
+    assert doge_meta["is_broad_market"] is False
+    assert doge_meta["sub_type"] == "speculative"
+
+    # 5. Individual Stock
+    aapl_meta = resolve_asset_metadata("AAPL", "Apple Inc.")
+    assert aapl_meta["asset_type"] == "stock"
+    assert aapl_meta["is_broad_market"] is False
+    assert aapl_meta["sub_type"] is None
+

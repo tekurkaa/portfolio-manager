@@ -29,6 +29,7 @@ from scanner_service import scan_breakouts, build_digest_html, send_digest_email
 from chat_service import chat_answer  # noqa: E402
 from db import get_database  # noqa: E402
 from trade_import_service import parse_robinhood_csv, derive_holdings_fifo  # noqa: E402
+from asset_metadata_service import resolve_asset_metadata  # noqa: E402
 
 db = get_database()
 
@@ -87,7 +88,9 @@ class Holding(BaseModel):
     name: Optional[str] = None
     quantity: float
     avg_cost: float
-    asset_type: Literal["stock", "crypto"] = "stock"
+    asset_type: str = "stock"
+    is_broad_market: Optional[bool] = None
+    sub_type: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     date_of_purchase: Optional[str] = None
     lot_count: Optional[int] = None
@@ -98,7 +101,9 @@ class HoldingCreate(BaseModel):
     name: Optional[str] = None
     quantity: float
     avg_cost: float
-    asset_type: Optional[Literal["stock", "crypto"]] = None
+    asset_type: Optional[str] = None
+    is_broad_market: Optional[bool] = None
+    sub_type: Optional[str] = None
     date_of_purchase: Optional[str] = None
     lot_count: Optional[int] = None
 
@@ -107,6 +112,9 @@ class HoldingUpdate(BaseModel):
     quantity: Optional[float] = None
     avg_cost: Optional[float] = None
     name: Optional[str] = None
+    asset_type: Optional[str] = None
+    is_broad_market: Optional[bool] = None
+    sub_type: Optional[str] = None
     date_of_purchase: Optional[str] = None
     lot_count: Optional[int] = None
 
@@ -149,6 +157,11 @@ async def list_holdings(uid: str = Depends(current_user_id)):
     total_cost = 0.0
     total_day_change = 0.0
     for d in docs:
+        if d.get("is_broad_market") is None or d.get("sub_type") is None:
+            meta = resolve_asset_metadata(d.get("symbol", ""), d.get("name", ""), d.get("asset_type"))
+            d["asset_type"] = meta["asset_type"]
+            d["is_broad_market"] = meta["is_broad_market"]
+            d["sub_type"] = meta["sub_type"]
         q = quotes.get(d["symbol"].upper())
         price = q["price"] if q else d.get("avg_cost", 0)
         prev_close = q["previous_close"] if q and q.get("previous_close") else price
@@ -186,21 +199,24 @@ async def list_holdings(uid: str = Depends(current_user_id)):
             "day_change": round(total_day_change, 2),
             "day_change_pct": round(day_pct, 3),
             "count": len(enriched),
-            "stock_count": sum(1 for h in enriched if h["asset_type"] == "stock"),
-            "crypto_count": sum(1 for h in enriched if h["asset_type"] == "crypto"),
+            "stock_count": sum(1 for h in enriched if h.get("asset_type") == "stock"),
+            "crypto_count": sum(1 for h in enriched if h.get("asset_type") == "crypto"),
+            "etf_count": sum(1 for h in enriched if h.get("asset_type") == "etf"),
         },
     }
 
 
 @api_router.post("/portfolio/holdings")
 async def create_holding(data: HoldingCreate, uid: str = Depends(current_user_id)):
-    asset_type = data.asset_type or ("crypto" if is_crypto(data.symbol) else "stock")
+    meta = resolve_asset_metadata(data.symbol, data.name or "", data.asset_type)
     h = Holding(
         symbol=data.symbol.upper().strip(),
         name=data.name,
         quantity=data.quantity,
         avg_cost=data.avg_cost,
-        asset_type=asset_type,
+        asset_type=data.asset_type or meta["asset_type"],
+        is_broad_market=data.is_broad_market if data.is_broad_market is not None else meta["is_broad_market"],
+        sub_type=data.sub_type or meta["sub_type"],
         date_of_purchase=data.date_of_purchase,
         lot_count=data.lot_count,
     )
@@ -282,7 +298,7 @@ async def import_activity_confirm(data: ImportActivityConfirmRequest, uid: str =
         if qty <= 0:
             continue
 
-        asset_type = h.get("asset_type") or ("crypto" if is_crypto(sym_up) else "stock")
+        meta = resolve_asset_metadata(sym_up, h.get("name") or sym_up, h.get("asset_type"))
         doc = {
             "id": str(uuid.uuid4()),
             "user_id": uid,
@@ -290,7 +306,9 @@ async def import_activity_confirm(data: ImportActivityConfirmRequest, uid: str =
             "name": h.get("name") or sym_up,
             "quantity": qty,
             "avg_cost": avg,
-            "asset_type": asset_type,
+            "asset_type": h.get("asset_type") or meta["asset_type"],
+            "is_broad_market": h.get("is_broad_market") if h.get("is_broad_market") is not None else meta["is_broad_market"],
+            "sub_type": h.get("sub_type") or meta["sub_type"],
             "date_of_purchase": h.get("date_of_purchase"),
             "lot_count": h.get("lot_count", 1),
             "created_at": now_iso,
@@ -309,6 +327,9 @@ async def import_activity_confirm(data: ImportActivityConfirmRequest, uid: str =
                         "quantity": qty,
                         "avg_cost": avg,
                         "name": doc["name"],
+                        "asset_type": doc["asset_type"],
+                        "is_broad_market": doc["is_broad_market"],
+                        "sub_type": doc["sub_type"],
                         "date_of_purchase": doc["date_of_purchase"],
                         "lot_count": doc["lot_count"],
                     }}
@@ -324,7 +345,7 @@ async def import_activity_confirm(data: ImportActivityConfirmRequest, uid: str =
                 "id": str(uuid.uuid4()),
                 "user_id": uid,
                 "symbol": sym_up,
-                "asset_type": lot.get("asset_type", asset_type),
+                "asset_type": lot.get("asset_type", doc["asset_type"]),
                 "quantity": float(lot.get("quantity", 0)),
                 "price": float(lot.get("price", 0)),
                 "trade_date": lot.get("trade_date"),
@@ -380,9 +401,16 @@ async def upload_csv(file: UploadFile = File(...), uid: str = Depends(current_us
             if quantity <= 0 or avg_cost <= 0:
                 continue
             sym_up = symbol.upper().strip()
-            asset_type = "crypto" if is_crypto(sym_up) else "stock"
-            h = Holding(symbol=sym_up, name=name, quantity=quantity,
-                        avg_cost=avg_cost, asset_type=asset_type)
+            meta = resolve_asset_metadata(sym_up, name or "", None)
+            h = Holding(
+                symbol=sym_up,
+                name=name,
+                quantity=quantity,
+                avg_cost=avg_cost,
+                asset_type=meta["asset_type"],
+                is_broad_market=meta["is_broad_market"],
+                sub_type=meta["sub_type"],
+            )
             doc = h.model_dump()
             doc["created_at"] = doc["created_at"].isoformat()
             doc["user_id"] = uid
@@ -391,7 +419,14 @@ async def upload_csv(file: UploadFile = File(...), uid: str = Depends(current_us
             if existing:
                 await db.holdings.update_one(
                     {"user_id": uid, "symbol": sym_up},
-                    {"$set": {"quantity": quantity, "avg_cost": avg_cost, "name": name or existing.get("name")}},
+                    {"$set": {
+                        "quantity": quantity,
+                        "avg_cost": avg_cost,
+                        "name": name or existing.get("name"),
+                        "asset_type": meta["asset_type"],
+                        "is_broad_market": meta["is_broad_market"],
+                        "sub_type": meta["sub_type"],
+                    }},
                 )
             else:
                 await db.holdings.insert_one(doc)
@@ -413,12 +448,23 @@ async def seed_demo(uid: str = Depends(current_user_id)):
         ("AMZN", "Amazon.com", 15, 132.80, "stock"),
         ("GOOGL", "Alphabet Inc.", 18, 128.40, "stock"),
         ("META", "Meta Platforms", 7, 315.60, "stock"),
+        ("VOO", "Vanguard S&P 500 ETF", 20, 410.00, "etf"),
+        ("GLD", "SPDR Gold Shares", 15, 185.00, "etf"),
         ("BTC-USD", "Bitcoin", 0.35, 42800.00, "crypto"),
         ("ETH-USD", "Ethereum", 4.2, 2350.00, "crypto"),
         ("SOL-USD", "Solana", 30, 105.00, "crypto"),
     ]
     for sym, name, qty, avg, atype in demo:
-        h = Holding(symbol=sym, name=name, quantity=qty, avg_cost=avg, asset_type=atype)
+        meta = resolve_asset_metadata(sym, name, atype)
+        h = Holding(
+            symbol=sym,
+            name=name,
+            quantity=qty,
+            avg_cost=avg,
+            asset_type=meta["asset_type"],
+            is_broad_market=meta["is_broad_market"],
+            sub_type=meta["sub_type"],
+        )
         doc = h.model_dump()
         doc["created_at"] = doc["created_at"].isoformat()
         doc["user_id"] = uid

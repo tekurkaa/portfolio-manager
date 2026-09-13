@@ -38,8 +38,153 @@ const divYieldFor = (h) => {
   return DIV_YIELDS[sym] ?? DEFAULT_STOCK_YIELD;
 };
 
+export function getAssetClass(holding) {
+  // 1. Explicit Asset Type Route
+  if (holding?.asset_type === "crypto") {
+    const sym = (holding.symbol || "").replace("-USD", "").toUpperCase();
+    return (sym === "BTC" || sym === "ETH") ? "crypto_blue_chip" : "crypto_speculative";
+  }
+
+  // 2. Explicit ETF Sub-type Route 
+  if (holding?.asset_type === "etf") {
+    // Rely on database fields like 'broad_market', 'index_fund', or 'leveraged_thematic'
+    if (holding.is_broad_market || holding.sub_type === "broad_index") {
+      return "diversified_broad_etf";
+    }
+    return "thematic_leveraged_etf";
+  }
+
+  // 3. Fallback standard equity
+  return "individual_stock";
+}
+
+export const ASSET_CLASS_META = {
+  crypto_blue_chip: { label: "Crypto Blue Chip", badgeCls: "text-cyan-400 border-cyan-800 bg-cyan-950/40" },
+  crypto_speculative: { label: "Crypto Speculative", badgeCls: "text-purple-400 border-purple-800 bg-purple-950/40" },
+  diversified_broad_etf: { label: "Diversified Broad ETF", badgeCls: "text-emerald-400 border-emerald-800 bg-emerald-950/40" },
+  thematic_leveraged_etf: { label: "Thematic / Leveraged ETF", badgeCls: "text-blue-400 border-blue-800 bg-blue-950/40" },
+  individual_stock: { label: "Individual Stock", badgeCls: "text-amber-400 border-amber-800 bg-amber-950/40" },
+};
+
+export function evaluateAssetAlert(holding, weightRatio) {
+  const assetClass = getAssetClass(holding);
+  const ticker = holding?.symbol || "";
+  const weight = (weightRatio * 100).toFixed(1);
+
+  switch (assetClass) {
+    case "crypto_blue_chip": // e.g., BTC, ETH
+      if (weightRatio > 0.10) {
+        return {
+          level: "RED",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `High Exposure: ${ticker} is ${weight}% (crypto hard ceiling 10.0%)`,
+        };
+      } else if (weightRatio > 0.05) {
+        return {
+          level: "YELLOW",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `Warning: ${ticker} is ${weight}% (crypto target max 5.0%)`,
+        };
+      }
+      break;
+
+    case "crypto_speculative": // All other altcoins / tokens
+      if (weightRatio > 0.025) {
+        return {
+          level: "RED",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `High Exposure: ${ticker} is ${weight}% (altcoin hard ceiling 2.5%)`,
+        };
+      } else if (weightRatio > 0.01) {
+        return {
+          level: "YELLOW",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `Warning: ${ticker} is ${weight}% (altcoin target max 1.0%)`,
+        };
+      }
+      break;
+
+    case "diversified_broad_etf":
+      if (weightRatio > 0.60) {
+        return {
+          level: "RED",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `High Exposure: ${ticker} is ${weight}% (hard ceiling 60.0%)`,
+        };
+      } else if (weightRatio > 0.40) {
+        return {
+          level: "YELLOW",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `Warning: ${ticker} is ${weight}% (core target max 40.0%)`,
+        };
+      }
+      break;
+
+    case "thematic_leveraged_etf":
+      if (weightRatio > 0.15) {
+        return {
+          level: "RED",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `High Exposure: ${ticker} is ${weight}% (hard ceiling 15.0%)`,
+        };
+      } else if (weightRatio > 0.05) {
+        return {
+          level: "YELLOW",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `Warning: ${ticker} is ${weight}% (satellite max 5.0%)`,
+        };
+      }
+      break;
+
+    case "individual_stock":
+    default:
+      if (weightRatio > 0.10) {
+        return {
+          level: "RED",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `High Exposure: ${ticker} is ${weight}% (hard ceiling 10.0%)`,
+        };
+      } else if (weightRatio > 0.05) {
+        return {
+          level: "YELLOW",
+          assetClass,
+          symbol: ticker,
+          weight: parseFloat(weight),
+          message: `Warning: ${ticker} is ${weight}% (target max 5.0%)`,
+        };
+      }
+      break;
+  }
+
+  return null;
+}
+
 export function assetRole(h) {
   if (isCrypto(h)) return { label: "Web3 / Digital Asset", cls: "text-cyan-400 border-cyan-800 bg-cyan-950/40" };
+  if (h.asset_type === "etf") {
+    if (h.is_broad_market || h.sub_type === "broad_index") {
+      return { label: "Broad Market Index", cls: "text-emerald-400 border-emerald-800 bg-emerald-950/40" };
+    }
+    return { label: "Thematic / Leveraged ETF", cls: "text-purple-400 border-purple-800 bg-purple-950/40" };
+  }
   if ((h.pl_pct ?? 0) <= -12) return { label: "Drawdown Watch", cls: "text-rose-400 border-rose-800 bg-rose-950/40" };
   if ((h.pl_pct ?? 0) >= 30) return { label: "Core Alpha Gainer", cls: "text-emerald-400 border-emerald-800 bg-emerald-950/40" };
   return { label: "Core Stability", cls: "text-amber-400 border-amber-800 bg-amber-950/40" };
@@ -62,11 +207,23 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
   if (!holdings || !holdings.length || !summary) return null;
   const totalValue = summary.total_value || 0;
 
-  // 5/20 concentration checks
-  const overExposed = holdings
-    .map((h) => ({ symbol: h.symbol, pct: totalValue ? (h.value / totalValue) * 100 : 0 }))
-    .filter((x) => x.pct > 5)
-    .sort((a, b) => b.pct - a.pct);
+  // Dynamic Categorical Exposure Evaluation
+  const assetAlerts = [];
+  for (const h of holdings) {
+    const weightRatio = totalValue ? (h.value || 0) / totalValue : 0;
+    const alert = evaluateAssetAlert(h, weightRatio);
+    if (alert) {
+      assetAlerts.push(alert);
+    }
+  }
+
+  // Sort alerts: RED first, then YELLOW, then descending weight
+  assetAlerts.sort((a, b) => {
+    if (a.level !== b.level) {
+      return a.level === "RED" ? -1 : 1;
+    }
+    return b.weight - a.weight;
+  });
 
   const sectorTotals = {};
   for (const h of holdings) {
@@ -78,10 +235,12 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
     .sort((a, b) => b.pct - a.pct);
   const overweightSectors = sectorPcts.filter((s) => s.pct > 20);
 
-  // Health score
+  // Health score calibrated for categorical alerts
   let health = 100;
-  overExposed.forEach((x) => (health -= Math.min(20, (x.pct - 5) * 2)));
-  overweightSectors.forEach((x) => (health -= Math.min(20, (x.pct - 20) * 1.5)));
+  assetAlerts.forEach((a) => {
+    health -= (a.level === "RED" ? 15 : 5);
+  });
+  overweightSectors.forEach((s) => (health -= Math.min(20, (s.pct - 20) * 1.5)));
   const drawdowns = holdings.filter((h) => (h.pl_pct ?? 0) < -12);
   health -= drawdowns.length * 5;
   health = Math.max(0, Math.min(100, Math.round(health)));
@@ -111,20 +270,45 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
         </div>
 
         <div className="grid md:grid-cols-2 gap-2">
-          {/* 5% single-asset */}
+          {/* Categorical Dual-Alert Single-Asset Exposure */}
           <div className="border border-[#222C3D] bg-[#0E131F] rounded-sm p-3">
-            <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-2 flex items-center gap-1">
-              <Scale className="w-3 h-3" /> 5% Rule · Single Asset
+            <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-2 flex items-center justify-between">
+              <span className="flex items-center gap-1">
+                <Scale className="w-3 h-3" /> Categorical Dual-Alert · Single Asset Exposure
+              </span>
+              <span className="text-[9px] text-gray-400 font-mono">
+                {assetAlerts.length} alert{assetAlerts.length === 1 ? "" : "s"}
+              </span>
             </div>
-            {overExposed.length === 0 ? (
+            {assetAlerts.length === 0 ? (
               <div className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-sm border text-emerald-400 border-emerald-800 bg-emerald-950/40" data-testid="conc-ok">
-                <ShieldCheck className="w-3 h-3" /> Single Asset Concentration Safe (&lt; 5.0%)
+                <ShieldCheck className="w-3 h-3" /> Single Asset Allocations Optimal Across All Asset Classes
               </div>
             ) : (
-              <div className="space-y-1" data-testid="conc-warn">
-                {overExposed.map((x) => (
-                  <div key={x.symbol} className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-sm border text-amber-300 border-amber-700 bg-amber-950/40 mr-1">
-                    <AlertTriangle className="w-3 h-3" /> High Exposure: <span className="font-bold text-amber-400">{x.symbol}</span> is {x.pct.toFixed(1)}% (max 5.0%)
+              <div className="space-y-1.5" data-testid="conc-warn">
+                {assetAlerts.map((a) => (
+                  <div
+                    key={`${a.symbol}-${a.level}`}
+                    className={`flex items-center justify-between text-[11px] font-mono px-2.5 py-1.5 rounded-sm border ${
+                      a.level === "RED"
+                        ? "text-rose-300 border-rose-700 bg-rose-950/50 shadow-sm"
+                        : "text-amber-300 border-amber-700 bg-amber-950/40"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className={`w-3.5 h-3.5 shrink-0 ${a.level === "RED" ? "text-rose-400 animate-pulse" : "text-amber-400"}`} />
+                      <span>{a.message}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider ${
+                        a.level === "RED" ? "bg-rose-500/20 text-rose-300 border border-rose-600/60" : "bg-amber-500/20 text-amber-300 border border-amber-600/60"
+                      }`}>
+                        {a.level === "RED" ? "HIGH EXPOSURE" : "WARNING"}
+                      </span>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-sm border ${ASSET_CLASS_META[a.assetClass]?.badgeCls || "text-gray-400 border-gray-700"}`}>
+                        {ASSET_CLASS_META[a.assetClass]?.label || a.assetClass}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
