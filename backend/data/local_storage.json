@@ -127,253 +127,67 @@
       "created_at": "2026-09-12 16:10:48.383431+00:00"
     },
     {
-      "session_token": "dl0qecK3XLb8MPEs-8h1QtLHx9RGSKg_vQlRu7jzZ7k",
+      "session_token": "tt0-hLYDLy1XFGyKoydoCEXfBRibBwbuV1_Be1j9qy0",
       "user_id": "user_45b3b10a99cb",
-      "expires_at": "2026-09-19 20:48:25.377737+00:00",
-      "created_at": "2026-09-12 20:48:25.377745+00:00"
+      "expires_at": "2026-09-20 18:32:56.415559+00:00",
+      "created_at": "2026-09-13 18:32:56.415572+00:00"
+    },
+    {
+      "session_token": "sess_c5de11a38cf04ef299d67b7fa062c5b8",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:40:59.442886+00:00",
+      "created_at": "2026-09-13 18:40:59.442896+00:00"
+    },
+    {
+      "session_token": "sess_eafc68000df34d5bbc2b9fe1cd4b48f5",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:40:59.828547+00:00",
+      "created_at": "2026-09-13 18:40:59.828557+00:00"
+    },
+    {
+      "session_token": "sess_42b079f394b6440fb03e3571ddbee695",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:00.558558+00:00",
+      "created_at": "2026-09-13 18:41:00.558566+00:00"
+    },
+    {
+      "session_token": "sess_29e6526c4f064cd8a064e25408eeb081",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:00.564890+00:00",
+      "created_at": "2026-09-13 18:41:00.564896+00:00"
+    },
+    {
+      "session_token": "sess_37b9176150e0444fab43ca018a41c33c",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:00.572739+00:00",
+      "created_at": "2026-09-13 18:41:00.572747+00:00"
+    },
+    {
+      "session_token": "sess_fe44c3b5091e4b7dae2a65c87a1fcb66",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:00.927364+00:00",
+      "created_at": "2026-09-13 18:41:00.927374+00:00"
+    },
+    {
+      "session_token": "sess_b2a9d8654463436aadbd42825d7f7a47",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:02.164075+00:00",
+      "created_at": "2026-09-13 18:41:02.164080+00:00"
+    },
+    {
+      "session_token": "sess_0dc79d1c284a40aba62aab659a92c64e",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:41:02.172451+00:00",
+      "created_at": "2026-09-13 18:41:02.172456+00:00"
+    },
+    {
+      "session_token": "sess_685b8ced69c543eb8cd1fd497fd3d989",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-20 18:43:12.144185+00:00",
+      "created_at": "2026-09-13 18:43:12.144194+00:00"
     }
   ],
   "holdings": [
-    {
-      "id": "ea4ccb18-d0e0-4477-bc5e-6d26f479b6ed",
-      "symbol": "AAPL",
-      "name": "Apple Inc.",
-      "quantity": 25.0,
-      "avg_cost": 152.3,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791339+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "5999610c-1a4c-45d9-b1ff-66322897e129",
-      "symbol": "NVDA",
-      "name": "NVIDIA Corp.",
-      "quantity": 12.0,
-      "avg_cost": 420.5,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791733+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "ef79a65d-6a57-47a6-a06d-b670b940e372",
-      "symbol": "TSLA",
-      "name": "Tesla Inc.",
-      "quantity": 8.0,
-      "avg_cost": 245.2,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791947+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "82d7109c-afd1-4d83-a297-8554fae464f8",
-      "symbol": "MSFT",
-      "name": "Microsoft Corp.",
-      "quantity": 10.0,
-      "avg_cost": 305.1,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792165+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "69017439-f9d3-423c-9998-eda4f91f2889",
-      "symbol": "AMZN",
-      "name": "Amazon.com",
-      "quantity": 15.0,
-      "avg_cost": 132.8,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792375+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "5fc1dcb3-07be-437b-a80e-259a1371ec5c",
-      "symbol": "GOOGL",
-      "name": "Alphabet Inc.",
-      "quantity": 18.0,
-      "avg_cost": 128.4,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792594+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "f5a3a86d-6a37-49fb-af46-2befab2ed790",
-      "symbol": "META",
-      "name": "Meta Platforms",
-      "quantity": 7.0,
-      "avg_cost": 315.6,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792814+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "5e456657-a5d6-4cc0-907c-22c3942d373a",
-      "symbol": "BTC-USD",
-      "name": "Bitcoin",
-      "quantity": 0.35,
-      "avg_cost": 42800.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793280+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "d73a8f41-f69d-4b19-aded-fb3f7dcb7043",
-      "symbol": "ETH-USD",
-      "name": "Ethereum",
-      "quantity": 4.2,
-      "avg_cost": 2350.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793646+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "6631e98b-c2ce-4320-9f6d-535fc5e551a1",
-      "symbol": "SOL-USD",
-      "name": "Solana",
-      "quantity": 30.0,
-      "avg_cost": 105.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793922+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "f192a020-9c6f-4c6c-b65a-86fdb3c6fa66",
-      "symbol": "AAPL",
-      "name": "Apple Inc",
-      "quantity": 10.0,
-      "avg_cost": 150.0,
-      "asset_type": "stock",
-      "created_at": "2026-08-25T03:20:49.705989+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "52a0dba0-9869-497c-af1e-5d5e3bc3c687",
-      "symbol": "NVDA",
-      "name": "NVIDIA",
-      "quantity": 5.0,
-      "avg_cost": 800.0,
-      "asset_type": "stock",
-      "created_at": "2026-08-25T03:27:27.038163+00:00",
-      "user_id": "user_7f21834c89b7"
-    },
-    {
-      "id": "8ef48130-7422-4310-9dd1-738e9cd1b548",
-      "symbol": "AAPL",
-      "name": "Apple Inc.",
-      "quantity": 25.0,
-      "avg_cost": 152.3,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791339+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "b2a455ba-0b80-45f4-9820-4ae6d517d0b7",
-      "symbol": "NVDA",
-      "name": "NVIDIA Corp.",
-      "quantity": 12.0,
-      "avg_cost": 420.5,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791733+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "e24d9ad6-53ef-4819-9c9b-d13873b53899",
-      "symbol": "TSLA",
-      "name": "Tesla Inc.",
-      "quantity": 8.0,
-      "avg_cost": 245.2,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.791947+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "9820bf10-1055-40f5-98c9-d93d0871f95c",
-      "symbol": "MSFT",
-      "name": "Microsoft Corp.",
-      "quantity": 10.0,
-      "avg_cost": 305.1,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792165+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "ee69ad38-aa5e-41e8-9701-04b8c57698c5",
-      "symbol": "AMZN",
-      "name": "Amazon.com",
-      "quantity": 15.0,
-      "avg_cost": 132.8,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792375+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "f028d710-f899-4366-91cb-ed04b3c98768",
-      "symbol": "GOOGL",
-      "name": "Alphabet Inc.",
-      "quantity": 18.0,
-      "avg_cost": 128.4,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792594+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "acc6c44d-3136-44d2-af89-8a4dac614edb",
-      "symbol": "META",
-      "name": "Meta Platforms",
-      "quantity": 7.0,
-      "avg_cost": 315.6,
-      "asset_type": "stock",
-      "created_at": "2026-08-24T16:57:24.792814+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "aa7349c9-0a2f-46cc-a5ca-81ec345ea59a",
-      "symbol": "BTC-USD",
-      "name": "Bitcoin",
-      "quantity": 0.35,
-      "avg_cost": 42800.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793280+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "96e2e584-9c74-45c3-9e6c-3ffe13fff5dc",
-      "symbol": "ETH-USD",
-      "name": "Ethereum",
-      "quantity": 4.2,
-      "avg_cost": 2350.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793646+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "e2db6a40-7959-4312-a798-edd305d8f97d",
-      "symbol": "SOL-USD",
-      "name": "Solana",
-      "quantity": 30.0,
-      "avg_cost": 105.0,
-      "asset_type": "crypto",
-      "created_at": "2026-08-24T16:57:24.793922+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "b53dff53-f4ec-44d2-850c-8023d30de0bd",
-      "symbol": "AAPL",
-      "name": "Apple Inc",
-      "quantity": 10.0,
-      "avg_cost": 150.0,
-      "asset_type": "stock",
-      "created_at": "2026-08-25T03:20:49.705989+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
-    {
-      "id": "227518f9-fcc4-4769-a291-697a35738638",
-      "symbol": "NVDA",
-      "name": "NVIDIA",
-      "quantity": 5.0,
-      "avg_cost": 800.0,
-      "asset_type": "stock",
-      "created_at": "2026-08-25T03:27:27.038163+00:00",
-      "user_id": "user_45b3b10a99cb"
-    },
     {
       "id": "d70faf12-e21f-4f59-807f-cc415de0938d",
       "symbol": "AAPL",
@@ -473,6 +287,138 @@
       "asset_type": "crypto",
       "created_at": "2026-09-12T16:10:54.229528+00:00",
       "user_id": "user_d8af5ace5f1e"
+    },
+    {
+      "id": "9316896f-4b51-4476-86f5-f66ebe1c21dc",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "quantity": 0.01,
+      "avg_cost": 60000.0,
+      "asset_type": "crypto",
+      "date_of_purchase": "2026-08-10",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:41:02.176112+00:00"
+    },
+    {
+      "id": "cef9719d-d3b1-429d-af61-8beebbde777f",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "VOO",
+      "name": "Vanguard S&P 500 ETF",
+      "quantity": 0.5,
+      "avg_cost": 700.0,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-08-17",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:41:02.176112+00:00"
+    },
+    {
+      "id": "de6c75b6-30e1-4783-be56-d734c5501031",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "quantity": 2.0,
+      "avg_cost": 3000.0,
+      "asset_type": "crypto",
+      "date_of_purchase": "2026-08-01",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:41:02.359411+00:00"
+    },
+    {
+      "id": "8cb77f26-963c-4097-9f03-5f25f0ed7f69",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "GLD",
+      "name": "SPDR Gold Trust",
+      "quantity": 1.204023,
+      "avg_cost": 458.8117,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-02-03",
+      "lot_count": 2,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "539af208-cf14-4869-a4dd-7e746452df4d",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "NLR",
+      "name": "VanEck Uranium and Nuclear ETF",
+      "quantity": 2.0,
+      "avg_cost": 153.4,
+      "asset_type": "stock",
+      "date_of_purchase": "2025-10-27",
+      "lot_count": 2,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "79f851b4-543d-48ea-bf05-3cca0ea9ebc9",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "quantity": 1.0,
+      "avg_cost": 181.8,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-02-17",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "523c1b6b-49b3-45a6-9f8b-d9f840e9e307",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "QQQ",
+      "name": "Invesco QQQ",
+      "quantity": 2.0,
+      "avg_cost": 717.715,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-06-15",
+      "lot_count": 3,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "88f3363c-8847-4116-9160-9dd8656f85da",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "RVI",
+      "name": "Robinhood Ventures Fund I",
+      "quantity": 6.0,
+      "avg_cost": 39.2,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-03-06",
+      "lot_count": 2,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "ecbd7109-fbd8-4afa-a048-0e8f15629697",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "SOXL",
+      "name": "Direxion Daily Semiconductor Bull 3X ETF",
+      "quantity": 3.0,
+      "avg_cost": 120.14,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-07-31",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "9fc12e02-07a3-4d22-8df8-fab67f580255",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "SPCX",
+      "name": "SpaceX",
+      "quantity": 1.0,
+      "avg_cost": 209.35,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-06-16",
+      "lot_count": 1,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "f90f91c6-c93e-4263-a8c7-ad73eb665e9f",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "name": "Vanguard S&P 500 ETF",
+      "quantity": 2.781247,
+      "avg_cost": 643.61,
+      "asset_type": "stock",
+      "date_of_purchase": "2026-02-17",
+      "lot_count": 8,
+      "created_at": "2026-09-13T18:45:12.890040+00:00"
     }
   ],
   "notify_prefs": [
@@ -480,7 +426,7 @@
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
       "enabled": true,
-      "last_sent_date": "2026-09-12"
+      "last_sent_date": "2026-09-13"
     },
     {
       "user_id": "user_7f21834c89b7",
@@ -559,6 +505,261 @@
         }
       ],
       "updated_at": "2026-09-12T16:10:48.956402+00:00"
+    }
+  ],
+  "trade_lots": [
+    {
+      "id": "932e0265-d25b-430d-807b-dbfaca7be167",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "BTC",
+      "asset_type": "crypto",
+      "quantity": 0.01,
+      "price": 60000.0,
+      "trade_date": "2026-08-10",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:41:02.176112+00:00"
+    },
+    {
+      "id": "8e2326fe-6a4e-4535-8d8d-2fa42402c3ac",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.5,
+      "price": 700.0,
+      "trade_date": "2026-08-17",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:41:02.176112+00:00"
+    },
+    {
+      "id": "e35812e5-e5ce-44a6-8e3c-492cf2bbc033",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "ETH",
+      "asset_type": "crypto",
+      "quantity": 2.0,
+      "price": 3000.0,
+      "trade_date": "2026-08-01",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:41:02.359411+00:00"
+    },
+    {
+      "id": "e2a7b19b-affa-4ced-adea-9f6887050f5c",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "GLD",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 452.42,
+      "trade_date": "2026-02-03",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "ba6b54da-9f46-4351-9a3d-fbede3bb76d8",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "GLD",
+      "asset_type": "stock",
+      "quantity": 0.204023,
+      "price": 490.14,
+      "trade_date": "2026-03-02",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "c5e6da6f-caa0-4c11-bb28-7aee897e7708",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "NLR",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 146.8,
+      "trade_date": "2025-10-27",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "16781bc6-772e-477c-ac88-db04e325934c",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "NLR",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 160.0,
+      "trade_date": "2026-01-29",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "edd908f7-0827-477e-acf0-501c4eea7cc7",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "NVDA",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 181.8,
+      "trade_date": "2026-02-17",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "a16e391c-5a3e-4eec-a459-10623629ea4a",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "QQQ",
+      "asset_type": "stock",
+      "quantity": 0.5,
+      "price": 739.43,
+      "trade_date": "2026-06-15",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "465d9063-1eef-4308-963e-65ffe1a5674b",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "QQQ",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 713.22,
+      "trade_date": "2026-06-25",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "d3732ad8-6c1e-4805-a790-5c7be5f71491",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "QQQ",
+      "asset_type": "stock",
+      "quantity": 0.5,
+      "price": 704.99,
+      "trade_date": "2026-07-21",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "b08a0440-201a-47cc-8313-bca89d77466b",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "RVI",
+      "asset_type": "stock",
+      "quantity": 4.0,
+      "price": 25.0,
+      "trade_date": "2026-03-06",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "9e53c9e7-187a-47df-9223-afff3ef3a2b6",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "RVI",
+      "asset_type": "stock",
+      "quantity": 2.0,
+      "price": 67.6,
+      "trade_date": "2026-05-13",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "b3c9e15c-c0e9-4737-a668-42a149fe9deb",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "SOXL",
+      "asset_type": "stock",
+      "quantity": 3.0,
+      "price": 120.14,
+      "trade_date": "2026-07-31",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "50a94821-aa85-4bd1-a522-55fe7066a269",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "SPCX",
+      "asset_type": "stock",
+      "quantity": 1.0,
+      "price": 209.35,
+      "trade_date": "2026-06-16",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "645e5988-64d8-4191-bb43-a77777752f7b",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.799207,
+      "price": 625.62,
+      "trade_date": "2026-02-17",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "e5a47f76-7716-41cb-81a8-7e5e3bb68806",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.397228,
+      "price": 629.36,
+      "trade_date": "2026-02-27",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "8c9a7f34-d58a-4eab-afb6-37e04ac8430a",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.325393,
+      "price": 614.64,
+      "trade_date": "2026-03-16",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "dfc3743d-091e-4766-aeb3-1e125761927c",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.248562,
+      "price": 603.47,
+      "trade_date": "2026-04-01",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "8e94da20-ee5f-45cb-9063-8cc7b63b98c5",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.227697,
+      "price": 658.77,
+      "trade_date": "2026-05-04",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "f9791254-9b06-47b3-abc9-4836997630f8",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.001913,
+      "price": 684.46,
+      "trade_date": "2026-07-21",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "fbea448e-427a-47c8-9c1d-d48cc901cec0",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.5,
+      "price": 677.46,
+      "trade_date": "2026-07-30",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
+    },
+    {
+      "id": "12a0b9d1-5a4a-42be-b9df-67014381b873",
+      "user_id": "user_45b3b10a99cb",
+      "symbol": "VOO",
+      "asset_type": "stock",
+      "quantity": 0.281247,
+      "price": 711.12,
+      "trade_date": "2026-08-17",
+      "broker": "robinhood",
+      "imported_at": "2026-09-13T18:45:12.890040+00:00"
     }
   ]
 }

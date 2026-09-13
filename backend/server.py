@@ -28,6 +28,7 @@ from auth import get_current_user, exchange_session, logout_session, create_dev_
 from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
 from chat_service import chat_answer  # noqa: E402
 from db import get_database  # noqa: E402
+from trade_import_service import parse_robinhood_csv, derive_holdings_fifo  # noqa: E402
 
 db = get_database()
 
@@ -88,6 +89,8 @@ class Holding(BaseModel):
     avg_cost: float
     asset_type: Literal["stock", "crypto"] = "stock"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    date_of_purchase: Optional[str] = None
+    lot_count: Optional[int] = None
 
 
 class HoldingCreate(BaseModel):
@@ -96,12 +99,22 @@ class HoldingCreate(BaseModel):
     quantity: float
     avg_cost: float
     asset_type: Optional[Literal["stock", "crypto"]] = None
+    date_of_purchase: Optional[str] = None
+    lot_count: Optional[int] = None
 
 
 class HoldingUpdate(BaseModel):
     quantity: Optional[float] = None
     avg_cost: Optional[float] = None
     name: Optional[str] = None
+    date_of_purchase: Optional[str] = None
+    lot_count: Optional[int] = None
+
+
+class ImportActivityConfirmRequest(BaseModel):
+    holdings: List[dict]
+    trades: Optional[List[dict]] = None
+    mode: Literal["replace", "merge"] = "replace"
 
 
 # ---------- ROUTES: PORTFOLIO ----------
@@ -188,6 +201,8 @@ async def create_holding(data: HoldingCreate, uid: str = Depends(current_user_id
         quantity=data.quantity,
         avg_cost=data.avg_cost,
         asset_type=asset_type,
+        date_of_purchase=data.date_of_purchase,
+        lot_count=data.lot_count,
     )
     doc = h.model_dump()
     doc["created_at"] = doc["created_at"].isoformat()
@@ -220,6 +235,111 @@ async def delete_holding(holding_id: str, uid: str = Depends(current_user_id)):
 async def clear_holdings(uid: str = Depends(current_user_id)):
     await db.holdings.delete_many({"user_id": uid})
     return {"ok": True}
+
+
+@api_router.post("/portfolio/import-activity/preview")
+async def import_activity_preview(file: UploadFile = File(...), uid: str = Depends(current_user_id)):
+    """
+    Parses a Robinhood Trade Activity CSV, applies strict FIFO lot clearing,
+    and returns a preview of derived active holdings and stats without writing to DB.
+    """
+    content = await file.read()
+    try:
+        trades, stats = parse_robinhood_csv(content)
+        derived = derive_holdings_fifo(trades, stats)
+        return {
+            **derived,
+            "trades": trades,
+        }
+    except Exception as e:
+        logger.exception("Failed to parse trade activity CSV")
+        raise HTTPException(status_code=400, detail=f"Failed to process trade activity CSV: {str(e)}")
+
+
+@api_router.post("/portfolio/import-activity/confirm")
+async def import_activity_confirm(data: ImportActivityConfirmRequest, uid: str = Depends(current_user_id)):
+    """
+    Confirms and writes derived holdings and lots to the database.
+    Supports 'replace' (clears old holdings/lots) or 'merge' (upserts matching symbols).
+    """
+    if not data.holdings:
+        raise HTTPException(status_code=400, detail="No holdings to import")
+
+    if data.mode == "replace":
+        await db.holdings.delete_many({"user_id": uid})
+        await db.trade_lots.delete_many({"user_id": uid})
+
+    imported_count = 0
+    lots_stored = 0
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    for h in data.holdings:
+        sym_up = str(h.get("symbol", "")).upper().strip()
+        if not sym_up:
+            continue
+        qty = float(h.get("quantity", 0))
+        avg = float(h.get("avg_cost", 0))
+        if qty <= 0:
+            continue
+
+        asset_type = h.get("asset_type") or ("crypto" if is_crypto(sym_up) else "stock")
+        doc = {
+            "id": str(uuid.uuid4()),
+            "user_id": uid,
+            "symbol": sym_up,
+            "name": h.get("name") or sym_up,
+            "quantity": qty,
+            "avg_cost": avg,
+            "asset_type": asset_type,
+            "date_of_purchase": h.get("date_of_purchase"),
+            "lot_count": h.get("lot_count", 1),
+            "created_at": now_iso,
+        }
+
+        if data.mode == "replace":
+            await db.holdings.insert_one(doc)
+            imported_count += 1
+        else:
+            # Merge mode: upsert by (user_id, symbol)
+            existing = await db.holdings.find_one({"user_id": uid, "symbol": sym_up})
+            if existing:
+                await db.holdings.update_one(
+                    {"user_id": uid, "symbol": sym_up},
+                    {"$set": {
+                        "quantity": qty,
+                        "avg_cost": avg,
+                        "name": doc["name"],
+                        "date_of_purchase": doc["date_of_purchase"],
+                        "lot_count": doc["lot_count"],
+                    }}
+                )
+            else:
+                await db.holdings.insert_one(doc)
+            imported_count += 1
+
+        # Store active lots
+        active_lots = h.get("active_lots") or []
+        for lot in active_lots:
+            lot_doc = {
+                "id": str(uuid.uuid4()),
+                "user_id": uid,
+                "symbol": sym_up,
+                "asset_type": lot.get("asset_type", asset_type),
+                "quantity": float(lot.get("quantity", 0)),
+                "price": float(lot.get("price", 0)),
+                "trade_date": lot.get("trade_date"),
+                "broker": lot.get("broker", "robinhood"),
+                "imported_at": now_iso,
+            }
+            await db.trade_lots.insert_one(lot_doc)
+            lots_stored += 1
+
+    return {
+        "ok": True,
+        "mode": data.mode,
+        "imported_count": imported_count,
+        "lots_stored": lots_stored,
+    }
 
 
 @api_router.post("/portfolio/upload-csv")
@@ -674,5 +794,7 @@ async def startup_scheduler():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    if hasattr(db, "client") and db.client:
-        db.client.close()
+    if getattr(db, "_engine_type", "") == "mongodb":
+        client = getattr(db, "client", None)
+        if client and hasattr(client, "close") and callable(client.close):
+            client.close()
