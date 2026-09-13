@@ -343,7 +343,7 @@ export default function PortfolioTab() {
       {rows.length > 0 && (
         <div className="grid lg:grid-cols-2 gap-3" data-testid="portfolio-charts">
           <PortfolioHistoryChart currentValue={s?.total_value} />
-          <AllocationTreemap holdings={data.holdings || []} />
+          <AllocationTreemap holdings={data.holdings || []} activeFilter={filter} />
         </div>
       )}
 

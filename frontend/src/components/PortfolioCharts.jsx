@@ -169,37 +169,102 @@ export function PortfolioHistoryChart({ currentValue = null }) {
   );
 }
 
-const TreemapCell = ({ x, y, width, height, name, value, pl_pct }) => {
-  if (width < 30 || height < 25) return null;
+const TreemapCell = (props) => {
+  const { x, y, width, height, name, value, pl_pct } = props;
+  if (!width || !height || width <= 0 || height <= 0) return null;
   const up = (pl_pct ?? 0) >= 0;
   const fill = up ? "rgba(16,185,129,0.85)" : "rgba(239,68,68,0.85)";
+  const showText = width >= 32 && height >= 24;
+  const showPct = width >= 44 && height >= 38;
+  const fontSize = Math.max(9, Math.min(Math.floor(width / 5), 15));
+
   return (
     <g>
-      <rect x={x} y={y} width={width} height={height} stroke="#0E131F" strokeWidth={2} fill={fill} />
-      <text x={x + width / 2} y={y + height / 2 - 4} textAnchor="middle" fill="#0A0D12" fontSize={Math.min(width/5, 16)} fontWeight="bold" style={{ fontFamily: "monospace" }}>{name}</text>
-      <text x={x + width / 2} y={y + height / 2 + 12} textAnchor="middle" fill="#0A0D12" fontSize={10} style={{ fontFamily: "monospace" }}>{fmtPct(pl_pct)}</text>
+      <title>{`${name}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%)`}</title>
+      <rect x={x} y={y} width={width} height={height} stroke="#0E131F" strokeWidth={2} fill={fill} rx={2} />
+      {showText && (
+        <text
+          x={x + width / 2}
+          y={showPct ? y + height / 2 - 4 : y + height / 2 + 4}
+          textAnchor="middle"
+          fill="#0A0D12"
+          fontSize={fontSize}
+          fontWeight="bold"
+          style={{ fontFamily: "monospace", pointerEvents: "none" }}
+        >
+          {name}
+        </text>
+      )}
+      {showPct && (
+        <text
+          x={x + width / 2}
+          y={y + height / 2 + 11}
+          textAnchor="middle"
+          fill="#0A0D12"
+          fontSize={10}
+          fontWeight="600"
+          style={{ fontFamily: "monospace", pointerEvents: "none" }}
+        >
+          {fmtPct(pl_pct)}
+        </text>
+      )}
     </g>
   );
 };
 
-export function AllocationTreemap({ holdings }) {
-  const stocks = (holdings || []).filter((h) => h.asset_type === "stock").map((h) => ({
-    name: h.symbol, value: h.value, pl_pct: h.pl_pct,
-  }));
+export function AllocationTreemap({ holdings, activeFilter = "all" }) {
+  const filtered = (holdings || []).filter((h) => {
+    if (!h || !h.symbol) return false;
+    if (activeFilter && activeFilter !== "all") {
+      return (h.asset_type || "stock") === activeFilter;
+    }
+    return true;
+  });
+
+  const items = filtered
+    .map((h) => {
+      const val = Number(h.value ?? (h.quantity * (h.price ?? h.avg_cost ?? 0)));
+      return {
+        name: h.symbol,
+        value: val > 0 ? Number(val.toFixed(2)) : 0.01,
+        pl_pct: h.pl_pct ?? 0,
+        asset_type: h.asset_type || "stock",
+      };
+    })
+    .filter((item) => item.value > 0);
+
+  const titleText =
+    activeFilter === "stock"
+      ? "Stock Allocation"
+      : activeFilter === "etf"
+      ? "ETF Allocation"
+      : activeFilter === "crypto"
+      ? "Crypto Allocation"
+      : "Portfolio Allocation";
+
+  const emptyText =
+    activeFilter === "stock"
+      ? "No stock positions"
+      : activeFilter === "etf"
+      ? "No ETF positions"
+      : activeFilter === "crypto"
+      ? "No crypto positions"
+      : "No positions to display";
+
   return (
     <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="allocation-treemap">
       <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-3">
-        Stock Allocation · Green = gain, Red = loss, Size = position value
+        {titleText} · Green = gain, Red = loss, Size = position value
       </div>
       <div style={{ width: "100%", height: 260 }}>
-        {stocks.length === 0 ? (
+        {items.length === 0 ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">
-            No stock positions
+            {emptyText}
           </div>
         ) : (
           <ResponsiveContainer>
             <Treemap
-              data={stocks}
+              data={items}
               dataKey="value"
               stroke="#0E131F"
               content={<TreemapCell />}
