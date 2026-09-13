@@ -19,7 +19,13 @@ from signal_service import _options_flow_sync
 from sentiment_service import analyze_symbol_public
 from insider_service import get_trades_for_symbol
 
+import time
+
 logger = logging.getLogger(__name__)
+
+_SCAN_CACHE: Dict[str, Any] = {}
+_LAST_GOOD_SCAN: Optional[Dict[str, Any]] = None
+_CACHE_TTL = 300  # 5 minutes
 
 # Universe: S&P popular names + high-momentum sectors (biotech, semis, EV, AI)
 UNIVERSE = [
@@ -41,7 +47,7 @@ UNIVERSE = [
 
 
 def _scan_one_sync(symbol: str) -> Optional[Dict[str, Any]]:
-    """Score a single ticker on breakout probability."""
+    """Score a single ticker on breakout probability using price action & volume."""
     try:
         t = yf.Ticker(symbol)
         hist = t.history(period="2mo", interval="1d")
@@ -66,24 +72,13 @@ def _scan_one_sync(symbol: str) -> Optional[Dict[str, Any]]:
         vol_today = float(vols.iloc[-1])
         vol_surge = (vol_today / vol_avg) if vol_avg else 1.0
 
-        # Options tilt (call vs put volume nearest expiry)
-        opt = _options_flow_sync(symbol)
-        call_v = sum(x["volume"] for x in opt["flow"] if x["kind"] == "call")
-        put_v = sum(x["volume"] for x in opt["flow"] if x["kind"] == "put")
-        opt_tilt = (call_v / (call_v + put_v) * 100) if (call_v + put_v) else 50.0
-        unusual_calls = sum(1 for x in opt["flow"] if x["kind"] == "call" and x["unusual"])
-
-        # Composite score — breakout-biased
-        # Weights: momentum 30 · near-52w 20 · volume surge 20 · options 20 · unusual calls bonus 10
+        # Fast initial technical score (without options call) to screen candidates
         mom_score = max(0, min(100, 50 + mom5 * 4))           # +12.5% mom => 100
         prox_score = max(0, min(100, (near_high - 80) * 5))    # 80%->0, 100%->100
         vol_score = max(0, min(100, (vol_surge - 1) * 100))    # 2x => 100
-        opt_score = opt_tilt
-        unusual_bonus = min(30, unusual_calls * 6)
 
-        composite = round(
-            0.30 * mom_score + 0.20 * prox_score + 0.20 * vol_score +
-            0.20 * opt_score + 0.10 * unusual_bonus, 1
+        initial_composite = round(
+            0.45 * mom_score + 0.35 * prox_score + 0.20 * vol_score, 1
         )
 
         drivers = []
@@ -91,19 +86,17 @@ def _scan_one_sync(symbol: str) -> Optional[Dict[str, Any]]:
         if mom20 >= 10: drivers.append(f"+{mom20:.1f}% month")
         if vol_surge >= 1.5: drivers.append(f"{vol_surge:.1f}× volume surge")
         if near_high >= 95: drivers.append(f"{near_high:.0f}% of 2mo high — breakout zone")
-        if opt_tilt >= 65: drivers.append(f"Call-heavy options ({opt_tilt:.0f}%)")
-        if unusual_calls >= 2: drivers.append(f"{unusual_calls} unusual call sweeps")
 
         return {
             "symbol": symbol,
             "price": round(price, 2),
-            "composite": composite,
+            "composite": initial_composite,
             "momentum_5d": round(mom5, 2),
             "momentum_20d": round(mom20, 2),
             "vol_surge": round(vol_surge, 2),
             "near_52w_high_pct": round(near_high, 1),
-            "options_tilt": round(opt_tilt, 1),
-            "unusual_calls": unusual_calls,
+            "options_tilt": 50.0,
+            "unusual_calls": 0,
             "drivers": drivers or ["Neutral setup"],
         }
     except Exception as e:
@@ -117,46 +110,94 @@ async def _scan_one(symbol: str) -> Optional[Dict[str, Any]]:
 
 
 async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Dict[str, Any]:
-    """Scan universe + user's extras. Enrich top candidates with congress activity."""
+    """Scan universe + user's extras. Enrich top candidates with options flow & congress activity."""
+    global _LAST_GOOD_SCAN
+    now = time.time()
     symbols = list(dict.fromkeys(UNIVERSE + [s.upper() for s in (extra_symbols or [])]))
-    # scan in parallel batches
-    sem = asyncio.Semaphore(6)
-    async def _bounded(s):
-        async with sem:
-            return await _scan_one(s)
-    results = await asyncio.gather(*[_bounded(s) for s in symbols])
-    scored = [r for r in results if r]
-    scored.sort(key=lambda x: x["composite"], reverse=True)
-    top = scored[:top_n]
+    cache_key = ",".join(sorted(symbols)) + f"_{top_n}"
 
-    # Enrich top with recent congress buys (last 60 days)
-    async def _enrich(r):
-        try:
-            trades = await get_trades_for_symbol(r["symbol"], 5)
-            buys = [t for t in trades if "purchase" in (t.get("type", "") or "").lower()]
-            r["congress_buys"] = len(buys)
-            r["latest_congress"] = buys[0] if buys else None
-            if buys:
-                r["drivers"].append(f"{len(buys)} recent congress buys")
-                r["composite"] = round(min(100, r["composite"] + 5 * min(3, len(buys))), 1)
-        except Exception:
-            r["congress_buys"] = 0
-            r["latest_congress"] = None
-        return r
+    if cache_key in _SCAN_CACHE:
+        cached_data, exp = _SCAN_CACHE[cache_key]
+        if exp > now:
+            return cached_data
 
-    top = await asyncio.gather(*[_enrich(r) for r in top])
-    top.sort(key=lambda x: x["composite"], reverse=True)
+    try:
+        # Step 1: Scan technicals in parallel batches
+        sem = asyncio.Semaphore(8)
+        async def _bounded(s):
+            async with sem:
+                return await _scan_one(s)
+        results = await asyncio.gather(*[_bounded(s) for s in symbols])
+        scored = [r for r in results if r]
 
-    # Classify signals
-    for r in top:
-        if r["composite"] >= 70:
-            r["signal"] = "STRONG BUY"
-        elif r["composite"] >= 55:
-            r["signal"] = "BUY"
-        else:
-            r["signal"] = "WATCH"
+        if not scored and _LAST_GOOD_SCAN:
+            logger.warning("Empty scan result, returning fallback last good scan.")
+            return _LAST_GOOD_SCAN
 
-    return {"scanned": len(scored), "universe_size": len(symbols), "candidates": top}
+        scored.sort(key=lambda x: x["composite"], reverse=True)
+        # Only take top candidates to enrich with options flow (avoids 232+ Yahoo Finance calls)
+        candidates_to_enrich = scored[: min(top_n + 5, 20)]
+
+        # Step 2: Enrich ONLY top candidates with options flow & congress trades
+        enrich_sem = asyncio.Semaphore(4)
+        async def _enrich(r):
+            async with enrich_sem:
+                sym = r["symbol"]
+                # Options flow enrichment
+                try:
+                    loop = asyncio.get_running_loop()
+                    opt = await loop.run_in_executor(None, _options_flow_sync, sym)
+                    call_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "call")
+                    put_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "put")
+                    opt_tilt = (call_v / (call_v + put_v) * 100) if (call_v + put_v) else 50.0
+                    unusual_calls = sum(1 for x in opt.get("flow", []) if x.get("kind") == "call" and x.get("unusual"))
+                    r["options_tilt"] = round(opt_tilt, 1)
+                    r["unusual_calls"] = unusual_calls
+                    if opt_tilt >= 65: r["drivers"].append(f"Call-heavy options ({opt_tilt:.0f}%)")
+                    if unusual_calls >= 2: r["drivers"].append(f"{unusual_calls} unusual call sweeps")
+                    
+                    # Update composite score with options weight
+                    unusual_bonus = min(20, unusual_calls * 5)
+                    r["composite"] = round(0.75 * r["composite"] + 0.20 * opt_tilt + 0.05 * unusual_bonus, 1)
+                except Exception as opt_err:
+                    logger.debug(f"enrich options {sym}: {opt_err}")
+
+                # Congress buys enrichment
+                try:
+                    trades = await get_trades_for_symbol(sym, 5)
+                    buys = [t for t in trades if "purchase" in (t.get("type", "") or "").lower()]
+                    r["congress_buys"] = len(buys)
+                    r["latest_congress"] = buys[0] if buys else None
+                    if buys:
+                        r["drivers"].append(f"{len(buys)} recent congress buys")
+                        r["composite"] = round(min(100, r["composite"] + 5 * min(3, len(buys))), 1)
+                except Exception:
+                    r["congress_buys"] = 0
+                    r["latest_congress"] = None
+                return r
+
+        enriched = await asyncio.gather(*[_enrich(r) for r in candidates_to_enrich])
+        enriched.sort(key=lambda x: x["composite"], reverse=True)
+        top = enriched[:top_n]
+
+        # Classify signals
+        for r in top:
+            if r["composite"] >= 70:
+                r["signal"] = "STRONG BUY"
+            elif r["composite"] >= 55:
+                r["signal"] = "BUY"
+            else:
+                r["signal"] = "WATCH"
+
+        payload = {"scanned": len(scored), "universe_size": len(symbols), "candidates": top}
+        _SCAN_CACHE[cache_key] = (payload, now + _CACHE_TTL)
+        _LAST_GOOD_SCAN = payload
+        return payload
+    except Exception as e:
+        logger.error(f"scan_breakouts failed: {e}")
+        if _LAST_GOOD_SCAN:
+            return _LAST_GOOD_SCAN
+        return {"scanned": 0, "universe_size": len(symbols), "candidates": []}
 
 
 def build_digest_html(scan_data: Dict[str, Any], user_email: str) -> str:

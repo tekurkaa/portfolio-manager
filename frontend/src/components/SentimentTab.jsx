@@ -55,7 +55,7 @@ export default function SentimentTab() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const load = async (isBackground = false) => {
+  const load = async (isBackground = false, isManual = false) => {
     if (!isBackground && (!data.per_symbol || data.per_symbol.length === 0)) {
       setLoading(true);
     } else {
@@ -65,7 +65,11 @@ export default function SentimentTab() {
       const { data: res } = await api.get("/sentiment/portfolio");
       setData(res);
     } catch {
-      if (!isBackground) toast.error("Failed to load sentiment");
+      if (isManual) {
+        toast.error("Failed to load sentiment");
+      } else if (!isBackground) {
+        setTimeout(() => load(true), 3500);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -91,7 +95,7 @@ export default function SentimentTab() {
           </div>
         </div>
         <button
-          onClick={() => load(true)}
+          onClick={() => load(false, true)}
           data-testid="refresh-sentiment"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
         >

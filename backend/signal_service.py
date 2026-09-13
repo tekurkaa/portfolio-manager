@@ -2,12 +2,16 @@
 import asyncio
 import logging
 import math
+import time
 from typing import List, Dict, Any, Optional
 
 import yfinance as yf
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+
+_ALPHA_CACHE: Dict[str, Any] = {}
+_CACHE_TTL = 300  # 5 minutes
 
 
 def _options_flow_sync(symbol: str) -> Dict[str, Any]:
@@ -115,40 +119,62 @@ async def alpha_signal(symbols: List[str], sentiment_map: Dict[str, int]) -> Lis
     """
     if not symbols:
         return []
-    out: List[Dict[str, Any]] = []
-    for s in symbols[:12]:
-        mom = await get_momentum(s)
-        sent = float(sentiment_map.get(s.upper(), 50))
-        # Options tilt: call vs put volume for symbol
-        opt = await get_options_flow(s)
-        call_v = sum(x["volume"] for x in opt["flow"] if x["kind"] == "call")
-        put_v = sum(x["volume"] for x in opt["flow"] if x["kind"] == "put")
-        opt_tilt = 50.0
-        if call_v + put_v > 0:
-            opt_tilt = (call_v / (call_v + put_v)) * 100
-        composite = 0.45 * mom + 0.40 * sent + 0.15 * opt_tilt
-        composite = round(composite, 1)
-        if composite >= 65:
-            signal = "BUY"
-        elif composite <= 35:
-            signal = "SELL"
-        else:
-            signal = "HOLD"
-        drivers = []
-        if mom >= 60: drivers.append(f"Momentum strong (+5d)")
-        elif mom <= 40: drivers.append(f"Momentum weak (-5d)")
-        if sent >= 60: drivers.append("StockTwits bullish")
-        elif sent <= 40: drivers.append("StockTwits bearish")
-        if opt_tilt >= 60: drivers.append("Call-heavy options")
-        elif opt_tilt <= 40: drivers.append("Put-heavy options")
-        out.append({
-            "symbol": s.upper(),
-            "signal": signal,
-            "composite": composite,
-            "momentum": round(mom, 1),
-            "sentiment": round(sent, 1),
-            "options_tilt": round(opt_tilt, 1),
-            "drivers": drivers or ["Neutral across factors"],
-        })
+    clean_syms = [s.upper() for s in symbols[:12]]
+    cache_key = "alpha-" + ",".join(sorted(clean_syms))
+    now = time.time()
+    if cache_key in _ALPHA_CACHE:
+        cached_data, exp = _ALPHA_CACHE[cache_key]
+        if exp > now:
+            return cached_data
+
+    sem = asyncio.Semaphore(4)
+    async def _eval_one(s: str) -> Dict[str, Any]:
+        async with sem:
+            try:
+                mom_task = get_momentum(s)
+                opt_task = get_options_flow(s)
+                mom, opt = await asyncio.gather(mom_task, opt_task)
+            except Exception as e:
+                logger.warning(f"alpha eval {s}: {e}")
+                mom = 50.0
+                opt = {"flow": []}
+
+            sent = float(sentiment_map.get(s, 50))
+            call_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "call")
+            put_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "put")
+            opt_tilt = 50.0
+            if call_v + put_v > 0:
+                opt_tilt = (call_v / (call_v + put_v)) * 100
+
+            composite = 0.45 * mom + 0.40 * sent + 0.15 * opt_tilt
+            composite = round(composite, 1)
+            if composite >= 65:
+                signal = "BUY"
+            elif composite <= 35:
+                signal = "SELL"
+            else:
+                signal = "HOLD"
+
+            drivers = []
+            if mom >= 60: drivers.append("Momentum strong (+5d)")
+            elif mom <= 40: drivers.append("Momentum weak (-5d)")
+            if sent >= 60: drivers.append("StockTwits/Social bullish")
+            elif sent <= 40: drivers.append("StockTwits/Social bearish")
+            if opt_tilt >= 60: drivers.append("Call-heavy options")
+            elif opt_tilt <= 40: drivers.append("Put-heavy options")
+
+            return {
+                "symbol": s,
+                "signal": signal,
+                "composite": composite,
+                "momentum": round(mom, 1),
+                "sentiment": round(sent, 1),
+                "options_tilt": round(opt_tilt, 1),
+                "drivers": drivers or ["Neutral across factors"],
+            }
+
+    results = await asyncio.gather(*[_eval_one(s) for s in clean_syms])
+    out = [r for r in results if r]
     out.sort(key=lambda x: x["composite"], reverse=True)
+    _ALPHA_CACHE[cache_key] = (out, now + _CACHE_TTL)
     return out

@@ -10,6 +10,7 @@ import httpx
 logger = logging.getLogger(__name__)
 
 _CACHE: Dict[str, Any] = {}
+_PORTFOLIO_CACHE: Dict[str, Any] = {}
 _CACHE_TTL = 300  # 5 min
 
 BULL_WORDS = {
@@ -26,11 +27,11 @@ BEAR_WORDS = {
 }
 
 HEADERS_REDDIT = {
-    "User-Agent": "TerminusInvest/1.0 (by u/investor)",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept": "application/json",
 }
 HEADERS_ST = {
-    "User-Agent": "Mozilla/5.0",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "application/json",
 }
 
@@ -50,7 +51,7 @@ async def _fetch_reddit(client: httpx.AsyncClient, sub: str, symbol: str, limit:
     url = f"https://www.reddit.com/r/{sub}/search.json"
     params = {"q": symbol, "sort": "new", "limit": str(limit), "restrict_sr": "1", "t": "week"}
     try:
-        r = await client.get(url, params=params, headers=HEADERS_REDDIT, timeout=10.0)
+        r = await client.get(url, params=params, headers=HEADERS_REDDIT, timeout=3.0)
         if r.status_code != 200:
             return []
         data = r.json()
@@ -69,7 +70,7 @@ async def _fetch_reddit(client: httpx.AsyncClient, sub: str, symbol: str, limit:
             })
         return posts
     except Exception as e:
-        logger.warning(f"reddit fetch fail {sub}/{symbol}: {e}")
+        logger.debug(f"reddit fetch fail {sub}/{symbol}: {e}")
         return []
 
 
@@ -186,14 +187,42 @@ async def analyze_symbol_public(symbol: str) -> Dict[str, Any]:
 async def analyze_portfolio_public(symbols: List[str]) -> List[Dict[str, Any]]:
     if not symbols:
         return []
-    # Serialize to avoid rate limits
-    results = []
-    for s in symbols[:12]:
-        try:
-            results.append(await analyze_symbol_public(s))
-        except Exception as e:
-            logger.warning(f"pub sentiment {s}: {e}")
-    return results
+    clean_syms = [s.upper() for s in symbols[:12]]
+    key = "port-" + ",".join(sorted(clean_syms))
+    now = time.time()
+    if key in _PORTFOLIO_CACHE:
+        d, exp = _PORTFOLIO_CACHE[key]
+        if exp > now:
+            return d
+
+    sem = asyncio.Semaphore(3)
+    async def _bounded(s):
+        async with sem:
+            try:
+                return await analyze_symbol_public(s)
+            except Exception as e:
+                logger.warning(f"pub sentiment {s}: {e}")
+                return {
+                    "symbol": s,
+                    "score": 50,
+                    "label": "Neutral",
+                    "bull_pct": 50,
+                    "bear_pct": 50,
+                    "reddit_bull_signals": 0,
+                    "reddit_bear_signals": 0,
+                    "stocktwits_bull": 0,
+                    "stocktwits_bear": 0,
+                    "post_count": 0,
+                    "stocktwits_msg_count": 0,
+                    "top_posts": [],
+                    "top_themes": [],
+                    "reasoning": "Neutral sentiment baseline",
+                }
+
+    results = await asyncio.gather(*[_bounded(s) for s in clean_syms])
+    res_list = [r for r in results if r]
+    _PORTFOLIO_CACHE[key] = (res_list, now + _CACHE_TTL)
+    return res_list
 
 
 async def market_fear_greed_from_social() -> Dict[str, Any]:

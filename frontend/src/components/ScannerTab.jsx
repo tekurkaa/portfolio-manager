@@ -17,7 +17,7 @@ export default function ScannerTab() {
   const [email, setEmail] = useState("");
   const [enabled, setEnabled] = useState(false);
 
-  const load = async (isBackground = false) => {
+  const load = async (isBackground = false, isManual = false) => {
     if (!isBackground && (!data.candidates || data.candidates.length === 0)) {
       setLoading(true);
     } else {
@@ -32,7 +32,11 @@ export default function ScannerTab() {
       setEmail(prefs.data.email || "");
       setEnabled(!!prefs.data.enabled);
     } catch {
-      if (!isBackground) toast.error("Failed to scan");
+      if (isManual) {
+        toast.error("Failed to scan");
+      } else if (!isBackground) {
+        setTimeout(() => load(true), 4000);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -76,7 +80,7 @@ export default function ScannerTab() {
               Scans {data.universe_size || 60}+ tickers (S&P + biotech + semis + AI + crypto). Momentum × volume surge × options × congress buys.
             </div>
           </div>
-          <button onClick={() => load(true)} disabled={loading || refreshing} data-testid="scan-refresh"
+          <button onClick={() => load(false, true)} disabled={loading || refreshing} data-testid="scan-refresh"
             className="flex items-center gap-1.5 border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm font-semibold disabled:opacity-50">
             <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Rescan
           </button>

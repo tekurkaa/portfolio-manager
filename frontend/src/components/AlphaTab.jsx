@@ -18,7 +18,7 @@ function AlphaSignals() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const load = async (isBackground = false) => {
+  const load = async (isBackground = false, isManual = false) => {
     if (!isBackground && (!data.signals || data.signals.length === 0)) {
       setLoading(true);
     } else {
@@ -28,7 +28,11 @@ function AlphaSignals() {
       const { data: res } = await api.get("/signal/alpha");
       setData(res);
     } catch {
-      if (!isBackground) toast.error("Failed to load alpha signals");
+      if (isManual) {
+        toast.error("Failed to load alpha signals");
+      } else if (!isBackground) {
+        setTimeout(() => load(true), 3500);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -50,7 +54,7 @@ function AlphaSignals() {
             Alpha Signal · Momentum × Sentiment × Options
           </span>
         </div>
-        <button onClick={() => load(true)} data-testid="refresh-alpha"
+        <button onClick={() => load(false, true)} data-testid="refresh-alpha"
           className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm">
           <RefreshCw className={`w-3 h-3 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
@@ -106,7 +110,7 @@ function OptionsFlow() {
   const [refreshing, setRefreshing] = useState(false);
   const [onlyUnusual, setOnlyUnusual] = useState(true);
 
-  const load = async (isBackground = false) => {
+  const load = async (isBackground = false, isManual = false) => {
     if (!isBackground && (!data.unusual || data.unusual.length === 0)) {
       setLoading(true);
     } else {
@@ -116,7 +120,11 @@ function OptionsFlow() {
       const { data: res } = await api.get("/options/flow");
       setData(res);
     } catch {
-      if (!isBackground) toast.error("Failed to load options flow");
+      if (isManual) {
+        toast.error("Failed to load options flow");
+      } else if (!isBackground) {
+        setTimeout(() => load(true), 3500);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -148,7 +156,7 @@ function OptionsFlow() {
             className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-sm border ${
               onlyUnusual ? "border-cyan-500 text-cyan-400 bg-cyan-500/10" : "border-[#222C3D] text-gray-400"
             }`}>{onlyUnusual ? "Unusual only" : "All"}</button>
-          <button onClick={() => load(true)} data-testid="refresh-options"
+          <button onClick={() => load(false, true)} data-testid="refresh-options"
             className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm">
             <RefreshCw className={`w-3 h-3 ${loading || refreshing ? "animate-spin" : ""}`} />
           </button>

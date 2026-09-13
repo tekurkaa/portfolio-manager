@@ -38,11 +38,52 @@ function App() {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   // auth state: null = checking, false = anon, object = user
   const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
+  const [loadTime, setLoadTime] = useState(0);
+
+  // Set of tabs mounted in the DOM. Always starts with active tab to ensure immediate responsiveness.
+  const [mountedTabs, setMountedTabs] = useState(() => new Set(["portfolio"]));
+
+  // Ensure active tab is immediately mounted if user clicks it
+  useEffect(() => {
+    setMountedTabs((prev) => {
+      if (prev.has(active)) return prev;
+      const next = new Set(prev);
+      next.add(active);
+      return next;
+    });
+  }, [active]);
+
+  // Staggered background pre-mounting: mount 1 tab every 1.5s after user is logged in
+  // Prevents thundering herd on backend while guaranteeing zero-latency switching once loaded.
+  useEffect(() => {
+    if (!user || typeof user !== "object") return;
+    const unmounted = TABS.map((t) => t.id).filter((id) => !mountedTabs.has(id));
+    if (unmounted.length === 0) return;
+
+    const timer = setTimeout(() => {
+      setMountedTabs((prev) => {
+        const nextTarget = TABS.map((t) => t.id).find((id) => !prev.has(id));
+        if (!nextTarget) return prev;
+        const updated = new Set(prev);
+        updated.add(nextTarget);
+        return updated;
+      });
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [mountedTabs, user]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
+  // Track cold-start load time
+  useEffect(() => {
+    if (user !== null) return;
+    const t = setInterval(() => setLoadTime((p) => p + 1), 1000);
+    return () => clearInterval(t);
+  }, [user]);
 
   // Check first-time login disclaimer acknowledgment
   useEffect(() => {
@@ -94,8 +135,19 @@ function App() {
   if (user === "callback") return <AuthCallback onDone={handleAuthDone} />;
   if (user === null) {
     return (
-      <div className="min-h-screen bg-[#0A0D12] flex items-center justify-center">
-        <div className="text-amber-500 font-mono text-sm tracking-widest uppercase animate-pulse">Loading terminal...</div>
+      <div className="min-h-screen bg-[#0A0D12] flex flex-col items-center justify-center gap-3 p-4" data-testid="loading-terminal-screen">
+        <div className="flex items-center gap-2 text-amber-500 font-mono text-sm tracking-widest uppercase">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping inline-block mr-1" />
+          Loading terminal...
+        </div>
+        {loadTime >= 4 && (
+          <div className="text-gray-400 font-mono text-xs text-center max-w-sm border border-[#222C3D] bg-[#121721] px-3.5 py-2.5 rounded shadow-lg animate-fadeIn">
+            <span className="text-amber-400 font-semibold">Connecting to cloud server...</span>
+            <p className="text-gray-500 text-[11px] mt-1 leading-relaxed">
+              Render free-tier instances spin down when idle. Booting container ({loadTime}s elapsed)...
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -208,18 +260,36 @@ function App() {
         })}
       </nav>
 
-      {/* Content — Keep all tabs mounted in parallel for zero-latency switching and background updates */}
+      {/* Content — Keep-Alive Staggered Mounting for zero-latency switching and cloud backend stability */}
       <main className="p-3 sm:p-5 flex-1" data-testid="tab-content">
         <ErrorBoundary>
-          <div className={active === "portfolio" ? "block" : "hidden"} data-tab-container="portfolio"><PortfolioTab /></div>
-          <div className={active === "chat" ? "block" : "hidden"} data-tab-container="chat"><ChatTab /></div>
-          <div className={active === "alpha" ? "block" : "hidden"} data-tab-container="alpha"><AlphaTab /></div>
-          <div className={active === "scanner" ? "block" : "hidden"} data-tab-container="scanner"><ScannerTab /></div>
-          <div className={active === "watchlist" ? "block" : "hidden"} data-tab-container="watchlist"><WatchlistTab /></div>
-          <div className={active === "stock-news" ? "block" : "hidden"} data-tab-container="stock-news"><StockNewsTab /></div>
-          <div className={active === "macro-news" ? "block" : "hidden"} data-tab-container="macro-news"><MacroNewsTab /></div>
-          <div className={active === "sentiment" ? "block" : "hidden"} data-tab-container="sentiment"><SentimentTab /></div>
-          <div className={active === "insider" ? "block" : "hidden"} data-tab-container="insider"><InsiderFlowTab /></div>
+          {mountedTabs.has("portfolio") && (
+            <div className={active === "portfolio" ? "block" : "hidden"} data-tab-container="portfolio"><PortfolioTab /></div>
+          )}
+          {mountedTabs.has("chat") && (
+            <div className={active === "chat" ? "block" : "hidden"} data-tab-container="chat"><ChatTab /></div>
+          )}
+          {mountedTabs.has("alpha") && (
+            <div className={active === "alpha" ? "block" : "hidden"} data-tab-container="alpha"><AlphaTab /></div>
+          )}
+          {mountedTabs.has("scanner") && (
+            <div className={active === "scanner" ? "block" : "hidden"} data-tab-container="scanner"><ScannerTab /></div>
+          )}
+          {mountedTabs.has("watchlist") && (
+            <div className={active === "watchlist" ? "block" : "hidden"} data-tab-container="watchlist"><WatchlistTab /></div>
+          )}
+          {mountedTabs.has("stock-news") && (
+            <div className={active === "stock-news" ? "block" : "hidden"} data-tab-container="stock-news"><StockNewsTab /></div>
+          )}
+          {mountedTabs.has("macro-news") && (
+            <div className={active === "macro-news" ? "block" : "hidden"} data-tab-container="macro-news"><MacroNewsTab /></div>
+          )}
+          {mountedTabs.has("sentiment") && (
+            <div className={active === "sentiment" ? "block" : "hidden"} data-tab-container="sentiment"><SentimentTab /></div>
+          )}
+          {mountedTabs.has("insider") && (
+            <div className={active === "insider" ? "block" : "hidden"} data-tab-container="insider"><InsiderFlowTab /></div>
+          )}
         </ErrorBoundary>
       </main>
 
