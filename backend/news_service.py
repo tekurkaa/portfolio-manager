@@ -8,12 +8,11 @@ Aggregates real-time stock news and macroeconomic intelligence from:
 import os
 import re
 import html
-import json
 import asyncio
 import logging
 import email.utils
 import xml.etree.ElementTree as ET
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional, Dict, List
 from datetime import datetime, timedelta, timezone
 
 import httpx
@@ -140,28 +139,32 @@ async def _fetch_google_news(query: str, when: str = "1d", limit: int = 15) -> L
     return await _fetch_google_news_rss(f"{query} when:{when}", max_results=limit)
 
 
-async def fetch_symbol_news_live(symbol: str) -> List[Dict[str, Any]]:
+def _dedupe_news(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen_urls, seen_titles, unique = set(), set(), []
+    for a in articles:
+        u = a.get("url") or ""
+        t = (a.get("title") or "").strip().lower()[:80]
+        if (u and u in seen_urls) or (t and t in seen_titles):
+            continue
+        if u:
+            seen_urls.add(u)
+        if t:
+            seen_titles.add(t)
+        unique.append(a)
+    unique.sort(key=lambda x: x.get("published_at") or "", reverse=True)
+    return unique
+
+
+async def fetch_symbol_news_live(symbol: str) -> list[dict[str, Any]]:
     """Combined live news for symbol: Yahoo Finance + Google News + NewsAPI. Deduplicated & sorted newest first."""
     yh, gn, na = await asyncio.gather(
-        _fetch_yfinance_news(symbol),
+        asyncio.to_thread(_fetch_yfinance_news_sync, symbol),
         _fetch_google_news(f'"{symbol}"+stock', when="1d", limit=15),
         _fetch_newsapi(f'"{symbol}"', page_size=10, days=1),
         return_exceptions=True,
     )
     def _safe(v): return v if isinstance(v, list) else []
-    combined = _safe(yh) + _safe(gn) + _safe(na)
-    seen_urls, seen_titles = set(), set()
-    unique = []
-    for a in combined:
-        u = a.get("url") or ""
-        t = (a.get("title") or "").strip().lower()[:80]
-        if u in seen_urls or (t and t in seen_titles):
-            continue
-        if u: seen_urls.add(u)
-        if t: seen_titles.add(t)
-        unique.append(a)
-    unique.sort(key=lambda a: a.get("published_at") or "", reverse=True)
-    return unique
+    return _dedupe_news(_safe(yh) + _safe(gn) + _safe(na))
 
 
 # ---------- 3. NEWSAPI.ORG (OPTIONAL) ----------
@@ -317,32 +320,8 @@ async def get_stock_news(symbols: List[str]) -> Dict[str, Any]:
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    combined: List[Dict[str, Any]] = []
-    for res in results:
-        if isinstance(res, list):
-            combined.extend(res)
-
-    # Deduplicate by normalized URL or lowercase title
-    seen_urls = set()
-    seen_titles = set()
-    unique: List[Dict[str, Any]] = []
-
-    for a in combined:
-        u = a.get("url") or ""
-        t = (a.get("title") or "").strip().lower()
-        if u and u in seen_urls:
-            continue
-        if t and t in seen_titles:
-            continue
-        if u:
-            seen_urls.add(u)
-        if t:
-            seen_titles.add(t)
-        unique.append(a)
-
-    # Sort newest first
-    unique.sort(key=lambda x: x.get("published_at") or "", reverse=True)
-
+    combined = [a for res in results if isinstance(res, list) for a in res]
+    unique = _dedupe_news(combined)
     summary = await _llm_summarize(unique[:15], focus=f"positions: {', '.join(active_symbols)}")
     return {"articles": unique[:40], "summary": summary, "symbols": active_symbols}
 
@@ -368,31 +347,7 @@ async def get_macro_news() -> Dict[str, Any]:
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    combined: List[Dict[str, Any]] = []
-    for res in results:
-        if isinstance(res, list):
-            combined.extend(res)
-
-    # Deduplicate by URL and title
-    seen_urls = set()
-    seen_titles = set()
-    unique: List[Dict[str, Any]] = []
-
-    for a in combined:
-        u = a.get("url") or ""
-        t = (a.get("title") or "").strip().lower()
-        if u and u in seen_urls:
-            continue
-        if t and t in seen_titles:
-            continue
-        if u:
-            seen_urls.add(u)
-        if t:
-            seen_titles.add(t)
-        unique.append(a)
-
-    # Sort newest first
-    unique.sort(key=lambda x: x.get("published_at") or "", reverse=True)
-
+    combined = [a for res in results if isinstance(res, list) for a in res]
+    unique = _dedupe_news(combined)
     summary = await _llm_summarize(unique[:15], focus="global macroeconomic landscape and capital markets")
     return {"articles": unique[:50], "summary": summary}

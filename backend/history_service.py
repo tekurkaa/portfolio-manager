@@ -1,11 +1,12 @@
 """Portfolio historical value calculation using yfinance historical prices."""
 import asyncio
 import logging
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta, timezone
+from typing import Any, Optional, Dict, List
 
 import yfinance as yf
 import pandas as pd
+
+from quotes import _normalize_crypto_symbol as _normalize
 
 logger = logging.getLogger(__name__)
 
@@ -20,14 +21,6 @@ RANGE_MAP = {
     "5Y": ("5y", "1wk"),
     "ALL": ("max", "1mo"),
 }
-
-
-def _normalize(sym: str) -> str:
-    s = sym.upper().strip()
-    common = {"BTC","ETH","SOL","DOGE","ADA","XRP","MATIC","AVAX","DOT","LINK","LTC","BCH","ATOM","NEAR","APT","SHIB","UNI","TRX","ARB","OP","USDC","USDT","BNB"}
-    if s in common:
-        return f"{s}-USD"
-    return s
 
 
 def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[str, Any]:
@@ -96,12 +89,11 @@ def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[
     }
 
 
-async def portfolio_history(holdings: List[Dict[str, Any]], range_key: str = "1M", benchmark: Optional[str] = None) -> Dict[str, Any]:
-    loop = asyncio.get_running_loop()
-    result = await loop.run_in_executor(None, _fetch_history_sync, holdings, range_key)
+async def portfolio_history(holdings: list[dict[str, Any]], range_key: str = "1M", benchmark: str | None = None) -> dict[str, Any]:
+    result = await asyncio.to_thread(_fetch_history_sync, holdings, range_key)
     if benchmark and result.get("points"):
         bench_holding = [{"symbol": benchmark.upper(), "quantity": 1.0}]
-        b = await loop.run_in_executor(None, _fetch_history_sync, bench_holding, range_key)
+        b = await asyncio.to_thread(_fetch_history_sync, bench_holding, range_key)
         result["benchmark"] = {
             "symbol": benchmark.upper(),
             "start_value": b.get("start_value"),

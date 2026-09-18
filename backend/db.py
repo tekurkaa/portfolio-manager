@@ -4,7 +4,7 @@ import json
 import uuid
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, NamedTuple
 
 logger = logging.getLogger(__name__)
 
@@ -14,19 +14,16 @@ LOCAL_DB_FILE = DATA_DIR / "local_storage.json"
 
 # ── Shared result types ────────────────────────────────────────────────────
 
-class UpdateResult:
-    def __init__(self, matched_count=0, modified_count=0, upserted_id=None):
-        self.matched_count = matched_count
-        self.modified_count = modified_count
-        self.upserted_id = upserted_id
+class UpdateResult(NamedTuple):
+    matched_count: int = 0
+    modified_count: int = 0
+    upserted_id: Any = None
 
-class DeleteResult:
-    def __init__(self, deleted_count=0):
-        self.deleted_count = deleted_count
+class DeleteResult(NamedTuple):
+    deleted_count: int = 0
 
-class InsertOneResult:
-    def __init__(self, inserted_id=None):
-        self.inserted_id = inserted_id
+class InsertOneResult(NamedTuple):
+    inserted_id: Any = None
 
 
 # ── Local JSON fallback (dev / offline) ───────────────────────────────────
@@ -148,9 +145,7 @@ class LocalDatabase:
             logger.error(f"Failed to save local DB: {e}")
 
     def _get(self, name):
-        if name not in self._data:
-            self._data[name] = []
-        return self._data[name]
+        return self._data.setdefault(name, [])
 
     def __getattr__(self, name):
         if name not in self._cols:
@@ -174,10 +169,11 @@ def get_database():
     db_name   = os.environ.get("DB_NAME", "portfolio_manager")
     is_remote = "localhost" not in mongo_url and "127.0.0.1" not in mongo_url
 
-    if is_remote:
-        try:
-            import certifi
-            from motor.motor_asyncio import AsyncIOMotorClient
+    try:
+        import certifi
+        from motor.motor_asyncio import AsyncIOMotorClient
+
+        if is_remote:
             client = AsyncIOMotorClient(
                 mongo_url,
                 tls=True,
@@ -192,26 +188,20 @@ def get_database():
             db_instance._engine_type = "mongodb"
             logger.info(f"Motor client created for Atlas ({db_name}) — connection is lazy.")
             return db_instance
-        except Exception as e:
-            logger.error(f"Could not create Motor client: {e}")
-            # Fall through to local JSON
 
-    # Local dev fallback
-    try:
-        import certifi
-        from motor.motor_asyncio import AsyncIOMotorClient
+        # Local dev fallback
         import pymongo
         sc = pymongo.MongoClient(mongo_url, serverSelectionTimeoutMS=1000)
         sc.server_info()
         sc.close()
-        from motor.motor_asyncio import AsyncIOMotorClient
         client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=1000)
         db_instance = client[db_name]
         db_instance._engine_type = "mongodb"
         logger.info(f"Motor connected to local MongoDB ({db_name})")
         return db_instance
-    except Exception:
-        pass
+    except Exception as e:
+        if is_remote:
+            logger.error(f"Could not create Motor client: {e}")
 
     logger.info(f"Using local JSON DB at {LOCAL_DB_FILE}")
     db_instance = LocalDatabase(LOCAL_DB_FILE)

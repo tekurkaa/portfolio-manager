@@ -3,7 +3,8 @@ import asyncio
 import logging
 import re
 import time
-from typing import List, Dict, Any, Optional
+from collections import Counter
+from typing import Any, Optional, Dict, List
 
 import httpx
 
@@ -117,9 +118,7 @@ async def analyze_symbol_public(symbol: str) -> Dict[str, Any]:
         reddit_tasks = [_fetch_reddit(client, s, symbol) for s in SUBREDDITS]
         st_task = _fetch_stocktwits(client, symbol)
         reddit_lists, st = await asyncio.gather(asyncio.gather(*reddit_tasks), st_task)
-    posts: List[Dict[str, Any]] = []
-    for lst in reddit_lists:
-        posts.extend(lst)
+    posts = [p for lst in reddit_lists for p in lst]
 
     # Score posts
     reddit_bull = 0
@@ -157,12 +156,8 @@ async def analyze_symbol_public(symbol: str) -> Dict[str, Any]:
     text_blob = " ".join(p.get("title", "") for p in posts[:30]).lower()
     words = re.findall(r"[a-zA-Z]{4,}", text_blob)
     stop = {"this","that","with","from","have","will","they","what","when","your","stock","stocks","shares","price","market","today","about","just","like","been","were","much","also","think","would","could","should"}
-    freq: Dict[str, int] = {}
-    for w in words:
-        if w in stop or w == symbol.lower():
-            continue
-        freq[w] = freq.get(w, 0) + 1
-    top_themes = [w for w, _ in sorted(freq.items(), key=lambda x: x[1], reverse=True)[:5]]
+    counts = Counter(w for w in words if w not in stop and w != symbol.lower())
+    top_themes = [w for w, _ in counts.most_common(5)]
 
     result = {
         "symbol": symbol.upper(),
@@ -203,19 +198,9 @@ async def analyze_portfolio_public(symbols: List[str]) -> List[Dict[str, Any]]:
             except Exception as e:
                 logger.warning(f"pub sentiment {s}: {e}")
                 return {
-                    "symbol": s,
-                    "score": 50,
-                    "label": "Neutral",
-                    "bull_pct": 50,
-                    "bear_pct": 50,
-                    "reddit_bull_signals": 0,
-                    "reddit_bear_signals": 0,
-                    "stocktwits_bull": 0,
-                    "stocktwits_bear": 0,
-                    "post_count": 0,
-                    "stocktwits_msg_count": 0,
-                    "top_posts": [],
-                    "top_themes": [],
+                    "symbol": s, "score": 50, "label": "Neutral", "bull_pct": 50, "bear_pct": 50,
+                    "reddit_bull_signals": 0, "reddit_bear_signals": 0, "stocktwits_bull": 0, "stocktwits_bear": 0,
+                    "post_count": 0, "stocktwits_msg_count": 0, "top_posts": [], "top_themes": [],
                     "reasoning": "Neutral sentiment baseline",
                 }
 

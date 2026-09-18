@@ -5,21 +5,15 @@ to surface high-probability BUY candidates BEFORE they break out.
 import os
 import asyncio
 import logging
-from pathlib import Path
-from typing import List, Dict, Any, Optional
-from dotenv import load_dotenv
-
-load_dotenv(Path(__file__).parent / ".env")
+from typing import Any, Optional, Dict, List
+import time
 
 import httpx
 import yfinance as yf
-import pandas as pd
 
 from signal_service import _options_flow_sync
 from sentiment_service import analyze_symbol_public
 from insider_service import get_trades_for_symbol
-
-import time
 
 logger = logging.getLogger(__name__)
 
@@ -145,9 +139,8 @@ def _scan_one_sync(symbol: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-async def _scan_one(symbol: str) -> Optional[Dict[str, Any]]:
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _scan_one_sync, symbol)
+async def _scan_one(symbol: str) -> dict[str, Any] | None:
+    return await asyncio.to_thread(_scan_one_sync, symbol)
 
 
 async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Dict[str, Any]:
@@ -186,12 +179,17 @@ async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Di
                 sym = r["symbol"]
                 # Options flow enrichment
                 try:
-                    loop = asyncio.get_running_loop()
-                    opt = await loop.run_in_executor(None, _options_flow_sync, sym)
-                    call_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "call")
-                    put_v = sum(x["volume"] for x in opt.get("flow", []) if x.get("kind") == "put")
+                    opt = await asyncio.to_thread(_options_flow_sync, sym)
+                    call_v, put_v, unusual_calls = 0, 0, 0
+                    for x in opt.get("flow", []):
+                        v = x.get("volume", 0)
+                        if x.get("kind") == "call":
+                            call_v += v
+                            if x.get("unusual"):
+                                unusual_calls += 1
+                        elif x.get("kind") == "put":
+                            put_v += v
                     opt_tilt = (call_v / (call_v + put_v) * 100) if (call_v + put_v) else 50.0
-                    unusual_calls = sum(1 for x in opt.get("flow", []) if x.get("kind") == "call" and x.get("unusual"))
                     r["options_tilt"] = round(opt_tilt, 1)
                     r["unusual_calls"] = unusual_calls
                     if opt_tilt >= 65: r["drivers"].append(f"Call-heavy options ({opt_tilt:.0f}%)")

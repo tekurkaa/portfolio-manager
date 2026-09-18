@@ -3,7 +3,7 @@ import asyncio
 import logging
 import time
 import xml.etree.ElementTree as ET
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional, Dict, List
 
 import httpx
 
@@ -101,9 +101,7 @@ async def get_congress_trades(limit: int = 60, symbol_filter: Optional[str] = No
 
     tasks = [get_trades_for_symbol(s, 15) for s in symbols]
     results = await asyncio.gather(*tasks)
-    all_trades: List[Dict[str, Any]] = []
-    for arr in results:
-        all_trades.extend(arr)
+    all_trades = [t for arr in results for t in arr]
     all_trades.sort(key=lambda x: x.get("date") or "", reverse=True)
     return all_trades[:limit]
 
@@ -129,8 +127,7 @@ async def get_sec_form4(limit: int = 40, symbol_filter: Optional[str] = None) ->
     except Exception as e:
         logger.warning(f"SEC parse: {e}")
     if symbol_filter:
-        s = symbol_filter.upper()
-        out = [x for x in out if s in (x["company"] or "").upper()]
+        out = [x for x in out if symbol_filter.upper() in (x["company"] or "").upper()]
     return out[:limit]
 
 

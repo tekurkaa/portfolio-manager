@@ -3,7 +3,16 @@ import os
 import re
 import asyncio
 import logging
-from typing import List, Dict, Any, Optional
+from datetime import datetime, timezone
+from typing import Any, Optional, Dict, List
+
+import httpx
+
+from quotes import get_quote
+from sentiment_service import analyze_symbol_public
+from insider_service import get_trades_for_symbol
+from signal_service import get_options_flow
+from news_service import fetch_symbol_news_live, _fetch_google_news, _fetch_newsapi
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +43,7 @@ KNOWN_TICKERS = {
 }
 
 
-def extract_tickers(text: str, held: List[str] = None) -> List[str]:
+def extract_tickers(text: str, held: list[str] | None = None) -> list[str]:
     found = []
     # Only scan original text, not upper-cased - protects against random uppercase-inside-word matches
     for m in TICKER_RE.finditer(text):
@@ -49,14 +58,8 @@ def extract_tickers(text: str, held: List[str] = None) -> List[str]:
     return found[:5]
 
 
-async def _fetch_ticker_context(symbol: str) -> Dict[str, Any]:
+async def _fetch_ticker_context(symbol: str) -> dict[str, Any]:
     """Pull compact ticker snapshot from all our services — live news via Yahoo + Google + NewsAPI."""
-    from quotes import get_quote
-    from sentiment_service import analyze_symbol_public
-    from insider_service import get_trades_for_symbol
-    from signal_service import get_options_flow
-    from news_service import fetch_symbol_news_live
-
     quote, sent, cong, opts, news_list = await asyncio.gather(
         get_quote(symbol, use_cache=False),
         analyze_symbol_public(symbol),
@@ -90,14 +93,13 @@ async def _fetch_ticker_context(symbol: str) -> Dict[str, Any]:
     }
 
 
-async def build_grounding(user_question: str, held_symbols: List[str], portfolio_summary: Dict[str, Any]) -> Dict[str, Any]:
+async def build_grounding(user_question: str, held_symbols: list[str], portfolio_summary: dict[str, Any]) -> dict[str, Any]:
     """Gather context needed to answer question."""
     tickers = extract_tickers(user_question, held_symbols)
     if not tickers and held_symbols:
         tickers = held_symbols[:3]
 
     tasks = [_fetch_ticker_context(s) for s in tickers[:4]]
-    from news_service import _fetch_google_news, _fetch_newsapi
 
     async def _macro():
         gn, na = await asyncio.gather(
@@ -118,7 +120,6 @@ async def build_grounding(user_question: str, held_symbols: List[str], portfolio
     results = await asyncio.gather(*tasks, _macro(), return_exceptions=True)
     ticker_ctx = [r for r in results[:-1] if not isinstance(r, Exception)]
     macro_news = results[-1] if not isinstance(results[-1], Exception) else []
-    from datetime import datetime, timezone
     return {
         "now_utc": datetime.now(timezone.utc).isoformat(),
         "held_symbols": held_symbols,
@@ -205,12 +206,11 @@ SYSTEM_MESSAGE = (
 )
 
 
-async def _generate_llm_response(prompt: str, session_id: str) -> Optional[str]:
+async def _generate_llm_response(prompt: str) -> str | None:
     """Call LLM with support across standard Anthropic, OpenAI, or Gemini APIs."""
     # 1. Try direct Anthropic API if key is available
     if ANTHROPIC_API_KEY:
         try:
-            import httpx
             async with httpx.AsyncClient(timeout=45.0) as client:
                 r = await client.post(
                     "https://api.anthropic.com/v1/messages",
@@ -237,7 +237,6 @@ async def _generate_llm_response(prompt: str, session_id: str) -> Optional[str]:
     # 2. Try OpenAI API if key is available
     if OPENAI_API_KEY:
         try:
-            import httpx
             async with httpx.AsyncClient(timeout=45.0) as client:
                 r = await client.post(
                     "https://api.openai.com/v1/chat/completions",
@@ -261,7 +260,6 @@ async def _generate_llm_response(prompt: str, session_id: str) -> Optional[str]:
     # 3. Try Gemini API if key is available
     if GEMINI_API_KEY:
         try:
-            import httpx
             async with httpx.AsyncClient(timeout=45.0) as client:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
                 r = await client.post(
@@ -284,9 +282,9 @@ async def _generate_llm_response(prompt: str, session_id: str) -> Optional[str]:
     return None
 
 
-async def chat_answer(user_question: str, history: List[Dict[str, str]],
-                      held_symbols: List[str], portfolio_summary: Dict[str, Any],
-                      session_id: str) -> Dict[str, Any]:
+async def chat_answer(user_question: str, history: list[dict[str, str]],
+                      held_symbols: list[str], portfolio_summary: dict[str, Any],
+                      session_id: str = "") -> dict[str, Any]:
     grounding = await build_grounding(user_question, held_symbols, portfolio_summary)
     context = render_grounding_prompt(grounding)
     sources = collect_sources(grounding)
@@ -301,7 +299,7 @@ async def chat_answer(user_question: str, history: List[Dict[str, str]],
         prefix = "PRIOR CONVERSATION:\n" + "\n".join(h_lines) + "\n\n"
     full_prompt = f"{prefix}{context}\n\nQUESTION: {user_question}"
 
-    answer = await _generate_llm_response(full_prompt, session_id)
+    answer = await _generate_llm_response(full_prompt)
 
     if not answer:
         # Grounded fallback when no active LLM key is configured

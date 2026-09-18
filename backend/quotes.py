@@ -4,26 +4,12 @@ import re
 import time
 import asyncio
 import logging
-from concurrent.futures import ThreadPoolExecutor
-from typing import Optional, List, Dict, Any
-from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv(Path(__file__).parent / ".env")
+from typing import Any, Optional, Dict, List
 
 import httpx
 import yfinance as yf
 
 logger = logging.getLogger(__name__)
-
-_CACHE: Dict[str, Any] = {}
-_CACHE_TTL = 15
-
-_INDICES_CACHE: List[Dict[str, Any]] = []
-_INDICES_CACHE_TIME = 0.0
-_INDICES_CACHE_TTL = 2.0  # 2-second ultra-fresh cache for real-time live ticker stream
-
-_EXECUTOR = ThreadPoolExecutor(max_workers=16)
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -42,26 +28,35 @@ def _clean_numeric(val: Any) -> float:
         return 0.0
 
 
+_CACHE: dict[str, Any] = {}
+_CACHE_TTL = 15
+
+_INDICES_CACHE: list[dict[str, Any]] = []
+_INDICES_CACHE_TIME = 0.0
+_INDICES_CACHE_TTL = 2.0
+
+COMMON_CRYPTO = {
+    "BTC", "ETH", "SOL", "DOGE", "ADA", "XRP", "MATIC", "AVAX",
+    "DOT", "LINK", "LTC", "BCH", "ATOM", "NEAR", "APT", "SHIB",
+    "UNI", "TRX", "ARB", "OP", "USDC", "USDT", "BNB",
+}
+
+
 def _normalize_crypto_symbol(symbol: str) -> str:
     s = symbol.upper().strip()
     if s.endswith("-USD"):
         return s
-    common_crypto = {
-        "BTC", "ETH", "SOL", "DOGE", "ADA", "XRP", "MATIC", "AVAX",
-        "DOT", "LINK", "LTC", "BCH", "ATOM", "NEAR", "APT", "SHIB",
-        "UNI", "TRX", "ARB", "OP", "USDC", "USDT", "BNB",
-    }
-    if s in common_crypto:
+    if s in COMMON_CRYPTO:
         return f"{s}-USD"
     return s
 
 
+normalize_symbol = _normalize_crypto_symbol
+
+
 def is_crypto(symbol: str) -> bool:
-    return "-USD" in symbol.upper() or symbol.upper() in {
-        "BTC", "ETH", "SOL", "DOGE", "ADA", "XRP", "MATIC", "AVAX",
-        "DOT", "LINK", "LTC", "BCH", "ATOM", "NEAR", "APT", "SHIB",
-        "UNI", "TRX", "ARB", "OP", "USDC", "USDT", "BNB",
-    }
+    s = symbol.upper()
+    return "-USD" in s or s in COMMON_CRYPTO
 
 
 def _yf_fetch_sync(symbol: str) -> Optional[Dict[str, Any]]:
@@ -96,9 +91,8 @@ def _yf_fetch_sync(symbol: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-async def _fetch_yfinance(symbol: str) -> Optional[Dict[str, Any]]:
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(_EXECUTOR, _yf_fetch_sync, symbol)
+async def _fetch_yfinance(symbol: str) -> dict[str, Any] | None:
+    return await asyncio.to_thread(_yf_fetch_sync, symbol)
 
 
 async def _fetch_alpha_vantage_quote(client: httpx.AsyncClient, symbol: str) -> Optional[Dict[str, Any]]:
@@ -299,7 +293,7 @@ async def get_market_indices() -> List[Dict[str, Any]]:
                 }
             except Exception:
                 return None
-        futures = [loop.run_in_executor(_EXECUTOR, _fetch_backup, item) for item in backup_tickers]
+        futures = [asyncio.to_thread(_fetch_backup, item) for item in backup_tickers]
         res = await asyncio.gather(*futures, return_exceptions=True)
         out = [r for r in res if isinstance(r, dict) and r.get("price") is not None]
 

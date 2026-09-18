@@ -9,16 +9,13 @@ import io
 import re
 import uuid
 import logging
-from datetime import datetime, date
-from typing import List, Dict, Any, Optional, Tuple
+from collections import deque
+from datetime import datetime
+from typing import Any, Optional, Dict, List, Tuple
+
+from asset_metadata_service import resolve_asset_metadata
 
 logger = logging.getLogger(__name__)
-
-KNOWN_CRYPTO = {
-    "BTC", "ETH", "SOL", "DOGE", "ADA", "XRP", "MATIC", "AVAX", "DOT",
-    "LINK", "LTC", "BCH", "ATOM", "SHIB", "UNI", "BNB", "NEAR", "APT", "TRX",
-    "PEPE", "XLM", "ETC", "ALGO", "FIL", "AAVE", "RENDER", "SUI", "FET"
-}
 
 OPTION_TRANS_CODES = {"BTO", "STC", "STO", "BTC", "OEXP"}
 SKIP_TRANS_CODES = {"ACH", "SLIP", "CDIV", "JNLS", "SPL", "CSD", "MINT", "DIV", "INT", "WIRE", "FEE", "NRAT", "RTP", "REC"}
@@ -109,13 +106,9 @@ def parse_quantity(raw: Any) -> float:
         return 0.0
 
 
-from asset_metadata_service import resolve_asset_metadata
-
-
 def detect_asset_type(symbol: str, description: str = "") -> str:
     """Determines if the asset is crypto, etf, or stock."""
-    meta = resolve_asset_metadata(symbol, description)
-    return meta["asset_type"]
+    return resolve_asset_metadata(symbol, description)["asset_type"]
 
 
 def is_option_row(trans_code: str, description: str) -> bool:
@@ -279,7 +272,7 @@ def derive_holdings_fifo(trades: List[Dict[str, Any]], stats: Optional[Dict[str,
             key=lambda x: (x["activity_date"], -x.get("row_index", 0))
         )
 
-        lot_queue: List[Dict[str, Any]] = []
+        lot_queue: deque[dict[str, Any]] = deque()
 
         for trade in sorted_trades:
             action = trade["trans_code"]
@@ -304,7 +297,7 @@ def derive_holdings_fifo(trades: List[Dict[str, Any]], stats: Optional[Dict[str,
                     oldest_lot = lot_queue[0]
                     if oldest_lot["quantity"] <= sell_rem + 1e-8:
                         sell_rem -= oldest_lot["quantity"]
-                        lot_queue.pop(0)
+                        lot_queue.popleft()
                     else:
                         oldest_lot["quantity"] -= sell_rem
                         sell_rem = 0.0

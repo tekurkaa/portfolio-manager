@@ -67,6 +67,42 @@ def _set_auth_cookie(response: Response, session_token: str):
     )
 
 
+async def _upsert_user_and_session(db, response: Response, email: str, name: str, picture: Optional[str], session_token: str) -> dict:
+    existing = await db.users.find_one({"email": email}, {"_id": 0})
+    if existing:
+        user_id = existing["user_id"]
+        update_fields = {"name": name, "email": email}
+        if picture is not None:
+            update_fields["picture"] = picture
+        else:
+            picture = existing.get("picture")
+        await db.users.update_one({"user_id": user_id}, {"$set": update_fields})
+    else:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        await db.users.insert_one({
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "created_at": datetime.now(timezone.utc),
+        })
+
+    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)
+    await db.user_sessions.update_one(
+        {"session_token": session_token},
+        {"$set": {
+            "user_id": user_id,
+            "session_token": session_token,
+            "expires_at": expires_at,
+            "created_at": datetime.now(timezone.utc),
+        }},
+        upsert=True,
+    )
+
+    _set_auth_cookie(response, session_token)
+    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
+
+
 async def exchange_session(session_id: str, db, response: Response) -> dict:
     """Exchange Emergent session_id → user + session_token cookie."""
     async with httpx.AsyncClient() as client:
@@ -74,81 +110,22 @@ async def exchange_session(session_id: str, db, response: Response) -> dict:
     if r.status_code != 200:
         raise HTTPException(status_code=401, detail=f"Session exchange failed: {r.status_code}")
     data = r.json()
-    raw_email = data.get("email") or ""
-    email = raw_email.strip().lower()
+    email = (data.get("email") or "").strip().lower()
     name = (data.get("name") or "").strip() or email.split("@")[0].capitalize()
     picture = data.get("picture")
     session_token = data.get("session_token")
     if not (email and session_token):
         raise HTTPException(status_code=401, detail="Invalid session data")
 
-    # Match user case-insensitively so accounts are never duplicated or reset
-    existing = await db.users.find_one({"email": email}, {"_id": 0})
-    if existing:
-        user_id = existing["user_id"]
-        await db.users.update_one({"user_id": user_id}, {"$set": {"name": name, "picture": picture, "email": email}})
-    else:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        await db.users.insert_one({
-            "user_id": user_id,
-            "email": email,
-            "name": name,
-            "picture": picture,
-            "created_at": datetime.now(timezone.utc),
-        })
-
-    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)
-    await db.user_sessions.update_one(
-        {"session_token": session_token},
-        {"$set": {
-            "user_id": user_id,
-            "session_token": session_token,
-            "expires_at": expires_at,
-            "created_at": datetime.now(timezone.utc),
-        }},
-        upsert=True,
-    )
-
-    _set_auth_cookie(response, session_token)
-    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
+    return await _upsert_user_and_session(db, response, email, name, picture, session_token)
 
 
 async def create_dev_session(email: str, name: str, db, response: Response) -> dict:
     """Create or login as a local user without external OAuth."""
-    email = email.strip().lower()
-    name = name.strip() or email.split("@")[0].capitalize()
+    clean_email = email.strip().lower()
+    clean_name = name.strip() or clean_email.split("@")[0].capitalize()
     session_token = f"sess_{uuid.uuid4().hex}"
-
-    existing = await db.users.find_one({"email": email}, {"_id": 0})
-    if existing:
-        user_id = existing["user_id"]
-        await db.users.update_one({"user_id": user_id}, {"$set": {"name": name}})
-        picture = existing.get("picture")
-    else:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        picture = None
-        await db.users.insert_one({
-            "user_id": user_id,
-            "email": email,
-            "name": name,
-            "picture": picture,
-            "created_at": datetime.now(timezone.utc),
-        })
-
-    expires_at = datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)
-    await db.user_sessions.update_one(
-        {"session_token": session_token},
-        {"$set": {
-            "user_id": user_id,
-            "session_token": session_token,
-            "expires_at": expires_at,
-            "created_at": datetime.now(timezone.utc),
-        }},
-        upsert=True,
-    )
-
-    _set_auth_cookie(response, session_token)
-    return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
+    return await _upsert_user_and_session(db, response, clean_email, clean_name, None, session_token)
 
 
 async def logout_session(request: Request, db, response: Response):

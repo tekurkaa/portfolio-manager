@@ -1,12 +1,12 @@
 """Options flow (unusual activity) + composite Alpha Signal Score via yfinance."""
 import asyncio
 import logging
-import math
 import time
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional, Dict, List
 
 import yfinance as yf
-import pandas as pd
+
+from quotes import normalize_symbol
 
 logger = logging.getLogger(__name__)
 
@@ -57,9 +57,8 @@ def _options_flow_sync(symbol: str) -> Dict[str, Any]:
         return {"symbol": symbol.upper(), "flow": []}
 
 
-async def get_options_flow(symbol: str) -> Dict[str, Any]:
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _options_flow_sync, symbol)
+async def get_options_flow(symbol: str) -> dict[str, Any]:
+    return await asyncio.to_thread(_options_flow_sync, symbol)
 
 
 async def get_portfolio_options_flow(symbols: List[str]) -> Dict[str, Any]:
@@ -90,9 +89,7 @@ async def get_portfolio_options_flow(symbols: List[str]) -> Dict[str, Any]:
 def _momentum_score_sync(symbol: str) -> float:
     """5-day price momentum → 0-100 score. >50 = bullish momentum."""
     try:
-        yh = symbol.upper()
-        if yh in {"BTC","ETH","SOL","DOGE","ADA","XRP","MATIC","AVAX","BNB"}:
-            yh = f"{yh}-USD"
+        yh = normalize_symbol(symbol)
         t = yf.Ticker(yh)
         hist = t.history(period="10d", interval="1d")
         if hist is None or hist.empty or len(hist) < 2:
@@ -108,8 +105,7 @@ def _momentum_score_sync(symbol: str) -> float:
 
 
 async def get_momentum(symbol: str) -> float:
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _momentum_score_sync, symbol)
+    return await asyncio.to_thread(_momentum_score_sync, symbol)
 
 
 async def alpha_signal(symbols: List[str], sentiment_map: Dict[str, int]) -> List[Dict[str, Any]]:

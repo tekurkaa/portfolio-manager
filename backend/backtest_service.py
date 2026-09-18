@@ -1,20 +1,14 @@
 """Signal backtest: how did today's signal composition perform historically."""
 import asyncio
 import logging
-from datetime import timedelta
-from typing import List, Dict, Any
+from typing import Any, Optional, Dict, List
 
 import yfinance as yf
 import pandas as pd
 
+from quotes import _normalize_crypto_symbol as _normalize
+
 logger = logging.getLogger(__name__)
-
-
-def _normalize(s: str) -> str:
-    s = s.upper().strip()
-    if s in {"BTC","ETH","SOL","DOGE","ADA","XRP","MATIC","AVAX","BNB"}:
-        return f"{s}-USD"
-    return s
 
 
 def _backtest_sync(symbol: str) -> Dict[str, Any]:
@@ -79,12 +73,11 @@ def _backtest_sync(symbol: str) -> Dict[str, Any]:
         return {"symbol": symbol.upper(), "results": None, "error": str(e)}
 
 
-async def backtest_symbol(symbol: str) -> Dict[str, Any]:
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _backtest_sync, symbol)
+async def backtest_symbol(symbol: str) -> dict[str, Any]:
+    return await asyncio.to_thread(_backtest_sync, symbol)
 
 
-async def backtest_portfolio(symbols: List[str]) -> List[Dict[str, Any]]:
+async def backtest_portfolio(symbols: list[str]) -> list[dict[str, Any]]:
     if not symbols:
         return []
     tasks = [backtest_symbol(s) for s in symbols[:12]]
