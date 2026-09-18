@@ -8,7 +8,7 @@
 
 ## ⚡ Overview
 
-**Terminus / Portfolio Manager** is a high-performance, full-stack financial market terminal designed for active equity traders, quantitative analysts, and portfolio managers. It combines sub-second live exchange market feeds, predictive alpha generation models, congressional trading intelligence, and automated breakout alerts in a sleek, dark-mode terminal interface.
+**TERMINUS** is a high-performance, full-stack financial market terminal designed for active equity traders, quantitative analysts, and portfolio managers. It combines sub-second live exchange market feeds, predictive alpha generation models, congressional trading intelligence, and automated breakout alerts in a sleek, dark-mode terminal interface.
 
 ---
 
@@ -121,10 +121,10 @@ cd portfolio-manager
    CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
    COOKIE_SECURE=false
 
-   # API Keys
-   ALPHA_VANTAGE_API_KEY=BUYS3Q4CWL278X63
-   NEWSAPI_KEY=8c149e153bcf41d19f868bb248113321
-   RESEND_API_KEY=re_Yoe8xeMf_AHzQJWhx8mXM2S3GcYdLaoAt
+   # API Keys (Optional integrations)
+   ALPHA_VANTAGE_API_KEY=your_alpha_vantage_api_key_here
+   NEWSAPI_KEY=your_newsapi_key_here
+   RESEND_API_KEY=your_resend_api_key_here
    RESEND_FROM=Terminus <onboarding@resend.dev>
    ```
 
@@ -213,13 +213,13 @@ npx playwright test --ui
 3. Start Command: `uvicorn server:app --host 0.0.0.0 --port $PORT`
 4. Set Environment Variables on Render:
    ```env
-   MONGO_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/portfolio_manager?retryWrites=true&w=majority
+   MONGO_URL=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
    DB_NAME=portfolio_manager
-   CORS_ORIGINS=https://portfolio-manager-by-atv.vercel.app
+   CORS_ORIGINS=https://<your-frontend-domain>.vercel.app
    COOKIE_SECURE=true
-   ALPHA_VANTAGE_API_KEY=BUYS3Q4CWL278X63
-   NEWSAPI_KEY=8c149e153bcf41d19f868bb248113321
-   RESEND_API_KEY=re_Yoe8xeMf_AHzQJWhx8mXM2S3GcYdLaoAt
+   ALPHA_VANTAGE_API_KEY=your_alpha_vantage_api_key_here
+   NEWSAPI_KEY=your_newsapi_key_here
+   RESEND_API_KEY=your_resend_api_key_here
    RESEND_FROM=Terminus <onboarding@resend.dev>
    ```
 
