@@ -15,14 +15,11 @@ SESSION_DAYS = 7
 
 
 def _extract_token(request: Request) -> Optional[str]:
-    """Get session_token from cookie first, then Authorization header."""
-    t = request.cookies.get("session_token")
-    if t:
-        return t
+    """Get session_token from Authorization header first, then fallback to cookie."""
     auth = request.headers.get("Authorization") or request.headers.get("authorization")
     if auth and auth.lower().startswith("bearer "):
         return auth[7:].strip()
-    return None
+    return request.cookies.get("session_token")
 
 
 async def get_current_user(request: Request, db) -> dict:

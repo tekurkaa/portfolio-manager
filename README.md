@@ -35,10 +35,16 @@
 - **Congressional Trading Tracker**: Real-time monitoring of House and Senate financial disclosures.
 
 ### 5. 💼 Portfolio & Risk Management
-- Real-time P&L calculations, historical equity curves (1D, 1W, 1M, 1Y, ALL), and asset allocation breakdowns.
-- Instant demo portfolio generation with 10 diversified tech, semi, and crypto positions.
+- **Robinhood Activity Importer**: Native import for Robinhood Trade Activity CSVs with FIFO lot accounting, buy/sell parsing, and split/rebalance handling.
+- **Portfolio Risk & Diversification Auditor**: Single-asset dual-alert exposure thresholds (hard ceilings for crypto blue chips vs altcoins vs stocks), 20% sector concentration rules, health score scoring, and projected annual dividend cash flow KPIs.
+- Real-time P&L calculations, historical equity curves (1D, 1W, 1M, 1Y, 5Y, ALL), and interactive allocation treemaps.
+- Instant demo portfolio generation with 12 diversified tech, semi, ETF, and crypto positions.
 
-### 6. 🗄️ Dual-Mode Database Architecture
+### 6. 🤖 Grounded AI Chat Assistant
+- **Fintech Research Engine**: Multi-turn conversational AI grounded in live portfolio holdings, news events, congress transactions, and quantitative alpha signals.
+- **Auto-Ticker Extraction & Conversation Lifecycle**: Thread persistence, automated conversation creation/deletion, and clickable ticker references.
+
+### 7. 🗄️ Dual-Mode Database Architecture
 - **Zero-Friction Local Mode**: Automatically detects if MongoDB is running; if not available, gracefully falls back to an embedded JSON document store (`backend/data/local_storage.json`) within 1 second without hanging.
 - **Production Mode**: Seamlessly switches to Cloud MongoDB (MongoDB Atlas) when `MONGO_URL` is configured.
 
@@ -50,7 +56,7 @@
 portfolio-manager/
 ├── frontend/                # React 19 Single Page Application
 │   ├── src/
-│   │   ├── components/      # Terminal Tabs (TopTickerBar, Portfolio, Alpha, Scanner, News, etc.)
+│   │   ├── components/      # Terminal Tabs (TopTickerBar, Portfolio, Alpha, Scanner, News, Chat, etc.)
 │   │   ├── lib/api.js       # Axios HTTP client with credentials & formatting utils
 │   │   └── App.js           # Main terminal shell & auth state
 │   └── vercel.json          # SPA rewrite rules for production
@@ -60,11 +66,20 @@ portfolio-manager/
 │   ├── news_service.py      # Stock & macro financial news aggregator
 │   ├── scanner_service.py   # Breakout scoring engine & Resend email delivery
 │   ├── signal_service.py    # Alpha models & options flow calculations
+│   ├── trade_import_service.py # Robinhood trade activity CSV parser & lot accountant
+│   ├── chat_service.py      # Grounded AI conversation engine
 │   ├── insider_service.py   # Congressional trading integration
 │   ├── auth.py              # Session management & dev login
 │   ├── db.py                # Dual-mode (MongoDB + Local JSON) database engine
 │   └── .env                 # Environment configuration & API keys
-└── tests/                   # Pytest test suite (16 comprehensive tests)
+├── specs/                   # QA test specifications (Given/When/Then format)
+│   └── feature-tests.md     # Exhaustive 22-suite specification
+├── tests/
+│   ├── e2e/                 # Playwright TypeScript E2E test suite (81 tests across 22 suites)
+│   ├── helpers/             # E2E test session bootstrap & database reset utilities
+│   └── test_*.py            # Pytest backend integration test suite (24 tests)
+├── playwright.config.ts     # Playwright configuration (workers: 1, dual backend/frontend webServers)
+└── package.json             # Root dependencies & test scripts
 ```
 
 ---
@@ -141,19 +156,44 @@ cd portfolio-manager
 
 ## 🧪 Running the Test Suite
 
-The project includes a full unit and integration test suite covering API routes, database CRUD, quotes streaming, news aggregation, and scanner scoring:
+The project features a dual testing setup: backend unit/integration tests with **Pytest** and full end-to-end browser automation with **Playwright (TypeScript)**.
+
+### 1. Backend Integration Tests (Pytest — 24 Tests)
+Validates core API routes, dual-mode database CRUD, market quote streaming, trade activity import, and scanner scoring:
 
 ```bash
 # From the project root
 ./backend/venv/bin/pytest tests/
 ```
 
-**Test Coverage**:
-- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, `/api/auth/me`, `/api/market/indices`, `/api/portfolio/holdings`, `/api/scanner/prefs`.
+- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`.
 - `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer.
 - `tests/test_news.py`: Stock news by ticker, macro news, HTML cleaner, RFC-822 date parser.
 - `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
+
+### 2. End-to-End Browser Tests (Playwright — 81 Tests across 22 Suites)
+Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
+
+```bash
+# Install Playwright browsers (first-time only)
+npx playwright install chromium
+
+# Run all 81 E2E tests (configured with workers: 1 to guarantee database isolation)
+npx playwright test
+
+# Run a specific suite (e.g. Holdings CRUD)
+npx playwright test tests/e2e/02_holdings.spec.ts
+
+# Run with interactive UI mode
+npx playwright test --ui
+```
+
+**Coverage Summary**:
+- **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs, History Chart Ranges & Benchmarks, Allocation Treemap.
+- **Suites 06–10**: CSV Upload, Robinhood Activity Import, Demo Seed, Watchlist Management, Held Stock News.
+- **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner, Email Notifications.
+- **Suites 16–22**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience.
 
 ---
 

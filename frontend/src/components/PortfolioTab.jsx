@@ -340,12 +340,10 @@ export default function PortfolioTab() {
       )}
 
       {/* Charts */}
-      {rows.length > 0 && (
-        <div className="grid lg:grid-cols-2 gap-3" data-testid="portfolio-charts">
-          <PortfolioHistoryChart currentValue={s?.total_value} />
-          <AllocationTreemap holdings={data.holdings || []} activeFilter={filter} />
-        </div>
-      )}
+      <div className="grid lg:grid-cols-2 gap-3" data-testid="portfolio-charts">
+        <PortfolioHistoryChart currentValue={s?.total_value} />
+        <AllocationTreemap holdings={data.holdings || []} activeFilter={filter} />
+      </div>
 
       {/* Filters */}
       <div className="flex items-center gap-2" data-testid="filter-pills">

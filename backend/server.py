@@ -493,6 +493,8 @@ async def _get_held_symbols(uid: str) -> List[str]:
 @api_router.get("/news/stocks")
 async def stock_news(uid: str = Depends(current_user_id)):
     symbols = await _get_held_symbols(uid)
+    if not symbols:
+        return {"articles": [], "symbols": [], "summary": None}
     clean = [s.replace("-USD", "") for s in symbols]
     return await get_stock_news(clean)
 
@@ -661,7 +663,8 @@ async def scanner_notify_route(user=Depends(current_user)):
         today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         await db.notify_prefs.update_one(
             {"user_id": user["user_id"]},
-            {"$set": {"last_sent_date": today_str}}
+            {"$set": {"last_sent_date": today_str}},
+            upsert=True,
         )
     return {**result, "candidates_count": len(scan.get("candidates", []))}
 

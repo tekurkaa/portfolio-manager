@@ -141,6 +141,12 @@ def parse_robinhood_csv(file_bytes: bytes) -> Tuple[List[Dict[str, Any]], Dict[s
             text = file_bytes.decode("latin-1")
 
     reader = csv.DictReader(io.StringIO(text))
+    if not reader.fieldnames:
+        raise ValueError("Empty or invalid CSV")
+    norm_headers = {h.strip().lower() for h in reader.fieldnames if h}
+    required_any = {"activity date", "date", "trade date", "instrument", "trans code", "trans_code"}
+    if not (norm_headers & required_any):
+        raise ValueError("Invalid Robinhood Trade Activity CSV: missing required headers")
     
     trades: List[Dict[str, Any]] = []
     total_rows = 0
