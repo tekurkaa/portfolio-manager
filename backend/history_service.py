@@ -1,7 +1,7 @@
 """Portfolio historical value calculation using yfinance historical prices."""
 import asyncio
 import logging
-from typing import Any, Optional, Dict, List
+from typing import Any, Dict, List
 
 import yfinance as yf
 import pandas as pd
@@ -69,6 +69,11 @@ def _fetch_history_sync(holdings: List[Dict[str, Any]], range_key: str) -> Dict[
     for s, ser in series_map.items():
         aligned = ser.reindex(all_index).ffill().bfill()
         total = total.add(aligned * qty_map.get(s, 0), fill_value=0)
+
+    # For 1D: filter to only the single latest trading session
+    if range_key == "1D" and not total.empty:
+        latest_date = total.index[-1].date()
+        total = total[total.index.date == latest_date]
 
     points = [
         {"t": ts.isoformat(), "v": round(float(v), 2)}

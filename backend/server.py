@@ -1,7 +1,6 @@
 from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException, Depends, Request, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import io
 import csv
@@ -16,14 +15,13 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from quotes import get_quote, get_quotes, get_market_indices, is_crypto  # noqa: E402
+from quotes import get_quote, get_quotes, get_market_indices  # noqa: E402
 from news_service import get_stock_news, get_macro_news  # noqa: E402
 from sentiment_service import analyze_portfolio_public, market_fear_greed_from_social, analyze_symbol_public  # noqa: E402
 from insider_service import get_insider_summary, get_congress_trades, get_sec_form4  # noqa: E402
 from history_service import portfolio_history  # noqa: E402
 from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
-from backtest_service import backtest_portfolio, backtest_symbol  # noqa: E402
-from sentiment_service import analyze_symbol_public  # noqa: E402
+from backtest_service import backtest_portfolio  # noqa: E402
 from auth import get_current_user, exchange_session, logout_session, create_dev_session  # noqa: E402
 from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
 from chat_service import chat_answer  # noqa: E402

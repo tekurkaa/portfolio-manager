@@ -12,7 +12,6 @@ import httpx
 import yfinance as yf
 
 from signal_service import _options_flow_sync
-from sentiment_service import analyze_symbol_public
 from insider_service import get_trades_for_symbol
 
 logger = logging.getLogger(__name__)

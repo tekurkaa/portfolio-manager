@@ -1,7 +1,7 @@
 """Signal backtest: how did today's signal composition perform historically."""
 import asyncio
 import logging
-from typing import Any, Optional, Dict, List
+from typing import Any, Dict
 
 import yfinance as yf
 import pandas as pd

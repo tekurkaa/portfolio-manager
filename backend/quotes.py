@@ -253,7 +253,6 @@ async def get_market_indices() -> List[Dict[str, Any]]:
             out.append(sol)
     else:
         # Fallback to parallel yfinance if primary feed is unreachable
-        loop = asyncio.get_running_loop()
         backup_tickers = [
             ("^GSPC", "S&P 500", "index"),
             ("^NDX", "NASDAQ 100", "index"),

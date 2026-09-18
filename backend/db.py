@@ -4,7 +4,7 @@ import json
 import uuid
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Union, NamedTuple
+from typing import Dict, Any, List, NamedTuple
 
 logger = logging.getLogger(__name__)
 
