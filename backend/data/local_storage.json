@@ -21,6 +21,438 @@
       "picture": null,
       "created_at": "2026-09-12 16:10:48.382328+00:00",
       "_id": "57cafec6-c4f6-47dd-a7e8-15f6924c1090"
+    },
+    {
+      "user_id": "user_8a23748bef5f",
+      "email": "dev-tester@terminus.local",
+      "name": "Dev Tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:23:21.780478+00:00",
+      "_id": "5925a5ce-ac9a-4c49-91ea-f4d81eb0ac37"
+    },
+    {
+      "user_id": "user_fe9c198c04c6",
+      "email": "persist-trader@terminus.local",
+      "name": "persist-trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:23:22.238034+00:00",
+      "_id": "99e85558-2dee-4794-96fb-71999d5ee5d4"
+    },
+    {
+      "user_id": "user_f2c90753d14c",
+      "email": "logout-trader@terminus.local",
+      "name": "logout-trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:23:23.131545+00:00",
+      "_id": "067a9d5e-f9f1-4629-ab80-6479806bfc25"
+    },
+    {
+      "user_id": "user_50f59e279cd3",
+      "email": "holdings-tester@terminus.local",
+      "name": "holdings-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:24:37.629649+00:00",
+      "_id": "248c1a73-434f-40c8-84fe-5f51c134d09a"
+    },
+    {
+      "user_id": "user_d40036d41731",
+      "email": "user-a@terminus.local",
+      "name": "User A",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:04.657822+00:00",
+      "_id": "6d90967b-1a63-41e1-a8fe-7e7818903241"
+    },
+    {
+      "user_id": "user_3ad205fa9acd",
+      "email": "user-b@terminus.local",
+      "name": "User B",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:04.664733+00:00",
+      "_id": "69ff55c7-e711-4046-8c4a-e52900015a30"
+    },
+    {
+      "user_id": "user_1e036e67b2a0",
+      "email": "kpi-tester@terminus.local",
+      "name": "kpi-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:06.258698+00:00",
+      "_id": "3e361464-facd-4228-93f6-0c87c32b7bd0"
+    },
+    {
+      "user_id": "user_d853654ebc16",
+      "email": "fallback-quote@terminus.local",
+      "name": "Fallback User",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:18.394214+00:00",
+      "_id": "7ec81389-02f6-4a75-9c3a-76d5b0d82f69"
+    },
+    {
+      "user_id": "user_41bddde21166",
+      "email": "zero-cost@terminus.local",
+      "name": "Zero Cost User",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:19.846439+00:00",
+      "_id": "1bd9414e-42f5-4477-8acc-ec3d75e20fe7"
+    },
+    {
+      "user_id": "user_2669971cb1bc",
+      "email": "chart-tester@terminus.local",
+      "name": "chart-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:32:22.720434+00:00",
+      "_id": "5f0d6cc2-ca4c-45ba-9bef-5bd83c2158b7"
+    },
+    {
+      "user_id": "user_828512024eaa",
+      "email": "chart-backend@terminus.local",
+      "name": "Chart User",
+      "picture": null,
+      "created_at": "2026-09-18 13:33:54.075360+00:00",
+      "_id": "51e4450b-6bd9-4c7b-a352-b72729e3749d"
+    },
+    {
+      "user_id": "user_aa3f74f006d6",
+      "email": "treemap-tester@terminus.local",
+      "name": "treemap-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:33:54.896449+00:00",
+      "_id": "42e573f7-ce67-4334-8af9-ec1a0dfdfb8f"
+    },
+    {
+      "user_id": "user_7dfdac402f5b",
+      "email": "csv-tester@terminus.local",
+      "name": "csv-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:38:59.119306+00:00",
+      "_id": "7c108e2a-ad84-4538-bcd2-0e2766600d74"
+    },
+    {
+      "user_id": "user_b1daafe175dd",
+      "email": "importer-tester@terminus.local",
+      "name": "Trade Importer",
+      "picture": null,
+      "created_at": "2026-09-18 13:39:03.253156+00:00",
+      "_id": "b6f5c1ba-b067-4014-aa48-eb58b8cdac7a"
+    },
+    {
+      "user_id": "user_de5980c950da",
+      "email": "demo-tester@terminus.local",
+      "name": "demo-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:39:09.768006+00:00",
+      "_id": "2c1af120-20a8-41e0-a2ad-36cdf5e274f6"
+    },
+    {
+      "user_id": "user_13992717c199",
+      "email": "watchlist-tester@terminus.local",
+      "name": "watchlist-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:39:11.174154+00:00",
+      "_id": "8f450f6c-9571-4b6c-a501-7c4b276d0ebe"
+    },
+    {
+      "user_id": "user_ad7a5cbbdf1b",
+      "email": "empty-wl@terminus.local",
+      "name": "Empty WL",
+      "picture": null,
+      "created_at": "2026-09-18 13:39:12.823262+00:00",
+      "_id": "0560b95f-df3f-46e8-a086-937ac3e74121"
+    },
+    {
+      "user_id": "user_e1ab070d7878",
+      "email": "news-tester@terminus.local",
+      "name": "news-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:39:14.721852+00:00",
+      "_id": "41010961-4e59-4fe0-97b1-7d96779d6552"
+    },
+    {
+      "user_id": "user_b89bcd87237f",
+      "email": "scanner-test@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:42:45.296673+00:00",
+      "_id": "5245be76-347c-4133-a560-a3940e3cbef2"
+    },
+    {
+      "user_id": "user_70db1b48f19f",
+      "email": "brand-new-user@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:43:04.451008+00:00",
+      "_id": "1d75f3f8-2a9e-40cd-b71b-bac1ddbb43f8"
+    },
+    {
+      "user_id": "user_5171bed7f2c8",
+      "email": "notify-tester@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:43:18.133487+00:00",
+      "_id": "b9b7ecc4-b5ad-4bc4-995c-7302c075f726"
+    },
+    {
+      "user_id": "user_8f20fc7d5380",
+      "email": "notify-test2@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:43:54.057246+00:00",
+      "_id": "d15fb381-e4da-4716-8823-7712256c77fb"
+    },
+    {
+      "user_id": "user_59f3837c4719",
+      "email": "notify-test3@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:03.168245+00:00",
+      "_id": "492bd945-45e0-4dde-9844-f0cc06ba49d4"
+    },
+    {
+      "user_id": "user_5cafc6f7c8df",
+      "email": "macro-tester@terminus.local",
+      "name": "macro-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:18.112946+00:00",
+      "_id": "1c5b81a1-3a8b-48ff-a889-8e6829ab09e5"
+    },
+    {
+      "user_id": "user_9fe8fc4b0ae4",
+      "email": "sentiment-tester@terminus.local",
+      "name": "sentiment-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:19.840765+00:00",
+      "_id": "0e44f148-3af0-474b-be70-b0e67d290fc6"
+    },
+    {
+      "user_id": "user_02c443d13d4a",
+      "email": "insider-tester@terminus.local",
+      "name": "insider-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:21.658749+00:00",
+      "_id": "e1a975b0-53b5-4fa4-a2a9-3c79f07403d4"
+    },
+    {
+      "user_id": "user_b01ec7331e94",
+      "email": "scanner-tester@terminus.local",
+      "name": "scanner-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:38.267351+00:00",
+      "_id": "116bfeee-f067-44f5-bf00-7fc994dbcb39"
+    },
+    {
+      "user_id": "user_336bd6085d37",
+      "email": "scanner-wl-user@terminus.local",
+      "name": "WL Scanner User",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:41.801780+00:00",
+      "_id": "edd1634f-0692-4311-9f99-1d6a7d6a3b55"
+    },
+    {
+      "user_id": "user_650ac1fc02c5",
+      "email": "new-user-1789739085249@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:45.251384+00:00",
+      "_id": "828bb8a0-c1cd-463f-9395-11f2164330c6"
+    },
+    {
+      "user_id": "user_6a38249c90dc",
+      "email": "notif-tester@terminus.local",
+      "name": "notif-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:45.676472+00:00",
+      "_id": "7ba47185-90b3-4b6f-94b6-4e4115282260"
+    },
+    {
+      "user_id": "user_a618dd4df3ab",
+      "email": "trigger-1789739086061@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:46.062771+00:00",
+      "_id": "6de1d911-f85f-4027-b72b-34c902f3ff2b"
+    },
+    {
+      "user_id": "user_33663d6bb922",
+      "email": "scheduler-guard-1789739086088@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:44:46.089695+00:00",
+      "_id": "df14e721-c5dc-4903-ad4a-b1e576f5d7b9"
+    },
+    {
+      "user_id": "user_8074dad0afe7",
+      "email": "bt-test@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:45:42.098179+00:00",
+      "_id": "0071a7bb-533e-4f3c-94a4-b4a1e44903ee"
+    },
+    {
+      "user_id": "user_f70e08113cf3",
+      "email": "chat-tester@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:45:51.724753+00:00",
+      "_id": "88733a63-f72d-4f46-b155-ad64205c370a"
+    },
+    {
+      "user_id": "user_2c056a27639b",
+      "email": "alpha-tester@terminus.local",
+      "name": "alpha-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:43.087136+00:00",
+      "_id": "72511b30-99d7-43a1-89e7-e1b1b75b7428"
+    },
+    {
+      "user_id": "user_8501e6b972c5",
+      "email": "backtest-tester@terminus.local",
+      "name": "backtest-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:45.039352+00:00",
+      "_id": "26a09012-53d5-4b12-a234-b6f53ee1a905"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "email": "chat-e2e-tester@terminus.local",
+      "name": "chat-e2e-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:46.964438+00:00",
+      "_id": "30f0447f-f69e-418f-ae0f-bf8aac02c23e"
+    },
+    {
+      "user_id": "user_e7cc1157b86a",
+      "email": "chat-lifecycle-1789739209654@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:49.656575+00:00",
+      "_id": "33126195-8119-40d6-90be-79e5629349ec"
+    },
+    {
+      "user_id": "user_44aa5d010caa",
+      "email": "chat-long-1789739210262@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:50.264329+00:00",
+      "_id": "aa1bf68f-5a86-44d1-be4c-6439cfa7cbe0"
+    },
+    {
+      "user_id": "user_b43a9fbf8b6a",
+      "email": "risk-tester@terminus.local",
+      "name": "risk-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:51.028642+00:00",
+      "_id": "b6ba76e3-b89f-4b8f-ac43-12be21794f78"
+    },
+    {
+      "user_id": "user_2263ca5a3ace",
+      "email": "crypto-risk@terminus.local",
+      "name": "crypto-risk",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:54.080744+00:00",
+      "_id": "8fc3b1e8-4495-4ee6-b2ff-884f7a990162"
+    },
+    {
+      "user_id": "user_19f4394925a5",
+      "email": "ticker-tester@terminus.local",
+      "name": "ticker-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:46:55.290742+00:00",
+      "_id": "4946b130-3a3f-484b-826f-b3f06db74b9d"
+    },
+    {
+      "user_id": "user_71aa1ec37820",
+      "email": "empty-tester@terminus.local",
+      "name": "empty-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:47:08.231395+00:00",
+      "_id": "c9a6420c-cbe3-4955-bdad-0d244b4dbe0e"
+    },
+    {
+      "user_id": "user_87a08a3a85ae",
+      "email": "err-tester@terminus.local",
+      "name": "err-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:47:21.506660+00:00",
+      "_id": "678e7af4-d6a5-4114-a77c-561f85318963"
+    },
+    {
+      "user_id": "user_842ae65b3c53",
+      "email": "slow-tester@terminus.local",
+      "name": "slow-tester",
+      "picture": null,
+      "created_at": "2026-09-18 13:47:23.026164+00:00",
+      "_id": "04737172-841d-47f1-acf3-bb63d1be2a90"
+    },
+    {
+      "user_id": "user_fbaac343fbc4",
+      "email": "chat-lifecycle-1789739346891@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:49:06.893494+00:00",
+      "_id": "a937b1c9-e417-479c-aec9-db399c5e6762"
+    },
+    {
+      "user_id": "user_f2a1e42662cd",
+      "email": "chat-long-1789739347469@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:49:07.470851+00:00",
+      "_id": "30776fde-f8eb-4f99-b170-967d0e8f285b"
+    },
+    {
+      "user_id": "user_ca3f92af1f21",
+      "email": "new-user-1789739430640@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:50:30.642846+00:00",
+      "_id": "cb4d319e-6624-4fd9-83b7-3ab4e88ce37a"
+    },
+    {
+      "user_id": "user_9c88e72c4d9f",
+      "email": "trigger-1789739431829@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:50:31.832352+00:00",
+      "_id": "6783b2b7-790e-4dec-b31f-04188eed5a3b"
+    },
+    {
+      "user_id": "user_4f7b7faeeb86",
+      "email": "scheduler-guard-1789739434507@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:50:34.509758+00:00",
+      "_id": "5a69ed54-fd88-439b-8f84-06ad54da9145"
+    },
+    {
+      "user_id": "user_87b7f651dd8b",
+      "email": "chat-lifecycle-1789739442227@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:50:42.229222+00:00",
+      "_id": "9a37a796-1752-466a-ad53-ece045afd93e"
+    },
+    {
+      "user_id": "user_af4840afd773",
+      "email": "chat-long-1789739442894@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-18 13:50:42.896749+00:00",
+      "_id": "d2b33428-fa1d-42ce-affd-d8ea602909b5"
+    },
+    {
+      "user_id": "user_92219a8ec8ce",
+      "email": "market-status-tester@terminus.local",
+      "name": "market-status-tester",
+      "picture": null,
+      "created_at": "2026-09-24 03:38:18.320424+00:00",
+      "_id": "b40bae40-489d-43c7-a370-d421b6c30849"
+    },
+    {
+      "user_id": "user_1b7aee0f0318",
+      "email": "stock-modal-tester@terminus.local",
+      "name": "stock-modal-tester",
+      "picture": null,
+      "created_at": "2026-09-24 03:38:19.414938+00:00",
+      "_id": "422aa27c-7646-4fa4-a85c-77adadbcadd8"
     }
   ],
   "user_sessions": [
@@ -287,6 +719,2136 @@
       "user_id": "user_7f21834c89b7",
       "expires_at": "2026-09-20 22:37:37.891861+00:00",
       "created_at": "2026-09-13 22:37:37.891872+00:00"
+    },
+    {
+      "session_token": "sess_61e03bef6dfe492c961e617f9cdc3eeb",
+      "user_id": "user_8a23748bef5f",
+      "expires_at": "2026-09-25 13:23:21.784741+00:00",
+      "created_at": "2026-09-18 13:23:21.784748+00:00"
+    },
+    {
+      "session_token": "sess_89b210bf043b43a49f6aa048ea99718e",
+      "user_id": "user_fe9c198c04c6",
+      "expires_at": "2026-09-25 13:23:22.239343+00:00",
+      "created_at": "2026-09-18 13:23:22.239350+00:00"
+    },
+    {
+      "session_token": "sess_cca64315847140ff9cec974ebdb67a77",
+      "user_id": "user_f2c90753d14c",
+      "expires_at": "2026-09-25 13:23:23.132615+00:00",
+      "created_at": "2026-09-18 13:23:23.132646+00:00"
+    },
+    {
+      "session_token": "sess_ca6505734bb14fc986570e04733bbbe5",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:24:37.631298+00:00",
+      "created_at": "2026-09-18 13:24:37.631311+00:00"
+    },
+    {
+      "session_token": "sess_156b177f56af4158958616aba3a4d687",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:25:50.893938+00:00",
+      "created_at": "2026-09-18 13:25:50.893956+00:00"
+    },
+    {
+      "session_token": "sess_21c9e851dfb9480398b3543f31d623e1",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:27:04.813898+00:00",
+      "created_at": "2026-09-18 13:27:04.813953+00:00"
+    },
+    {
+      "session_token": "sess_14be61f5ceeb4c0dae56d70e2a22ab74",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:28:18.955642+00:00",
+      "created_at": "2026-09-18 13:28:18.955650+00:00"
+    },
+    {
+      "session_token": "sess_2a4dde4074fa47ef9e313f3e0169529c",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:29:31.873076+00:00",
+      "created_at": "2026-09-18 13:29:31.873087+00:00"
+    },
+    {
+      "session_token": "sess_58716793a93c48ae95d3c4b256564c7e",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:29:32.866821+00:00",
+      "created_at": "2026-09-18 13:29:32.866831+00:00"
+    },
+    {
+      "session_token": "sess_c2a0e7ecec244e1e979cddc2d37c41c1",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:29:33.848642+00:00",
+      "created_at": "2026-09-18 13:29:33.848654+00:00"
+    },
+    {
+      "session_token": "sess_f3919e659f8449999b85048ba5e400cc",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:30:47.622406+00:00",
+      "created_at": "2026-09-18 13:30:47.622415+00:00"
+    },
+    {
+      "session_token": "sess_6465e26c8ca44ae689d458bbd5edc346",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:32:02.104671+00:00",
+      "created_at": "2026-09-18 13:32:02.104684+00:00"
+    },
+    {
+      "session_token": "sess_514726259f3247b0badeb909cdd8a565",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:32:03.115653+00:00",
+      "created_at": "2026-09-18 13:32:03.115663+00:00"
+    },
+    {
+      "session_token": "sess_ef1e45f10096454597316f0c87b566fb",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:32:04.162614+00:00",
+      "created_at": "2026-09-18 13:32:04.162625+00:00"
+    },
+    {
+      "session_token": "sess_71cacf7870e7429bb667e547a37950ea",
+      "user_id": "user_d40036d41731",
+      "expires_at": "2026-09-25 13:32:04.659137+00:00",
+      "created_at": "2026-09-18 13:32:04.659144+00:00"
+    },
+    {
+      "session_token": "sess_02887bb177db426fae3186406236f0ba",
+      "user_id": "user_3ad205fa9acd",
+      "expires_at": "2026-09-25 13:32:04.665977+00:00",
+      "created_at": "2026-09-18 13:32:04.666004+00:00"
+    },
+    {
+      "session_token": "sess_ce5111041ece4c9cb50fd7f93b299cf1",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:32:06.260307+00:00",
+      "created_at": "2026-09-18 13:32:06.260318+00:00"
+    },
+    {
+      "session_token": "sess_f2daf25bb7a049ce913086c25bb31671",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:32:18.293417+00:00",
+      "created_at": "2026-09-18 13:32:18.293426+00:00"
+    },
+    {
+      "session_token": "sess_06110894a2d7416e82a6be79e26f1f62",
+      "user_id": "user_d853654ebc16",
+      "expires_at": "2026-09-25 13:32:18.395342+00:00",
+      "created_at": "2026-09-18 13:32:18.395348+00:00"
+    },
+    {
+      "session_token": "sess_392f1b2807ef419fac454178ba351b72",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:32:19.738305+00:00",
+      "created_at": "2026-09-18 13:32:19.738315+00:00"
+    },
+    {
+      "session_token": "sess_ef46ad423c274ea8b7cdca401e40206a",
+      "user_id": "user_41bddde21166",
+      "expires_at": "2026-09-25 13:32:19.848944+00:00",
+      "created_at": "2026-09-18 13:32:19.848952+00:00"
+    },
+    {
+      "session_token": "sess_89af69d047d149bfb3223cb63e5ebca8",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:32:21.047054+00:00",
+      "created_at": "2026-09-18 13:32:21.047064+00:00"
+    },
+    {
+      "session_token": "sess_71221d0972484ba08d5ec9663d08ab98",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:32:22.722363+00:00",
+      "created_at": "2026-09-18 13:32:22.722392+00:00"
+    },
+    {
+      "session_token": "sess_18fa55be3e5e4a8e87d2272b89b09f63",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:32:39.682513+00:00",
+      "created_at": "2026-09-18 13:32:39.682556+00:00"
+    },
+    {
+      "session_token": "sess_295a2f754d324332a2c473cc3e48a88f",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:33:53.078319+00:00",
+      "created_at": "2026-09-18 13:33:53.078329+00:00"
+    },
+    {
+      "session_token": "sess_5dc08679a530499291d4c44247ecb320",
+      "user_id": "user_828512024eaa",
+      "expires_at": "2026-09-25 13:33:54.076687+00:00",
+      "created_at": "2026-09-18 13:33:54.076694+00:00"
+    },
+    {
+      "session_token": "sess_772ba2a0e62f444989fc4610fda340e0",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:33:54.898278+00:00",
+      "created_at": "2026-09-18 13:33:54.898329+00:00"
+    },
+    {
+      "session_token": "sess_7f6d596693264365be2578d9f1a22a22",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:34:11.756008+00:00",
+      "created_at": "2026-09-18 13:34:11.756025+00:00"
+    },
+    {
+      "session_token": "sess_9a7131d3595246429d6de59beaed9fa6",
+      "user_id": "user_8a23748bef5f",
+      "expires_at": "2026-09-25 13:35:51.763502+00:00",
+      "created_at": "2026-09-18 13:35:51.763511+00:00"
+    },
+    {
+      "session_token": "sess_c55bcc52a488473a803121c19c73ce94",
+      "user_id": "user_fe9c198c04c6",
+      "expires_at": "2026-09-25 13:35:52.318753+00:00",
+      "created_at": "2026-09-18 13:35:52.318764+00:00"
+    },
+    {
+      "session_token": "sess_d61684e0ab8d46668c1b06ec56831c3d",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:35:55.219075+00:00",
+      "created_at": "2026-09-18 13:35:55.219090+00:00"
+    },
+    {
+      "session_token": "sess_7b51bbddb78f49df919750c579dc85a0",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:35:56.547971+00:00",
+      "created_at": "2026-09-18 13:35:56.547984+00:00"
+    },
+    {
+      "session_token": "sess_c64991b44a124c1482bcefa2aa5c2030",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:08.818291+00:00",
+      "created_at": "2026-09-18 13:36:08.818302+00:00"
+    },
+    {
+      "session_token": "sess_b9696899e0574451b1b99ac313ef4673",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:10.284425+00:00",
+      "created_at": "2026-09-18 13:36:10.284438+00:00"
+    },
+    {
+      "session_token": "sess_18257c8b653d4fd790811853d8f00814",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:11.399650+00:00",
+      "created_at": "2026-09-18 13:36:11.399671+00:00"
+    },
+    {
+      "session_token": "sess_5edac9a1e67b42158b466ce3fd64a2ea",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:12.327593+00:00",
+      "created_at": "2026-09-18 13:36:12.327603+00:00"
+    },
+    {
+      "session_token": "sess_edbafdc663694cc4b3406c72d1e29edd",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:13.292731+00:00",
+      "created_at": "2026-09-18 13:36:13.292742+00:00"
+    },
+    {
+      "session_token": "sess_dd601962c36d40728d6e3439bbd2ec0a",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:14.766410+00:00",
+      "created_at": "2026-09-18 13:36:14.766448+00:00"
+    },
+    {
+      "session_token": "sess_78bcca7b0f6c40d7a58b07a4cef9b172",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:16.090507+00:00",
+      "created_at": "2026-09-18 13:36:16.090518+00:00"
+    },
+    {
+      "session_token": "sess_8c5ae89fa84643459bcdb9c19d78ff0a",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:16.982634+00:00",
+      "created_at": "2026-09-18 13:36:16.982657+00:00"
+    },
+    {
+      "session_token": "sess_88a6d5c765f344b79d0677b029e5ec02",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:36:17.953606+00:00",
+      "created_at": "2026-09-18 13:36:17.953618+00:00"
+    },
+    {
+      "session_token": "sess_805e5a2a63af44a79be47eccac452729",
+      "user_id": "user_d40036d41731",
+      "expires_at": "2026-09-25 13:36:18.374017+00:00",
+      "created_at": "2026-09-18 13:36:18.374026+00:00"
+    },
+    {
+      "session_token": "sess_eabca9ef82e542a0829abbec71b40c12",
+      "user_id": "user_3ad205fa9acd",
+      "expires_at": "2026-09-25 13:36:18.380788+00:00",
+      "created_at": "2026-09-18 13:36:18.380798+00:00"
+    },
+    {
+      "session_token": "sess_10785fbb28124f89aac94c45a1201944",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:36:19.710256+00:00",
+      "created_at": "2026-09-18 13:36:19.710268+00:00"
+    },
+    {
+      "session_token": "sess_1cc2d00ff5814d388061d9be3907042f",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:36:20.731202+00:00",
+      "created_at": "2026-09-18 13:36:20.731212+00:00"
+    },
+    {
+      "session_token": "sess_2315afb3571c49f3a3bc2e1425a7d0fd",
+      "user_id": "user_d853654ebc16",
+      "expires_at": "2026-09-25 13:36:20.876530+00:00",
+      "created_at": "2026-09-18 13:36:20.876539+00:00"
+    },
+    {
+      "session_token": "sess_ca0bcd2f1bb14b1b8a28fe4712bd244a",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:36:21.832985+00:00",
+      "created_at": "2026-09-18 13:36:21.832996+00:00"
+    },
+    {
+      "session_token": "sess_eb10ac0ed07a44739b5a0431374733e0",
+      "user_id": "user_41bddde21166",
+      "expires_at": "2026-09-25 13:36:21.963022+00:00",
+      "created_at": "2026-09-18 13:36:21.963032+00:00"
+    },
+    {
+      "session_token": "sess_568f1631dd1f4397b217cbb5c5e9e884",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:36:22.728049+00:00",
+      "created_at": "2026-09-18 13:36:22.728076+00:00"
+    },
+    {
+      "session_token": "sess_f7fa45feea99457cb26953744ab149c9",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:36:23.427986+00:00",
+      "created_at": "2026-09-18 13:36:23.427997+00:00"
+    },
+    {
+      "session_token": "sess_5bac95c2168445849edbceb6a335fa77",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:36:24.391829+00:00",
+      "created_at": "2026-09-18 13:36:24.391841+00:00"
+    },
+    {
+      "session_token": "sess_ada5530921c74f05b04e988399f57cff",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:36:25.665893+00:00",
+      "created_at": "2026-09-18 13:36:25.665936+00:00"
+    },
+    {
+      "session_token": "sess_2b4fbb849cf946d8ba3018a7424bc31c",
+      "user_id": "user_828512024eaa",
+      "expires_at": "2026-09-25 13:36:26.410568+00:00",
+      "created_at": "2026-09-18 13:36:26.410584+00:00"
+    },
+    {
+      "session_token": "sess_58be3ca4744146f9945a50e018b94a3f",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:36:27.125764+00:00",
+      "created_at": "2026-09-18 13:36:27.125805+00:00"
+    },
+    {
+      "session_token": "sess_1ba21e462b404b188194cac066ab0bc7",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:36:28.085623+00:00",
+      "created_at": "2026-09-18 13:36:28.085649+00:00"
+    },
+    {
+      "session_token": "sess_08eacc3300f54f3ba54c99cb40d777eb",
+      "user_id": "user_8a23748bef5f",
+      "expires_at": "2026-09-25 13:37:06.162506+00:00",
+      "created_at": "2026-09-18 13:37:06.162517+00:00"
+    },
+    {
+      "session_token": "sess_450c1e56f2be4e3785f65f20415a1157",
+      "user_id": "user_fe9c198c04c6",
+      "expires_at": "2026-09-25 13:37:06.670463+00:00",
+      "created_at": "2026-09-18 13:37:06.670492+00:00"
+    },
+    {
+      "session_token": "sess_fb91e9a4d7ac4525a367fa7c1c891702",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:09.267344+00:00",
+      "created_at": "2026-09-18 13:37:09.267355+00:00"
+    },
+    {
+      "session_token": "sess_4f28d6f8bdb5481b82bdd56d68aa4372",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:10.526284+00:00",
+      "created_at": "2026-09-18 13:37:10.526297+00:00"
+    },
+    {
+      "session_token": "sess_9a79cc9567794f3c9b719615fd58d91d",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:11.903765+00:00",
+      "created_at": "2026-09-18 13:37:11.903791+00:00"
+    },
+    {
+      "session_token": "sess_f5c490d1800141909eb9203ceccae097",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:13.174672+00:00",
+      "created_at": "2026-09-18 13:37:13.174685+00:00"
+    },
+    {
+      "session_token": "sess_3e212e1932464164badbc56d34207bc3",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:14.334396+00:00",
+      "created_at": "2026-09-18 13:37:14.334407+00:00"
+    },
+    {
+      "session_token": "sess_2ef1ff621d114d8e809c9ff30d570973",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:15.295774+00:00",
+      "created_at": "2026-09-18 13:37:15.295786+00:00"
+    },
+    {
+      "session_token": "sess_e15b3ba3abe8411384eb3e814a37b598",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:16.287841+00:00",
+      "created_at": "2026-09-18 13:37:16.287861+00:00"
+    },
+    {
+      "session_token": "sess_77de8469ddf04ad3acb0d26eb625aab5",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:17.735697+00:00",
+      "created_at": "2026-09-18 13:37:17.735708+00:00"
+    },
+    {
+      "session_token": "sess_767dcd3ef3534b1db5f25e887cabc999",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:19.062689+00:00",
+      "created_at": "2026-09-18 13:37:19.062701+00:00"
+    },
+    {
+      "session_token": "sess_db7d9d999fb54b4db25d348d810a8db0",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:20.072615+00:00",
+      "created_at": "2026-09-18 13:37:20.072625+00:00"
+    },
+    {
+      "session_token": "sess_935bd82ad9624835b3d027ec547873d7",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:37:21.022852+00:00",
+      "created_at": "2026-09-18 13:37:21.022878+00:00"
+    },
+    {
+      "session_token": "sess_e682510a5ad7488fb307738f0adaf0aa",
+      "user_id": "user_d40036d41731",
+      "expires_at": "2026-09-25 13:37:21.450258+00:00",
+      "created_at": "2026-09-18 13:37:21.450267+00:00"
+    },
+    {
+      "session_token": "sess_808c4c27fd504073b13d7bbd0fa525ee",
+      "user_id": "user_3ad205fa9acd",
+      "expires_at": "2026-09-25 13:37:21.463958+00:00",
+      "created_at": "2026-09-18 13:37:21.463969+00:00"
+    },
+    {
+      "session_token": "sess_0378289ebb364182bdf6b02df1e560c6",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:37:22.031839+00:00",
+      "created_at": "2026-09-18 13:37:22.031851+00:00"
+    },
+    {
+      "session_token": "sess_e1fee4ee6a14480f8d181fba94d03ed5",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:37:23.059907+00:00",
+      "created_at": "2026-09-18 13:37:23.059942+00:00"
+    },
+    {
+      "session_token": "sess_6490c39972524d6da9650e64e4d7c149",
+      "user_id": "user_d853654ebc16",
+      "expires_at": "2026-09-25 13:37:23.211458+00:00",
+      "created_at": "2026-09-18 13:37:23.211466+00:00"
+    },
+    {
+      "session_token": "sess_e198b0fb1e1649e594aba7a7b802d134",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:37:24.797130+00:00",
+      "created_at": "2026-09-18 13:37:24.797141+00:00"
+    },
+    {
+      "session_token": "sess_d120d373cd2d4078839c085866c7cb5a",
+      "user_id": "user_41bddde21166",
+      "expires_at": "2026-09-25 13:37:24.944423+00:00",
+      "created_at": "2026-09-18 13:37:24.944449+00:00"
+    },
+    {
+      "session_token": "sess_e8d6cf74ba5c4f1394539aa9698ccb99",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:37:25.681487+00:00",
+      "created_at": "2026-09-18 13:37:25.681500+00:00"
+    },
+    {
+      "session_token": "sess_1c3998cd1ddb423ca7ac331d482e49a0",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:37:26.579184+00:00",
+      "created_at": "2026-09-18 13:37:26.579195+00:00"
+    },
+    {
+      "session_token": "sess_c0fb1af8104e43ed9d70387a82483248",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:37:27.761213+00:00",
+      "created_at": "2026-09-18 13:37:27.761225+00:00"
+    },
+    {
+      "session_token": "sess_0c181bf2b49246b093f7d408b6ce38cb",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:37:29.193829+00:00",
+      "created_at": "2026-09-18 13:37:29.193859+00:00"
+    },
+    {
+      "session_token": "sess_bb3d47d6b222483dadb4ba1e2a9097f3",
+      "user_id": "user_828512024eaa",
+      "expires_at": "2026-09-25 13:37:30.005913+00:00",
+      "created_at": "2026-09-18 13:37:30.005921+00:00"
+    },
+    {
+      "session_token": "sess_6ce850ede00546cda3175dacd999bdbf",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:37:30.832059+00:00",
+      "created_at": "2026-09-18 13:37:30.832091+00:00"
+    },
+    {
+      "session_token": "sess_3dd85b12fe7f42e2bb74f1b98c0d3cb3",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:37:31.847306+00:00",
+      "created_at": "2026-09-18 13:37:31.847318+00:00"
+    },
+    {
+      "session_token": "sess_11e2cd7f5c95417f8a46b09f3fc2e2c5",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:38:59.125363+00:00",
+      "created_at": "2026-09-18 13:38:59.125400+00:00"
+    },
+    {
+      "session_token": "sess_bf23910132f041738b06d514c594f983",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:38:59.572348+00:00",
+      "created_at": "2026-09-18 13:38:59.572368+00:00"
+    },
+    {
+      "session_token": "sess_10f0d9d016fa456998acbe66f4f0b1ef",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:39:00.363154+00:00",
+      "created_at": "2026-09-18 13:39:00.363166+00:00"
+    },
+    {
+      "session_token": "sess_16c849d13e7f40ea8b01395ac359854c",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:39:00.831871+00:00",
+      "created_at": "2026-09-18 13:39:00.831880+00:00"
+    },
+    {
+      "session_token": "sess_f413e6d6d51d49d58caeebbcef25f5c1",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:39:01.383272+00:00",
+      "created_at": "2026-09-18 13:39:01.383285+00:00"
+    },
+    {
+      "session_token": "sess_00ef787cf5924ab793e6e8daa7376d12",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:39:01.806186+00:00",
+      "created_at": "2026-09-18 13:39:01.806195+00:00"
+    },
+    {
+      "session_token": "sess_3a4a569577794cebbbc6160a38f0adea",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:39:02.320510+00:00",
+      "created_at": "2026-09-18 13:39:02.320525+00:00"
+    },
+    {
+      "session_token": "sess_e334a81de2a044fc85376d97e5463d6c",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:03.255099+00:00",
+      "created_at": "2026-09-18 13:39:03.255132+00:00"
+    },
+    {
+      "session_token": "sess_ca5a7a88d8384fffb4488868250ce924",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:03.658465+00:00",
+      "created_at": "2026-09-18 13:39:03.658472+00:00"
+    },
+    {
+      "session_token": "sess_f9c318cc89d04ff9ba828ed47c5d9a17",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:04.170108+00:00",
+      "created_at": "2026-09-18 13:39:04.170121+00:00"
+    },
+    {
+      "session_token": "sess_8344bfaeec1e4e3ca94f6c6dbb061673",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:04.564708+00:00",
+      "created_at": "2026-09-18 13:39:04.564719+00:00"
+    },
+    {
+      "session_token": "sess_01e71cffd6cc4f6e9ef96d4c36616592",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:05.252582+00:00",
+      "created_at": "2026-09-18 13:39:05.252624+00:00"
+    },
+    {
+      "session_token": "sess_6b3bf653ce6246a4a35062d9a95927d7",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:05.661353+00:00",
+      "created_at": "2026-09-18 13:39:05.661388+00:00"
+    },
+    {
+      "session_token": "sess_6a4c480b15c9465ca69c7bc0bae7c626",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:06.317359+00:00",
+      "created_at": "2026-09-18 13:39:06.317379+00:00"
+    },
+    {
+      "session_token": "sess_6516c084a4e54c8db60c7b7405fadc11",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:06.739521+00:00",
+      "created_at": "2026-09-18 13:39:06.739531+00:00"
+    },
+    {
+      "session_token": "sess_0d2e659d9e6c4b38b91433184b113863",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:07.255133+00:00",
+      "created_at": "2026-09-18 13:39:07.255197+00:00"
+    },
+    {
+      "session_token": "sess_5bfcfa9a810c4056847ea1e673899186",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:07.662076+00:00",
+      "created_at": "2026-09-18 13:39:07.662086+00:00"
+    },
+    {
+      "session_token": "sess_6e2e1ce0227143f48f003335186cc81e",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:08.170904+00:00",
+      "created_at": "2026-09-18 13:39:08.170932+00:00"
+    },
+    {
+      "session_token": "sess_ec53672b5b204787a2533e13a53e5217",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:39:08.570880+00:00",
+      "created_at": "2026-09-18 13:39:08.570904+00:00"
+    },
+    {
+      "session_token": "sess_ec86d5238ed14efd9f0351c0561da1ca",
+      "user_id": "user_de5980c950da",
+      "expires_at": "2026-09-25 13:39:09.770082+00:00",
+      "created_at": "2026-09-18 13:39:09.770094+00:00"
+    },
+    {
+      "session_token": "sess_2eaec60a3fbf42b4ac82299ef4475c6b",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:39:11.176303+00:00",
+      "created_at": "2026-09-18 13:39:11.176315+00:00"
+    },
+    {
+      "session_token": "sess_d40a4b20107c47f18c167fb14f1cc49e",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:39:12.052277+00:00",
+      "created_at": "2026-09-18 13:39:12.052287+00:00"
+    },
+    {
+      "session_token": "sess_a88b1d01a1874896afb89bc341f5b61c",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:39:12.191457+00:00",
+      "created_at": "2026-09-18 13:39:12.191468+00:00"
+    },
+    {
+      "session_token": "sess_99e3bcfeb9cf47e1830c28cc9117b62f",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:39:12.698615+00:00",
+      "created_at": "2026-09-18 13:39:12.698626+00:00"
+    },
+    {
+      "session_token": "sess_da6f0ce0263e424f8f43c3918e21d52b",
+      "user_id": "user_ad7a5cbbdf1b",
+      "expires_at": "2026-09-25 13:39:12.824998+00:00",
+      "created_at": "2026-09-18 13:39:12.825004+00:00"
+    },
+    {
+      "session_token": "sess_bf4802b04c7f4680af23f1d11302be3d",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:39:14.055752+00:00",
+      "created_at": "2026-09-18 13:39:14.055763+00:00"
+    },
+    {
+      "session_token": "sess_68ddb1b073a64f3286f20ed5267b79f4",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:39:14.724088+00:00",
+      "created_at": "2026-09-18 13:39:14.724147+00:00"
+    },
+    {
+      "session_token": "sess_c2a779d3fe7548c996ab0bf650270119",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:39:32.668830+00:00",
+      "created_at": "2026-09-18 13:39:32.668840+00:00"
+    },
+    {
+      "session_token": "sess_59d4cb9a3365475d85991ece07a16ae0",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:09.684865+00:00",
+      "created_at": "2026-09-18 13:40:09.684880+00:00"
+    },
+    {
+      "session_token": "sess_e84bd2579ec94205ba0927ff25b84e67",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:10.123780+00:00",
+      "created_at": "2026-09-18 13:40:10.123833+00:00"
+    },
+    {
+      "session_token": "sess_80e64ececb6a4e5591d234e23615b7bc",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:10.835133+00:00",
+      "created_at": "2026-09-18 13:40:10.835145+00:00"
+    },
+    {
+      "session_token": "sess_18995010f4b042d3a3cc2a3eb31a1ab9",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:11.282515+00:00",
+      "created_at": "2026-09-18 13:40:11.282530+00:00"
+    },
+    {
+      "session_token": "sess_86e1b8e0decb44d5b0cf8c2801cea9c6",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:11.803519+00:00",
+      "created_at": "2026-09-18 13:40:11.803555+00:00"
+    },
+    {
+      "session_token": "sess_680fd79010354a12bf64fed5255733ba",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:12.283311+00:00",
+      "created_at": "2026-09-18 13:40:12.283321+00:00"
+    },
+    {
+      "session_token": "sess_677332974d804a56afbb2ccfa49b805e",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:12.817975+00:00",
+      "created_at": "2026-09-18 13:40:12.817987+00:00"
+    },
+    {
+      "session_token": "sess_3d5cf78614b54ae7b4afdbae58393604",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:13.756014+00:00",
+      "created_at": "2026-09-18 13:40:13.756029+00:00"
+    },
+    {
+      "session_token": "sess_4a86b20b66b547628cd63b640a54f2a9",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:14.177320+00:00",
+      "created_at": "2026-09-18 13:40:14.177366+00:00"
+    },
+    {
+      "session_token": "sess_df22056da03f4eb8b78a1de7089fc731",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:14.712973+00:00",
+      "created_at": "2026-09-18 13:40:14.713001+00:00"
+    },
+    {
+      "session_token": "sess_dd044c2c2f9d41a1bb60ae9580245a09",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:15.115968+00:00",
+      "created_at": "2026-09-18 13:40:15.115979+00:00"
+    },
+    {
+      "session_token": "sess_ce64728343f94fbe905a97ffac164c8c",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:15.937501+00:00",
+      "created_at": "2026-09-18 13:40:15.937514+00:00"
+    },
+    {
+      "session_token": "sess_5daf10d69ee842409709289dac1958c6",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:16.387583+00:00",
+      "created_at": "2026-09-18 13:40:16.387591+00:00"
+    },
+    {
+      "session_token": "sess_e401a98d3ebe410c9924cda69d5a6de0",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:17.068315+00:00",
+      "created_at": "2026-09-18 13:40:17.068347+00:00"
+    },
+    {
+      "session_token": "sess_31b2f0f65a0b4246a392c6a06cf4861c",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:17.532746+00:00",
+      "created_at": "2026-09-18 13:40:17.532767+00:00"
+    },
+    {
+      "session_token": "sess_d6e51371ed264f908653d0159ebe028f",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:18.073637+00:00",
+      "created_at": "2026-09-18 13:40:18.073655+00:00"
+    },
+    {
+      "session_token": "sess_60bc518c6bb04cb9a7339ba92abf0d9f",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:18.456317+00:00",
+      "created_at": "2026-09-18 13:40:18.456327+00:00"
+    },
+    {
+      "session_token": "sess_aa4e59dc95fa45dbb661ad4cdba4eed8",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:19.047763+00:00",
+      "created_at": "2026-09-18 13:40:19.047773+00:00"
+    },
+    {
+      "session_token": "sess_6186a09bab7546f3a260926017a5b3c2",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:19.457405+00:00",
+      "created_at": "2026-09-18 13:40:19.457417+00:00"
+    },
+    {
+      "session_token": "sess_f6249180b7634697bf6c905b3e8555ff",
+      "user_id": "user_de5980c950da",
+      "expires_at": "2026-09-25 13:40:19.987826+00:00",
+      "created_at": "2026-09-18 13:40:19.987839+00:00"
+    },
+    {
+      "session_token": "sess_17b4fcd80bb1456ca3b4dcd620dbfa90",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:21.334916+00:00",
+      "created_at": "2026-09-18 13:40:21.334939+00:00"
+    },
+    {
+      "session_token": "sess_fd3e66f56f1a450a8d6a545fbc5bccfc",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:22.833596+00:00",
+      "created_at": "2026-09-18 13:40:22.833611+00:00"
+    },
+    {
+      "session_token": "sess_32f0e10127c4497da68e0598ece0ed2e",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:22.951434+00:00",
+      "created_at": "2026-09-18 13:40:22.951443+00:00"
+    },
+    {
+      "session_token": "sess_247ba21497c74b61aebe3ed327ecc32f",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:23.530387+00:00",
+      "created_at": "2026-09-18 13:40:23.530461+00:00"
+    },
+    {
+      "session_token": "sess_029fdcdc718b4c34bd802ca03078b81a",
+      "user_id": "user_ad7a5cbbdf1b",
+      "expires_at": "2026-09-25 13:40:23.667027+00:00",
+      "created_at": "2026-09-18 13:40:23.667053+00:00"
+    },
+    {
+      "session_token": "sess_8863294f812340feae75f220a17ee70c",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:25.206947+00:00",
+      "created_at": "2026-09-18 13:40:25.206976+00:00"
+    },
+    {
+      "session_token": "sess_2c87f9cf6f5d4c538fb8a2652577f3b8",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:40:25.956780+00:00",
+      "created_at": "2026-09-18 13:40:25.956816+00:00"
+    },
+    {
+      "session_token": "sess_0b05e0cc459d40b9a7fd1fc09900b19d",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:40:26.676225+00:00",
+      "created_at": "2026-09-18 13:40:26.676239+00:00"
+    },
+    {
+      "session_token": "sess_fe87ab2940574d4f924309c670f4889f",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:43.797526+00:00",
+      "created_at": "2026-09-18 13:40:43.797538+00:00"
+    },
+    {
+      "session_token": "sess_52c3f49d5cad465fae9319b75768a340",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:44.217050+00:00",
+      "created_at": "2026-09-18 13:40:44.217061+00:00"
+    },
+    {
+      "session_token": "sess_8090f4e160da42e8a781951b897f7335",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:44.877262+00:00",
+      "created_at": "2026-09-18 13:40:44.877275+00:00"
+    },
+    {
+      "session_token": "sess_1cdfb85202f1467a832242c1ba255f77",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:45.335389+00:00",
+      "created_at": "2026-09-18 13:40:45.335399+00:00"
+    },
+    {
+      "session_token": "sess_579c01d5f87748a59dfdff013e78295b",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:45.837133+00:00",
+      "created_at": "2026-09-18 13:40:45.837148+00:00"
+    },
+    {
+      "session_token": "sess_2a2bff777a4a4f048d9a288f7d93ebd9",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:46.273929+00:00",
+      "created_at": "2026-09-18 13:40:46.273937+00:00"
+    },
+    {
+      "session_token": "sess_12c894e940d747d3849b3212830a5ef7",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:40:46.798489+00:00",
+      "created_at": "2026-09-18 13:40:46.798502+00:00"
+    },
+    {
+      "session_token": "sess_8809513bd8f74602bc22481eae56b61e",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:47.752852+00:00",
+      "created_at": "2026-09-18 13:40:47.752864+00:00"
+    },
+    {
+      "session_token": "sess_51de7a444b964e73912ff1e598bdf569",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:48.189949+00:00",
+      "created_at": "2026-09-18 13:40:48.189961+00:00"
+    },
+    {
+      "session_token": "sess_9302dfbc91f54a3a873cda0a451c1086",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:48.723060+00:00",
+      "created_at": "2026-09-18 13:40:48.723072+00:00"
+    },
+    {
+      "session_token": "sess_07d98ecddfb344f3bb31646064372f52",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:49.163139+00:00",
+      "created_at": "2026-09-18 13:40:49.163151+00:00"
+    },
+    {
+      "session_token": "sess_ccda3293f04a4c139733675144efbb53",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:50.010137+00:00",
+      "created_at": "2026-09-18 13:40:50.010171+00:00"
+    },
+    {
+      "session_token": "sess_7868c38dc15c42c697ac82aa44332a71",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:50.525754+00:00",
+      "created_at": "2026-09-18 13:40:50.525769+00:00"
+    },
+    {
+      "session_token": "sess_795fc540efe64ce989d7884bb7e79e19",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:51.288664+00:00",
+      "created_at": "2026-09-18 13:40:51.288681+00:00"
+    },
+    {
+      "session_token": "sess_2f19086939144254b632ebea9a0809c2",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:51.744446+00:00",
+      "created_at": "2026-09-18 13:40:51.744458+00:00"
+    },
+    {
+      "session_token": "sess_c1c8fd34a12144adacc66b42cfcd8fb4",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:52.253354+00:00",
+      "created_at": "2026-09-18 13:40:52.253370+00:00"
+    },
+    {
+      "session_token": "sess_1671a066da6d4f6ba393ee201b9a89d7",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:52.702657+00:00",
+      "created_at": "2026-09-18 13:40:52.702670+00:00"
+    },
+    {
+      "session_token": "sess_1eb4a5dc79634e18a8981ed7523a6c4b",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:53.297289+00:00",
+      "created_at": "2026-09-18 13:40:53.297304+00:00"
+    },
+    {
+      "session_token": "sess_5a270dbbd6aa420e8dc1847fd92c4b2e",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:40:53.794173+00:00",
+      "created_at": "2026-09-18 13:40:53.794184+00:00"
+    },
+    {
+      "session_token": "sess_c2bebf0af9eb41ab8ed337f8833fccdb",
+      "user_id": "user_de5980c950da",
+      "expires_at": "2026-09-25 13:40:54.408556+00:00",
+      "created_at": "2026-09-18 13:40:54.408568+00:00"
+    },
+    {
+      "session_token": "sess_b7b15eae00f3461aa0018fa22eb5fc65",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:55.940110+00:00",
+      "created_at": "2026-09-18 13:40:55.940120+00:00"
+    },
+    {
+      "session_token": "sess_4832ced22a9a45139661854d97bed5e9",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:57.058435+00:00",
+      "created_at": "2026-09-18 13:40:57.058459+00:00"
+    },
+    {
+      "session_token": "sess_4010d64141884c0b88d0da8ac8e7aca2",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:57.185615+00:00",
+      "created_at": "2026-09-18 13:40:57.185626+00:00"
+    },
+    {
+      "session_token": "sess_f831aa9b703c4fe2b3e255d1c2ba3688",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:57.723280+00:00",
+      "created_at": "2026-09-18 13:40:57.723294+00:00"
+    },
+    {
+      "session_token": "sess_0286421bbf034b2d8f320ff2995fda0d",
+      "user_id": "user_ad7a5cbbdf1b",
+      "expires_at": "2026-09-25 13:40:57.828742+00:00",
+      "created_at": "2026-09-18 13:40:57.828752+00:00"
+    },
+    {
+      "session_token": "sess_c7990e2ae8f44ca59cf2e0c14791eb38",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:40:58.406393+00:00",
+      "created_at": "2026-09-18 13:40:58.406406+00:00"
+    },
+    {
+      "session_token": "sess_0312b3c7b43f45b586b335d18ad7c6d4",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:40:59.063219+00:00",
+      "created_at": "2026-09-18 13:40:59.063228+00:00"
+    },
+    {
+      "session_token": "sess_af478b1f9eb9422b9915ced6846993f5",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:41:00.024537+00:00",
+      "created_at": "2026-09-18 13:41:00.024561+00:00"
+    },
+    {
+      "session_token": "sess_e861480c761b499b9c83b08995b552c9",
+      "user_id": "user_b89bcd87237f",
+      "expires_at": "2026-09-25 13:42:45.299023+00:00",
+      "created_at": "2026-09-18 13:42:45.299028+00:00"
+    },
+    {
+      "session_token": "sess_e8ec3f50df714eac99b4bf09e6809f1b",
+      "user_id": "user_70db1b48f19f",
+      "expires_at": "2026-09-25 13:43:04.453883+00:00",
+      "created_at": "2026-09-18 13:43:04.453893+00:00"
+    },
+    {
+      "session_token": "sess_9c15f6521148409d9ef344cf5a4a4a09",
+      "user_id": "user_5171bed7f2c8",
+      "expires_at": "2026-09-25 13:43:18.135972+00:00",
+      "created_at": "2026-09-18 13:43:18.135982+00:00"
+    },
+    {
+      "session_token": "sess_529dd8d1e2de4d89bf781fd34b86a2d7",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:35.240271+00:00",
+      "created_at": "2026-09-18 13:43:35.240280+00:00"
+    },
+    {
+      "session_token": "sess_2935c6567a0c443c89b496573e6b80c1",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:35.604402+00:00",
+      "created_at": "2026-09-18 13:43:35.604410+00:00"
+    },
+    {
+      "session_token": "sess_ceec1499c35b40b1aaf3361ece8d8c7f",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:36.333374+00:00",
+      "created_at": "2026-09-18 13:43:36.333383+00:00"
+    },
+    {
+      "session_token": "sess_163b84307c9a495f989f26ce4e095132",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:36.342009+00:00",
+      "created_at": "2026-09-18 13:43:36.342017+00:00"
+    },
+    {
+      "session_token": "sess_65ab1d1fed5a4ee9ab7e5dc984e053d1",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:36.355059+00:00",
+      "created_at": "2026-09-18 13:43:36.355068+00:00"
+    },
+    {
+      "session_token": "sess_d560e988ce5b4aafb734b30127a206ab",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:36.754546+00:00",
+      "created_at": "2026-09-18 13:43:36.754556+00:00"
+    },
+    {
+      "session_token": "sess_60e299d188684a0ca486493b7454f2d0",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:37.520735+00:00",
+      "created_at": "2026-09-18 13:43:37.520743+00:00"
+    },
+    {
+      "session_token": "sess_8fcd4a72d2344bd0af77b5f05e306e77",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-09-25 13:43:37.535352+00:00",
+      "created_at": "2026-09-18 13:43:37.535358+00:00"
+    },
+    {
+      "session_token": "sess_91b4ee17556e49e9878cf70a5852cccb",
+      "user_id": "user_8f20fc7d5380",
+      "expires_at": "2026-09-25 13:43:54.060114+00:00",
+      "created_at": "2026-09-18 13:43:54.060121+00:00"
+    },
+    {
+      "session_token": "sess_07726394371e469eb655ac787554a34a",
+      "user_id": "user_59f3837c4719",
+      "expires_at": "2026-09-25 13:44:03.169911+00:00",
+      "created_at": "2026-09-18 13:44:03.169917+00:00"
+    },
+    {
+      "session_token": "sess_207511bf7a92477fbcaa9b68f320316d",
+      "user_id": "user_5cafc6f7c8df",
+      "expires_at": "2026-09-25 13:44:18.114961+00:00",
+      "created_at": "2026-09-18 13:44:18.114974+00:00"
+    },
+    {
+      "session_token": "sess_f18a2b7ad9164236910603bb60bfdfa7",
+      "user_id": "user_5cafc6f7c8df",
+      "expires_at": "2026-09-25 13:44:19.175372+00:00",
+      "created_at": "2026-09-18 13:44:19.175397+00:00"
+    },
+    {
+      "session_token": "sess_28dd1ee3e9c641e290904bc0228ccf68",
+      "user_id": "user_9fe8fc4b0ae4",
+      "expires_at": "2026-09-25 13:44:19.842865+00:00",
+      "created_at": "2026-09-18 13:44:19.842877+00:00"
+    },
+    {
+      "session_token": "sess_31838f273eea4afd88f59d2011957077",
+      "user_id": "user_9fe8fc4b0ae4",
+      "expires_at": "2026-09-25 13:44:20.613404+00:00",
+      "created_at": "2026-09-18 13:44:20.613419+00:00"
+    },
+    {
+      "session_token": "sess_3ba17015e404482398f2e7de21390577",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:44:21.660853+00:00",
+      "created_at": "2026-09-18 13:44:21.660866+00:00"
+    },
+    {
+      "session_token": "sess_0c91d62dbb164c238e0c2ad26a7ff9a2",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:44:36.143527+00:00",
+      "created_at": "2026-09-18 13:44:36.143539+00:00"
+    },
+    {
+      "session_token": "sess_eb1e5c7158e34c1db47f7b8722516fc0",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:44:37.562920+00:00",
+      "created_at": "2026-09-18 13:44:37.562931+00:00"
+    },
+    {
+      "session_token": "sess_ef01ac149bb24bc28fc2129036645113",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-09-25 13:44:38.281016+00:00",
+      "created_at": "2026-09-18 13:44:38.281023+00:00"
+    },
+    {
+      "session_token": "sess_f745023df4cd4b989f63df8dba507357",
+      "user_id": "user_336bd6085d37",
+      "expires_at": "2026-09-25 13:44:41.803653+00:00",
+      "created_at": "2026-09-18 13:44:41.803659+00:00"
+    },
+    {
+      "session_token": "sess_de6c1b04ba5b48c5a5c86c68a536a452",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-09-25 13:44:45.004115+00:00",
+      "created_at": "2026-09-18 13:44:45.004131+00:00"
+    },
+    {
+      "session_token": "sess_bb270acb591d481ab3ec87ae35e4ac0e",
+      "user_id": "user_650ac1fc02c5",
+      "expires_at": "2026-09-25 13:44:45.253292+00:00",
+      "created_at": "2026-09-18 13:44:45.253299+00:00"
+    },
+    {
+      "session_token": "sess_22e05f48225a4978a2a691d8b51bb2c1",
+      "user_id": "user_6a38249c90dc",
+      "expires_at": "2026-09-25 13:44:45.680411+00:00",
+      "created_at": "2026-09-18 13:44:45.680425+00:00"
+    },
+    {
+      "session_token": "sess_c9c947a17753411ab162c320c48d8785",
+      "user_id": "user_a618dd4df3ab",
+      "expires_at": "2026-09-25 13:44:46.064782+00:00",
+      "created_at": "2026-09-18 13:44:46.064788+00:00"
+    },
+    {
+      "session_token": "sess_b7942133b0fd4207af36c75767016152",
+      "user_id": "user_33663d6bb922",
+      "expires_at": "2026-09-25 13:44:46.091655+00:00",
+      "created_at": "2026-09-18 13:44:46.091661+00:00"
+    },
+    {
+      "session_token": "sess_9f8ddd1ba54747578b3c62f9499468d9",
+      "user_id": "user_8074dad0afe7",
+      "expires_at": "2026-09-25 13:45:42.100584+00:00",
+      "created_at": "2026-09-18 13:45:42.100591+00:00"
+    },
+    {
+      "session_token": "sess_4fe49d03e80c4741938e5569635cf98c",
+      "user_id": "user_f70e08113cf3",
+      "expires_at": "2026-09-25 13:45:51.730381+00:00",
+      "created_at": "2026-09-18 13:45:51.730387+00:00"
+    },
+    {
+      "session_token": "sess_c30c75b850944eafb7921fdff3bf1d92",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:46:43.100658+00:00",
+      "created_at": "2026-09-18 13:46:43.100685+00:00"
+    },
+    {
+      "session_token": "sess_2059af04486143cfb7bd4dff53355d9c",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:46:43.850324+00:00",
+      "created_at": "2026-09-18 13:46:43.850340+00:00"
+    },
+    {
+      "session_token": "sess_15c51ef458af48e4b1eb19db316defe1",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:46:45.042207+00:00",
+      "created_at": "2026-09-18 13:46:45.042220+00:00"
+    },
+    {
+      "session_token": "sess_a2da78c453754882bb7d46268b9990ab",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:46:45.760906+00:00",
+      "created_at": "2026-09-18 13:46:45.760921+00:00"
+    },
+    {
+      "session_token": "sess_b1fbba0b5c3d4ae6ae4842945c9f5773",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:46:46.968890+00:00",
+      "created_at": "2026-09-18 13:46:46.968904+00:00"
+    },
+    {
+      "session_token": "sess_ab737b16704f48bbb14582f5b1f71a85",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:46:47.643773+00:00",
+      "created_at": "2026-09-18 13:46:47.643786+00:00"
+    },
+    {
+      "session_token": "sess_376cfcde68584c94ae496db2cf7d09a5",
+      "user_id": "user_e7cc1157b86a",
+      "expires_at": "2026-09-25 13:46:49.658999+00:00",
+      "created_at": "2026-09-18 13:46:49.659007+00:00"
+    },
+    {
+      "session_token": "sess_76a5edae536843b5a5e5df66683841c8",
+      "user_id": "user_44aa5d010caa",
+      "expires_at": "2026-09-25 13:46:50.267080+00:00",
+      "created_at": "2026-09-18 13:46:50.267087+00:00"
+    },
+    {
+      "session_token": "sess_41d73048727d49229a83fdf2017e5efd",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:46:51.031528+00:00",
+      "created_at": "2026-09-18 13:46:51.031542+00:00"
+    },
+    {
+      "session_token": "sess_3ccbcac4decf4304806a1bf26b3e57ef",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:46:52.291798+00:00",
+      "created_at": "2026-09-18 13:46:52.291829+00:00"
+    },
+    {
+      "session_token": "sess_98f93864f1d2408fbdf4e3b83ff5cbbb",
+      "user_id": "user_2263ca5a3ace",
+      "expires_at": "2026-09-25 13:46:54.084223+00:00",
+      "created_at": "2026-09-18 13:46:54.084245+00:00"
+    },
+    {
+      "session_token": "sess_f7e8d73ce4c541558416b4a5a155507e",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:46:55.298171+00:00",
+      "created_at": "2026-09-18 13:46:55.298197+00:00"
+    },
+    {
+      "session_token": "sess_74e844fadc8a489fa3a5dd8eb6924749",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:47:08.235384+00:00",
+      "created_at": "2026-09-18 13:47:08.235397+00:00"
+    },
+    {
+      "session_token": "sess_4793ce4996404ff58472136c647edbe0",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:47:20.142795+00:00",
+      "created_at": "2026-09-18 13:47:20.142807+00:00"
+    },
+    {
+      "session_token": "sess_cb32789ce95f47028a17e83c57071f30",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:47:21.509852+00:00",
+      "created_at": "2026-09-18 13:47:21.509864+00:00"
+    },
+    {
+      "session_token": "sess_93aea300429d4f8d8f5d303c3af33fa8",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:47:22.403754+00:00",
+      "created_at": "2026-09-18 13:47:22.403764+00:00"
+    },
+    {
+      "session_token": "sess_54f883f9ca104cc7bf771f41332727c0",
+      "user_id": "user_842ae65b3c53",
+      "expires_at": "2026-09-25 13:47:23.030131+00:00",
+      "created_at": "2026-09-18 13:47:23.030165+00:00"
+    },
+    {
+      "session_token": "sess_57ec921139204b33bf2bb9f814aa9c99",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:47:47.416145+00:00",
+      "created_at": "2026-09-18 13:47:47.416159+00:00"
+    },
+    {
+      "session_token": "sess_bbf9d0ab47854510810e4de0039d78a2",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:47:48.931812+00:00",
+      "created_at": "2026-09-18 13:47:48.931825+00:00"
+    },
+    {
+      "session_token": "sess_1e1beee294ce49d2850659a39a7420eb",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:48:00.718741+00:00",
+      "created_at": "2026-09-18 13:48:00.718757+00:00"
+    },
+    {
+      "session_token": "sess_54a7f5f64e4c4389a9faec0f8a4907b0",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:48:15.394708+00:00",
+      "created_at": "2026-09-18 13:48:15.394724+00:00"
+    },
+    {
+      "session_token": "sess_9ebbdb2fe10b418c87a13b3ae069ecec",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:48:17.474722+00:00",
+      "created_at": "2026-09-18 13:48:17.474734+00:00"
+    },
+    {
+      "session_token": "sess_885a64a1d502480f9636f70831ca7509",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:48:29.552509+00:00",
+      "created_at": "2026-09-18 13:48:29.552526+00:00"
+    },
+    {
+      "session_token": "sess_d21c51bde11842d79a753eeee0723aaf",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:48:51.876802+00:00",
+      "created_at": "2026-09-18 13:48:51.876816+00:00"
+    },
+    {
+      "session_token": "sess_e1996cafa5284ffab2210a5d2c8d48d2",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:48:53.260301+00:00",
+      "created_at": "2026-09-18 13:48:53.260334+00:00"
+    },
+    {
+      "session_token": "sess_fe469e5aa09b479bab039066d7b79f84",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:48:54.220527+00:00",
+      "created_at": "2026-09-18 13:48:54.220540+00:00"
+    },
+    {
+      "session_token": "sess_c19825227ef34fa083d7998916045d76",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:48:59.748959+00:00",
+      "created_at": "2026-09-18 13:48:59.748972+00:00"
+    },
+    {
+      "session_token": "sess_77cd67cbe7c64b8f90f61f0c0089cde4",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:49:00.490004+00:00",
+      "created_at": "2026-09-18 13:49:00.490015+00:00"
+    },
+    {
+      "session_token": "sess_50c7ef6678b14138ba52afead1e49cfe",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:49:01.300469+00:00",
+      "created_at": "2026-09-18 13:49:01.300481+00:00"
+    },
+    {
+      "session_token": "sess_6e42b21cefc5424a93a9aefc386dd09d",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:49:02.143006+00:00",
+      "created_at": "2026-09-18 13:49:02.143019+00:00"
+    },
+    {
+      "session_token": "sess_c6bcbab627c64be5bdb65552c376ce89",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:49:03.328309+00:00",
+      "created_at": "2026-09-18 13:49:03.328318+00:00"
+    },
+    {
+      "session_token": "sess_f5c52524f6884b0e987ba7d74630aabf",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:49:04.119480+00:00",
+      "created_at": "2026-09-18 13:49:04.119521+00:00"
+    },
+    {
+      "session_token": "sess_edc2d11fd7f5427bb0f6e0b95ee98197",
+      "user_id": "user_fbaac343fbc4",
+      "expires_at": "2026-09-25 13:49:06.896561+00:00",
+      "created_at": "2026-09-18 13:49:06.896569+00:00"
+    },
+    {
+      "session_token": "sess_4fbdf254c7524ffeb874da89c1ba6824",
+      "user_id": "user_f2a1e42662cd",
+      "expires_at": "2026-09-25 13:49:07.473701+00:00",
+      "created_at": "2026-09-18 13:49:07.473707+00:00"
+    },
+    {
+      "session_token": "sess_52aa702297bf441a9fd6e47d443955fd",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:49:08.460025+00:00",
+      "created_at": "2026-09-18 13:49:08.460037+00:00"
+    },
+    {
+      "session_token": "sess_86da12b2efab40f5a24d4f38850383c2",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:49:09.564377+00:00",
+      "created_at": "2026-09-18 13:49:09.564390+00:00"
+    },
+    {
+      "session_token": "sess_1ecac114c4f94505abdd9568c742fb76",
+      "user_id": "user_2263ca5a3ace",
+      "expires_at": "2026-09-25 13:49:10.682185+00:00",
+      "created_at": "2026-09-18 13:49:10.682209+00:00"
+    },
+    {
+      "session_token": "sess_15e343c0f6304588bedf0d2d19318cca",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:49:11.833683+00:00",
+      "created_at": "2026-09-18 13:49:11.833697+00:00"
+    },
+    {
+      "session_token": "sess_5cf9f93d6a954ff0bcf0d510cc2aaea8",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:49:13.219913+00:00",
+      "created_at": "2026-09-18 13:49:13.219935+00:00"
+    },
+    {
+      "session_token": "sess_61033c603a0d4a82a8739dd596325d81",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:49:14.556891+00:00",
+      "created_at": "2026-09-18 13:49:14.556918+00:00"
+    },
+    {
+      "session_token": "sess_1911fd39b3d948bc9f1d8e18db653f2e",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:49:16.171531+00:00",
+      "created_at": "2026-09-18 13:49:16.171541+00:00"
+    },
+    {
+      "session_token": "sess_fd0ca62fffc44beb8204987a7a7199af",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:49:17.186765+00:00",
+      "created_at": "2026-09-18 13:49:17.186778+00:00"
+    },
+    {
+      "session_token": "sess_09fcd4a837484a0a87f07fa4f9aa5024",
+      "user_id": "user_842ae65b3c53",
+      "expires_at": "2026-09-25 13:49:17.877329+00:00",
+      "created_at": "2026-09-18 13:49:17.877342+00:00"
+    },
+    {
+      "session_token": "sess_fbea11fc577548a296644a770e4de257",
+      "user_id": "user_8a23748bef5f",
+      "expires_at": "2026-09-25 13:49:25.081494+00:00",
+      "created_at": "2026-09-18 13:49:25.081505+00:00"
+    },
+    {
+      "session_token": "sess_387b43f2c9844fccae196e6b780ca643",
+      "user_id": "user_fe9c198c04c6",
+      "expires_at": "2026-09-25 13:49:25.571230+00:00",
+      "created_at": "2026-09-18 13:49:25.571253+00:00"
+    },
+    {
+      "session_token": "sess_e8f3144a58cf46dda4d5bbe2d90607ce",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:28.308755+00:00",
+      "created_at": "2026-09-18 13:49:28.308770+00:00"
+    },
+    {
+      "session_token": "sess_9b71231d3d304505a8207e3a24f867cb",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:29.696051+00:00",
+      "created_at": "2026-09-18 13:49:29.696063+00:00"
+    },
+    {
+      "session_token": "sess_ec60c5ddd46043b9a40fe966b24a6361",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:31.265141+00:00",
+      "created_at": "2026-09-18 13:49:31.265146+00:00"
+    },
+    {
+      "session_token": "sess_a6099036b14344bca7bbbaf2f53d4d05",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:32.811018+00:00",
+      "created_at": "2026-09-18 13:49:32.811031+00:00"
+    },
+    {
+      "session_token": "sess_ea8ec14761a84475a3f5475728b2cd0e",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:33.975637+00:00",
+      "created_at": "2026-09-18 13:49:33.975650+00:00"
+    },
+    {
+      "session_token": "sess_2f8bc473663a478b83a3ed2e3f6d1d66",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:35.003111+00:00",
+      "created_at": "2026-09-18 13:49:35.003125+00:00"
+    },
+    {
+      "session_token": "sess_c5e88d00a26844b9950480f086573c7c",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:36.080056+00:00",
+      "created_at": "2026-09-18 13:49:36.080182+00:00"
+    },
+    {
+      "session_token": "sess_61422a5ab794416aa215b789c640adc8",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:37.745516+00:00",
+      "created_at": "2026-09-18 13:49:37.745528+00:00"
+    },
+    {
+      "session_token": "sess_be217489e7e74d259c5098c14adaf167",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:39.237931+00:00",
+      "created_at": "2026-09-18 13:49:39.237943+00:00"
+    },
+    {
+      "session_token": "sess_08610245f412468f803c308ad3037be7",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:40.325867+00:00",
+      "created_at": "2026-09-18 13:49:40.325897+00:00"
+    },
+    {
+      "session_token": "sess_450b55d1610546c3bef0ead25f99dd51",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-09-25 13:49:41.472645+00:00",
+      "created_at": "2026-09-18 13:49:41.472659+00:00"
+    },
+    {
+      "session_token": "sess_3f2c4b72382f4b48800545954451b834",
+      "user_id": "user_d40036d41731",
+      "expires_at": "2026-09-25 13:49:41.943452+00:00",
+      "created_at": "2026-09-18 13:49:41.943466+00:00"
+    },
+    {
+      "session_token": "sess_11b2679cace04c1ba5f93c29e78a7726",
+      "user_id": "user_3ad205fa9acd",
+      "expires_at": "2026-09-25 13:49:41.956612+00:00",
+      "created_at": "2026-09-18 13:49:41.956630+00:00"
+    },
+    {
+      "session_token": "sess_ed4a13a30c7e49c781a04abf620caed2",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:49:42.566085+00:00",
+      "created_at": "2026-09-18 13:49:42.566098+00:00"
+    },
+    {
+      "session_token": "sess_ec118f38a1c04c6695d1282f47b2036c",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:49:43.782713+00:00",
+      "created_at": "2026-09-18 13:49:43.782726+00:00"
+    },
+    {
+      "session_token": "sess_0f6e764b865a4fc7b12c4328c7e38c59",
+      "user_id": "user_d853654ebc16",
+      "expires_at": "2026-09-25 13:49:43.951563+00:00",
+      "created_at": "2026-09-18 13:49:43.951574+00:00"
+    },
+    {
+      "session_token": "sess_ee6f925e28a8452e89afa52d41ff7515",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:49:45.684072+00:00",
+      "created_at": "2026-09-18 13:49:45.684117+00:00"
+    },
+    {
+      "session_token": "sess_249bc520e3724dd39c8b84d8a0c243fd",
+      "user_id": "user_41bddde21166",
+      "expires_at": "2026-09-25 13:49:45.838726+00:00",
+      "created_at": "2026-09-18 13:49:45.838738+00:00"
+    },
+    {
+      "session_token": "sess_271b890f2778411f92fdf8a2107db279",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-09-25 13:49:46.734419+00:00",
+      "created_at": "2026-09-18 13:49:46.734431+00:00"
+    },
+    {
+      "session_token": "sess_1b7819688e554b598aa67ad8c342b29d",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:49:47.594961+00:00",
+      "created_at": "2026-09-18 13:49:47.594972+00:00"
+    },
+    {
+      "session_token": "sess_700c6796bf6d4ec6beb3764efc57f0f4",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:49:48.715509+00:00",
+      "created_at": "2026-09-18 13:49:48.715521+00:00"
+    },
+    {
+      "session_token": "sess_e24151d6b0b9473ea74d0f510b3c25e6",
+      "user_id": "user_2669971cb1bc",
+      "expires_at": "2026-09-25 13:49:50.231919+00:00",
+      "created_at": "2026-09-18 13:49:50.231928+00:00"
+    },
+    {
+      "session_token": "sess_eaffdaffba1e4c80ad8c5f351bfb4b93",
+      "user_id": "user_828512024eaa",
+      "expires_at": "2026-09-25 13:49:51.203880+00:00",
+      "created_at": "2026-09-18 13:49:51.203889+00:00"
+    },
+    {
+      "session_token": "sess_9b0ed556feb040b5bc184801b162b1de",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:49:52.070868+00:00",
+      "created_at": "2026-09-18 13:49:52.070882+00:00"
+    },
+    {
+      "session_token": "sess_5e54b683aa9848b187f05fb1b0ecdd4a",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-09-25 13:49:53.183378+00:00",
+      "created_at": "2026-09-18 13:49:53.183390+00:00"
+    },
+    {
+      "session_token": "sess_8fd0b20a1fac41249cdbb0bd1810e8d9",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:54.359091+00:00",
+      "created_at": "2026-09-18 13:49:54.359102+00:00"
+    },
+    {
+      "session_token": "sess_094a2f12a3a9459ca865546988d9b4a1",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:54.809952+00:00",
+      "created_at": "2026-09-18 13:49:54.809966+00:00"
+    },
+    {
+      "session_token": "sess_41e21370f2704f2cb0205144b7c25523",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:55.601231+00:00",
+      "created_at": "2026-09-18 13:49:55.601244+00:00"
+    },
+    {
+      "session_token": "sess_2260ff86289f444d8c34382d566a25bb",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:56.117757+00:00",
+      "created_at": "2026-09-18 13:49:56.117778+00:00"
+    },
+    {
+      "session_token": "sess_b89a416bcada43b0953d2ab46f7a8329",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:56.832356+00:00",
+      "created_at": "2026-09-18 13:49:56.832368+00:00"
+    },
+    {
+      "session_token": "sess_6400f2aea7cc448ca3ac8c01bc2c7232",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:57.303860+00:00",
+      "created_at": "2026-09-18 13:49:57.303873+00:00"
+    },
+    {
+      "session_token": "sess_49511755fe0d44c5842205f91cd609c7",
+      "user_id": "user_7dfdac402f5b",
+      "expires_at": "2026-09-25 13:49:57.912839+00:00",
+      "created_at": "2026-09-18 13:49:57.912853+00:00"
+    },
+    {
+      "session_token": "sess_25e58c0527384897802a74a488c30e43",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:49:58.981844+00:00",
+      "created_at": "2026-09-18 13:49:58.981856+00:00"
+    },
+    {
+      "session_token": "sess_acd85609622c45c98d48fe0351850362",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:49:59.458742+00:00",
+      "created_at": "2026-09-18 13:49:59.458755+00:00"
+    },
+    {
+      "session_token": "sess_18368b611edb432290bbb32d2a343f89",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:00.026864+00:00",
+      "created_at": "2026-09-18 13:50:00.026878+00:00"
+    },
+    {
+      "session_token": "sess_325a787cb3f6409f93fa36d3b0c55614",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:00.460834+00:00",
+      "created_at": "2026-09-18 13:50:00.460846+00:00"
+    },
+    {
+      "session_token": "sess_a2650b821c8f4695861d7e19590981ca",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:01.213370+00:00",
+      "created_at": "2026-09-18 13:50:01.213384+00:00"
+    },
+    {
+      "session_token": "sess_740080a64574469ea5d440b15393bc2a",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:01.751643+00:00",
+      "created_at": "2026-09-18 13:50:01.751667+00:00"
+    },
+    {
+      "session_token": "sess_f7f75120915d42c1bfa67cf806fccbf5",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:02.648828+00:00",
+      "created_at": "2026-09-18 13:50:02.648840+00:00"
+    },
+    {
+      "session_token": "sess_75818ba785de471e8945edcdaebbea05",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:03.153427+00:00",
+      "created_at": "2026-09-18 13:50:03.153444+00:00"
+    },
+    {
+      "session_token": "sess_8d4f3d722eb64ff2a99c2f90d5d83542",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:03.788786+00:00",
+      "created_at": "2026-09-18 13:50:03.788799+00:00"
+    },
+    {
+      "session_token": "sess_38d5c669586c40518d702dc3e2f96f5f",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:04.285369+00:00",
+      "created_at": "2026-09-18 13:50:04.285382+00:00"
+    },
+    {
+      "session_token": "sess_7cc7b70a409b4cc7b23b3d407d4e07cc",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:04.901659+00:00",
+      "created_at": "2026-09-18 13:50:04.901673+00:00"
+    },
+    {
+      "session_token": "sess_20500fa0576846edaad2a323db1d455e",
+      "user_id": "user_b1daafe175dd",
+      "expires_at": "2026-09-25 13:50:05.336943+00:00",
+      "created_at": "2026-09-18 13:50:05.336975+00:00"
+    },
+    {
+      "session_token": "sess_a8ea828745a044cbbd9c0dd68d376a1c",
+      "user_id": "user_de5980c950da",
+      "expires_at": "2026-09-25 13:50:05.939459+00:00",
+      "created_at": "2026-09-18 13:50:05.939480+00:00"
+    },
+    {
+      "session_token": "sess_6478261cef0340e5b2c9aa6c307aa34e",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:50:07.795644+00:00",
+      "created_at": "2026-09-18 13:50:07.795658+00:00"
+    },
+    {
+      "session_token": "sess_af2e4c4955cb491ca010e5c766323455",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:50:10.180700+00:00",
+      "created_at": "2026-09-18 13:50:10.180715+00:00"
+    },
+    {
+      "session_token": "sess_1bdf74039033478f96188290a8d7e0d9",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:50:10.316194+00:00",
+      "created_at": "2026-09-18 13:50:10.316206+00:00"
+    },
+    {
+      "session_token": "sess_04ad56a538dc4a91a52ba0bcf34bce9b",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:50:11.005734+00:00",
+      "created_at": "2026-09-18 13:50:11.005747+00:00"
+    },
+    {
+      "session_token": "sess_8a893fccb1c443e5aed6ada504d85a63",
+      "user_id": "user_ad7a5cbbdf1b",
+      "expires_at": "2026-09-25 13:50:11.117581+00:00",
+      "created_at": "2026-09-18 13:50:11.117594+00:00"
+    },
+    {
+      "session_token": "sess_540189010726477db6f297d2ffed2132",
+      "user_id": "user_13992717c199",
+      "expires_at": "2026-09-25 13:50:11.808473+00:00",
+      "created_at": "2026-09-18 13:50:11.808485+00:00"
+    },
+    {
+      "session_token": "sess_55ceade030604bc39aab2b95ad6421e5",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:50:12.574544+00:00",
+      "created_at": "2026-09-18 13:50:12.574556+00:00"
+    },
+    {
+      "session_token": "sess_dc77d3f6233a4fba89d79c02b4ab9b4f",
+      "user_id": "user_e1ab070d7878",
+      "expires_at": "2026-09-25 13:50:13.394853+00:00",
+      "created_at": "2026-09-18 13:50:13.394865+00:00"
+    },
+    {
+      "session_token": "sess_e2326018cfe44bea8342a0897b5249b5",
+      "user_id": "user_5cafc6f7c8df",
+      "expires_at": "2026-09-25 13:50:15.101613+00:00",
+      "created_at": "2026-09-18 13:50:15.101623+00:00"
+    },
+    {
+      "session_token": "sess_572b75c8956d473e8107a217785abf5e",
+      "user_id": "user_5cafc6f7c8df",
+      "expires_at": "2026-09-25 13:50:16.893497+00:00",
+      "created_at": "2026-09-18 13:50:16.893509+00:00"
+    },
+    {
+      "session_token": "sess_e652ba7e452c449196fac2791a6c80a3",
+      "user_id": "user_9fe8fc4b0ae4",
+      "expires_at": "2026-09-25 13:50:17.769856+00:00",
+      "created_at": "2026-09-18 13:50:17.769869+00:00"
+    },
+    {
+      "session_token": "sess_a4342ac83fa345859b6edbaea7ea2fde",
+      "user_id": "user_9fe8fc4b0ae4",
+      "expires_at": "2026-09-25 13:50:18.664693+00:00",
+      "created_at": "2026-09-18 13:50:18.664784+00:00"
+    },
+    {
+      "session_token": "sess_aebb82d344a24540987e5c0b122217db",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:50:19.516929+00:00",
+      "created_at": "2026-09-18 13:50:19.516942+00:00"
+    },
+    {
+      "session_token": "sess_bdb463415fea48678d9d7af322ab5d02",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:50:21.009612+00:00",
+      "created_at": "2026-09-18 13:50:21.009625+00:00"
+    },
+    {
+      "session_token": "sess_ad830c64b3964ae4b12baad658f66fe8",
+      "user_id": "user_02c443d13d4a",
+      "expires_at": "2026-09-25 13:50:22.556434+00:00",
+      "created_at": "2026-09-18 13:50:22.556447+00:00"
+    },
+    {
+      "session_token": "sess_d0ff721aece548c680025d5c1caf1830",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-09-25 13:50:23.468463+00:00",
+      "created_at": "2026-09-18 13:50:23.468477+00:00"
+    },
+    {
+      "session_token": "sess_835edeec68f942dea14b18f3d358d816",
+      "user_id": "user_336bd6085d37",
+      "expires_at": "2026-09-25 13:50:26.788021+00:00",
+      "created_at": "2026-09-18 13:50:26.788031+00:00"
+    },
+    {
+      "session_token": "sess_fea5c167756247faa6a977e03397fc15",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-09-25 13:50:30.368774+00:00",
+      "created_at": "2026-09-18 13:50:30.368783+00:00"
+    },
+    {
+      "session_token": "sess_1a8e40003d2e450fa65b1e2d843ff9aa",
+      "user_id": "user_ca3f92af1f21",
+      "expires_at": "2026-09-25 13:50:30.647186+00:00",
+      "created_at": "2026-09-18 13:50:30.647200+00:00"
+    },
+    {
+      "session_token": "sess_4646bdbc1c6d426aab607976a5c17c07",
+      "user_id": "user_6a38249c90dc",
+      "expires_at": "2026-09-25 13:50:31.387058+00:00",
+      "created_at": "2026-09-18 13:50:31.387072+00:00"
+    },
+    {
+      "session_token": "sess_7659bb0327f24fceb7d20ec994c72c9d",
+      "user_id": "user_9c88e72c4d9f",
+      "expires_at": "2026-09-25 13:50:31.836953+00:00",
+      "created_at": "2026-09-18 13:50:31.836965+00:00"
+    },
+    {
+      "session_token": "sess_fc86633a439545ba82c34e386b7cf360",
+      "user_id": "user_4f7b7faeeb86",
+      "expires_at": "2026-09-25 13:50:34.515507+00:00",
+      "created_at": "2026-09-18 13:50:34.515520+00:00"
+    },
+    {
+      "session_token": "sess_0962f639c7fd4ae5bdac79a3ac871080",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:50:35.085383+00:00",
+      "created_at": "2026-09-18 13:50:35.085395+00:00"
+    },
+    {
+      "session_token": "sess_6f67876cff56400baa85175fb8d7d642",
+      "user_id": "user_2c056a27639b",
+      "expires_at": "2026-09-25 13:50:35.919883+00:00",
+      "created_at": "2026-09-18 13:50:35.919894+00:00"
+    },
+    {
+      "session_token": "sess_42b7dc24782d452aa7e9c55959dc2cae",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:50:36.768649+00:00",
+      "created_at": "2026-09-18 13:50:36.768661+00:00"
+    },
+    {
+      "session_token": "sess_ae4ff879d5064b5fb3f1b8e7c50c64a5",
+      "user_id": "user_8501e6b972c5",
+      "expires_at": "2026-09-25 13:50:37.571180+00:00",
+      "created_at": "2026-09-18 13:50:37.571191+00:00"
+    },
+    {
+      "session_token": "sess_a895e8ad692c499f9e1396c2ff863823",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:50:38.783648+00:00",
+      "created_at": "2026-09-18 13:50:38.783660+00:00"
+    },
+    {
+      "session_token": "sess_df236f11eeb24f25a4f60a9e20daed66",
+      "user_id": "user_dd7d0ad3290c",
+      "expires_at": "2026-09-25 13:50:39.654568+00:00",
+      "created_at": "2026-09-18 13:50:39.654582+00:00"
+    },
+    {
+      "session_token": "sess_0d4d24712f104d8a983f0a0700bfe3f6",
+      "user_id": "user_87b7f651dd8b",
+      "expires_at": "2026-09-25 13:50:42.233020+00:00",
+      "created_at": "2026-09-18 13:50:42.233026+00:00"
+    },
+    {
+      "session_token": "sess_6f2a5a56f38546ffb8d1ddd0304de943",
+      "user_id": "user_af4840afd773",
+      "expires_at": "2026-09-25 13:50:42.900780+00:00",
+      "created_at": "2026-09-18 13:50:42.900788+00:00"
+    },
+    {
+      "session_token": "sess_bec58a425ee04bcf9fe902c15c9c7117",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:50:43.807472+00:00",
+      "created_at": "2026-09-18 13:50:43.807483+00:00"
+    },
+    {
+      "session_token": "sess_b8f2836312f640e4aa67a0ddcc6e9aff",
+      "user_id": "user_b43a9fbf8b6a",
+      "expires_at": "2026-09-25 13:50:44.915485+00:00",
+      "created_at": "2026-09-18 13:50:44.915496+00:00"
+    },
+    {
+      "session_token": "sess_7ffc34410cac4217ad24e438c5af2d3c",
+      "user_id": "user_2263ca5a3ace",
+      "expires_at": "2026-09-25 13:50:46.104931+00:00",
+      "created_at": "2026-09-18 13:50:46.104943+00:00"
+    },
+    {
+      "session_token": "sess_faeaecdd527240858679569801c720f8",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-09-25 13:50:47.252603+00:00",
+      "created_at": "2026-09-18 13:50:47.252615+00:00"
+    },
+    {
+      "session_token": "sess_4f176b3d9a2948d2938d7ff9d48e5296",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:50:48.712972+00:00",
+      "created_at": "2026-09-18 13:50:48.712983+00:00"
+    },
+    {
+      "session_token": "sess_46721003b7e449edaf48df66c194b1af",
+      "user_id": "user_71aa1ec37820",
+      "expires_at": "2026-09-25 13:50:49.883846+00:00",
+      "created_at": "2026-09-18 13:50:49.883857+00:00"
+    },
+    {
+      "session_token": "sess_9850e90333c24a6ba96463728aeee9fa",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:50:51.362094+00:00",
+      "created_at": "2026-09-18 13:50:51.362108+00:00"
+    },
+    {
+      "session_token": "sess_d379ff8a48de42da9c68deda925a5b73",
+      "user_id": "user_87a08a3a85ae",
+      "expires_at": "2026-09-25 13:50:52.483376+00:00",
+      "created_at": "2026-09-18 13:50:52.483388+00:00"
+    },
+    {
+      "session_token": "sess_fdefe0d29cfc4491ab4ae1e4edaf9efd",
+      "user_id": "user_842ae65b3c53",
+      "expires_at": "2026-09-25 13:50:53.207507+00:00",
+      "created_at": "2026-09-18 13:50:53.207522+00:00"
+    },
+    {
+      "session_token": "sess_251c970df3f9461fb9bcb8e86b6171a9",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:32.531935+00:00",
+      "created_at": "2026-09-24 03:16:32.531952+00:00"
+    },
+    {
+      "session_token": "sess_6a486f3eb251494592d9d97fe5887da3",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:33.186196+00:00",
+      "created_at": "2026-09-24 03:16:33.186207+00:00"
+    },
+    {
+      "session_token": "sess_a23ab32712be48e285ecd2527f19c361",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:34.745976+00:00",
+      "created_at": "2026-09-24 03:16:34.745987+00:00"
+    },
+    {
+      "session_token": "sess_51c25aa83ba541d6ba94b4a9132488da",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:34.767534+00:00",
+      "created_at": "2026-09-24 03:16:34.767547+00:00"
+    },
+    {
+      "session_token": "sess_bc5f48ec098849abbc690f5758b3c2f4",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:34.795293+00:00",
+      "created_at": "2026-09-24 03:16:34.795304+00:00"
+    },
+    {
+      "session_token": "sess_7299f2d9e46142b0861aa3b9c8a97b92",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:35.490447+00:00",
+      "created_at": "2026-09-24 03:16:35.490459+00:00"
+    },
+    {
+      "session_token": "sess_24f753ef24b24ca1b472177eb8bd39b5",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:36.873560+00:00",
+      "created_at": "2026-09-24 03:16:36.873576+00:00"
+    },
+    {
+      "session_token": "sess_d6eb308e263d435b9fbbbcfc27c4e804",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:16:36.902299+00:00",
+      "created_at": "2026-09-24 03:16:36.902313+00:00"
+    },
+    {
+      "session_token": "sess_9aacc3eeaaa24e34af4b0fe76ac07b6a",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:14.328424+00:00",
+      "created_at": "2026-09-24 03:22:14.328437+00:00"
+    },
+    {
+      "session_token": "sess_2e1adcb152a64ab4b037d1a809e4624c",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:14.746497+00:00",
+      "created_at": "2026-09-24 03:22:14.746510+00:00"
+    },
+    {
+      "session_token": "sess_6228522ff8c248adaf39a882b9f31265",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:15.044468+00:00",
+      "created_at": "2026-09-24 03:22:15.044480+00:00"
+    },
+    {
+      "session_token": "sess_6cf87e418f6e4385a9c3823c4183226a",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:15.059242+00:00",
+      "created_at": "2026-09-24 03:22:15.059251+00:00"
+    },
+    {
+      "session_token": "sess_37fd18b4c0db42b4ace81172b8d66d61",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:15.079940+00:00",
+      "created_at": "2026-09-24 03:22:15.079950+00:00"
+    },
+    {
+      "session_token": "sess_a06ae3e6cb554082a6ffe13e46729176",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:15.332911+00:00",
+      "created_at": "2026-09-24 03:22:15.332924+00:00"
+    },
+    {
+      "session_token": "sess_3014879937844be0861face317c69f45",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:16.055648+00:00",
+      "created_at": "2026-09-24 03:22:16.055678+00:00"
+    },
+    {
+      "session_token": "sess_bd53ffa6dea746d4adb7a4648fe27fb1",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:22:16.087050+00:00",
+      "created_at": "2026-09-24 03:22:16.087061+00:00"
+    },
+    {
+      "session_token": "sess_29e7e3dbc5d24f54b0de2be3f8eb9362",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:31.226598+00:00",
+      "created_at": "2026-09-24 03:26:31.226613+00:00"
+    },
+    {
+      "session_token": "sess_7e08fb2f09b8498491bb80303ed628b6",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:31.720641+00:00",
+      "created_at": "2026-09-24 03:26:31.720657+00:00"
+    },
+    {
+      "session_token": "sess_b765cdbbb7e949d7b62a2175fdb04d9b",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:32.291070+00:00",
+      "created_at": "2026-09-24 03:26:32.291079+00:00"
+    },
+    {
+      "session_token": "sess_77fcc4a9fe4f4d6aa3d69d0801d6a5ac",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:32.307248+00:00",
+      "created_at": "2026-09-24 03:26:32.307256+00:00"
+    },
+    {
+      "session_token": "sess_b217402b2e9346918f1df5968f8b1ed3",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:32.329437+00:00",
+      "created_at": "2026-09-24 03:26:32.329447+00:00"
+    },
+    {
+      "session_token": "sess_5f2af2baddd9455a867c01ab57238a89",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:32.609128+00:00",
+      "created_at": "2026-09-24 03:26:32.609142+00:00"
+    },
+    {
+      "session_token": "sess_8095096da052452f94045c7b333f6acb",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:33.416407+00:00",
+      "created_at": "2026-09-24 03:26:33.416419+00:00"
+    },
+    {
+      "session_token": "sess_ef9a3bdfc23c46dd84aafec079329731",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-01 03:26:33.446655+00:00",
+      "created_at": "2026-09-24 03:26:33.446664+00:00"
+    },
+    {
+      "session_token": "1b2rQrJDtBZftSj5doTORMpyTOBd9m9QWRM7lD5vqk0",
+      "user_id": "user_45b3b10a99cb",
+      "expires_at": "2026-10-01 03:32:42.476936+00:00",
+      "created_at": "2026-09-24 03:32:42.476981+00:00"
+    },
+    {
+      "session_token": "sess_813822d9fb2842d2b413355e2e8ccfd6",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-10-01 03:38:16.511196+00:00",
+      "created_at": "2026-09-24 03:38:16.511213+00:00"
+    },
+    {
+      "session_token": "sess_cef1e0b2ad704e9885eb914116e2d247",
+      "user_id": "user_92219a8ec8ce",
+      "expires_at": "2026-10-01 03:38:18.324748+00:00",
+      "created_at": "2026-09-24 03:38:18.324760+00:00"
+    },
+    {
+      "session_token": "sess_003b39b5c4714478bd1d96901f6e9e56",
+      "user_id": "user_1b7aee0f0318",
+      "expires_at": "2026-10-01 03:38:19.419395+00:00",
+      "created_at": "2026-09-24 03:38:19.419408+00:00"
+    },
+    {
+      "session_token": "sess_6ed1097fcb794a7cb5936773b4e6df95",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-10-01 03:39:29.709649+00:00",
+      "created_at": "2026-09-24 03:39:29.709662+00:00"
+    },
+    {
+      "session_token": "sess_747f6b987e4d4f9587bf81400d7091c7",
+      "user_id": "user_92219a8ec8ce",
+      "expires_at": "2026-10-01 03:39:31.244210+00:00",
+      "created_at": "2026-09-24 03:39:31.244227+00:00"
+    },
+    {
+      "session_token": "sess_cdf506f366ad43d5aacb46336a4aac3c",
+      "user_id": "user_1b7aee0f0318",
+      "expires_at": "2026-10-01 03:39:32.670458+00:00",
+      "created_at": "2026-09-24 03:39:32.670478+00:00"
     }
   ],
   "holdings": [
@@ -487,7 +3049,357 @@
       "created_at": "2026-09-13T18:45:12.890040+00:00"
     },
     {
-      "id": "9fadafb7-612b-4d4f-8d9d-8206dbe1e254",
+      "id": "2e032419-1897-4dc7-a3da-38c54a9f45c0",
+      "symbol": "ZZZZNOTREAL99",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 25.5,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:32:18.402923+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d853654ebc16"
+    },
+    {
+      "id": "88e12a7c-2752-4356-b5a7-38f2fb6c8c0d",
+      "symbol": "GIFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 0.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:32:19.855050+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_41bddde21166"
+    },
+    {
+      "id": "80aff5fb-2adf-4909-b60a-aba5216a867d",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:33:54.082350+00:00",
+      "date_of_purchase": "2024-01-15",
+      "lot_count": null,
+      "user_id": "user_828512024eaa"
+    },
+    {
+      "id": "0eae3c0a-5fc4-46e4-9e6c-bc9392c75bdf",
+      "symbol": "ZZZZNOTREAL99",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 25.5,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:36:20.882145+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d853654ebc16"
+    },
+    {
+      "id": "4be042d5-3a00-48f1-814f-ac0868b0d835",
+      "symbol": "GIFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 0.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:36:21.971309+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_41bddde21166"
+    },
+    {
+      "id": "d4cc9470-44b2-49e8-9858-b9cbf9f59e7f",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:36:26.414377+00:00",
+      "date_of_purchase": "2024-01-15",
+      "lot_count": null,
+      "user_id": "user_828512024eaa"
+    },
+    {
+      "id": "c69a0463-42d6-41ee-8ca8-2365d1c01265",
+      "symbol": "ZZZZNOTREAL99",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 25.5,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:37:23.223341+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d853654ebc16"
+    },
+    {
+      "id": "12ec910f-c15e-4e1e-8d34-a8b376e2a064",
+      "symbol": "GIFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 0.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:37:24.950640+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_41bddde21166"
+    },
+    {
+      "id": "9adac420-709d-40fc-aa72-14c99334d5f2",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:37:30.010159+00:00",
+      "date_of_purchase": "2024-01-15",
+      "lot_count": null,
+      "user_id": "user_828512024eaa"
+    },
+    {
+      "id": "c221f232-a165-42a3-8212-00a434814218",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:45:42.113828+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_8074dad0afe7"
+    },
+    {
+      "id": "74a10b1a-8c8d-4c24-9633-cf0174eb8851",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:46:47.768071+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "df0beda6-b216-4b1f-86f9-ea9f4ead4e0a",
+      "symbol": "NVDA",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 120.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:46:47.773560+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "db950bc7-73c1-48b9-aef1-b65f213f1af3",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:04.189481+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "9d286c60-c588-49fa-8c8d-953190cac693",
+      "symbol": "NVDA",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 120.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:04.200936+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "cf1ed2d2-4609-4d93-96b0-31e830364ef2",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 100.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:41.975910+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d40036d41731"
+    },
+    {
+      "id": "8a679bfb-68a5-44d7-8ac3-49f659cfc330",
+      "symbol": "ZZZZNOTREAL99",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 25.5,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:43.998310+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d853654ebc16"
+    },
+    {
+      "id": "6efc63bd-568d-485b-9f09-39fcc4a5b7ff",
+      "symbol": "GIFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 0.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:45.851410+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_41bddde21166"
+    },
+    {
+      "id": "9c3c936d-3904-45b8-a626-fafa25105f54",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:46.872341+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "efe23c39-01e7-492f-96c6-2029f3d75302",
+      "symbol": "VOO",
+      "name": null,
+      "quantity": 2.0,
+      "avg_cost": 400.0,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "created_at": "2026-09-18T13:49:46.879568+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "2d109911-6633-4593-80ac-c0fcb857954a",
+      "symbol": "BTC-USD",
+      "name": null,
+      "quantity": 0.1,
+      "avg_cost": 30000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "created_at": "2026-09-18T13:49:46.886601+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "33cc3ce9-35ad-4783-8fda-59b5667d6e0c",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:48.840970+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_2669971cb1bc"
+    },
+    {
+      "id": "74ca5296-1729-4620-855e-554fa3f5f35e",
+      "symbol": "MSFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 200.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:50.384631+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_2669971cb1bc"
+    },
+    {
+      "id": "55e95582-c5f8-42a1-95f4-e26d0b62f6a8",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:51.211362+00:00",
+      "date_of_purchase": "2024-01-15",
+      "lot_count": null,
+      "user_id": "user_828512024eaa"
+    },
+    {
+      "id": "d8501f7b-f444-4b84-940c-536a4b931bed",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 100.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:53.307862+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "31bd85cc-3dca-48bd-8082-1167341a2ed0",
+      "symbol": "TSLA",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 400.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:49:53.316424+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "de50bc59-9661-429e-83c3-8f664cfdb1d3",
       "symbol": "AAPL",
       "name": "Apple Inc.",
       "quantity": 25.0,
@@ -495,13 +3407,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.895358+00:00",
+      "created_at": "2026-09-18T13:50:06.664600+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "bd1b3390-c34d-4e96-8287-010c2a13a317",
+      "id": "994c1381-fbbd-4ae4-94f6-c4edb6080a70",
       "symbol": "NVDA",
       "name": "NVIDIA Corp.",
       "quantity": 12.0,
@@ -509,13 +3421,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.896114+00:00",
+      "created_at": "2026-09-18T13:50:06.670015+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "448a579c-14d4-42d8-bb0b-75d0abfc96b4",
+      "id": "11bd5575-c606-43dc-81f5-d5291d7d1623",
       "symbol": "TSLA",
       "name": "Tesla Inc.",
       "quantity": 8.0,
@@ -523,13 +3435,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.896790+00:00",
+      "created_at": "2026-09-18T13:50:06.686058+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "13f51fcf-c207-437b-8603-55aebfe1d86a",
+      "id": "17892c61-d719-4938-bebc-096cd5254cfc",
       "symbol": "MSFT",
       "name": "Microsoft Corp.",
       "quantity": 10.0,
@@ -537,13 +3449,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.897572+00:00",
+      "created_at": "2026-09-18T13:50:06.690116+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "ff8c6b4e-56a8-4d9f-b8c9-ec76d2f651cd",
+      "id": "0bdf29c3-89d5-4268-b3a4-cc38a0110c0f",
       "symbol": "AMZN",
       "name": "Amazon.com",
       "quantity": 15.0,
@@ -551,13 +3463,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.898268+00:00",
+      "created_at": "2026-09-18T13:50:06.707873+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "c2751555-e0cd-42dd-936e-40dcca83a988",
+      "id": "418de014-2b26-47d1-8ae3-0c85af18c0e4",
       "symbol": "GOOGL",
       "name": "Alphabet Inc.",
       "quantity": 18.0,
@@ -565,13 +3477,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.898964+00:00",
+      "created_at": "2026-09-18T13:50:06.746953+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "d8e72c5c-fa95-4b47-897a-d6a7676677a9",
+      "id": "71ee7854-3231-4b9d-8d52-de81a0c2609e",
       "symbol": "META",
       "name": "Meta Platforms",
       "quantity": 7.0,
@@ -579,13 +3491,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-13T22:37:37.899626+00:00",
+      "created_at": "2026-09-18T13:50:06.763253+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "419b27f2-6d6b-4ef9-97af-f535fde1bbe2",
+      "id": "57d6eef6-75f5-4dbd-af1f-eb6a796f61fa",
       "symbol": "VOO",
       "name": "Vanguard S&P 500 ETF",
       "quantity": 20.0,
@@ -593,13 +3505,13 @@
       "asset_type": "etf",
       "is_broad_market": true,
       "sub_type": "broad_index",
-      "created_at": "2026-09-13T22:37:37.900314+00:00",
+      "created_at": "2026-09-18T13:50:06.774608+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "093120f7-a026-4947-8ba9-0160e6c935d7",
+      "id": "5189b3e3-71fe-4da3-a4f4-81b1198e6adc",
       "symbol": "GLD",
       "name": "SPDR Gold Shares",
       "quantity": 15.0,
@@ -607,13 +3519,13 @@
       "asset_type": "etf",
       "is_broad_market": false,
       "sub_type": "leveraged_thematic",
-      "created_at": "2026-09-13T22:37:37.901050+00:00",
+      "created_at": "2026-09-18T13:50:06.779490+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "0cf331e6-402c-453d-932e-f3d50e94324f",
+      "id": "16ab84f3-7d83-4655-924b-43ca777e1203",
       "symbol": "BTC-USD",
       "name": "Bitcoin",
       "quantity": 0.35,
@@ -621,13 +3533,13 @@
       "asset_type": "crypto",
       "is_broad_market": false,
       "sub_type": "blue_chip",
-      "created_at": "2026-09-13T22:37:37.901775+00:00",
+      "created_at": "2026-09-18T13:50:06.786331+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "e339a3af-bc34-45a6-8837-8c5745bc4d7c",
+      "id": "3460fe1b-e107-4441-a58a-4709877ad4b2",
       "symbol": "ETH-USD",
       "name": "Ethereum",
       "quantity": 4.2,
@@ -635,13 +3547,13 @@
       "asset_type": "crypto",
       "is_broad_market": false,
       "sub_type": "blue_chip",
-      "created_at": "2026-09-13T22:37:37.902470+00:00",
+      "created_at": "2026-09-18T13:50:06.790275+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
     },
     {
-      "id": "502a3a43-a774-4d32-a8f4-a16c93f99eec",
+      "id": "d2b17b78-c60a-4500-b8ee-3c83e24179c0",
       "symbol": "SOL-USD",
       "name": "Solana",
       "quantity": 30.0,
@@ -649,10 +3561,206 @@
       "asset_type": "crypto",
       "is_broad_market": false,
       "sub_type": "speculative",
-      "created_at": "2026-09-13T22:37:37.903177+00:00",
+      "created_at": "2026-09-18T13:50:06.794077+00:00",
       "date_of_purchase": null,
       "lot_count": null,
-      "user_id": "user_7f21834c89b7"
+      "user_id": "user_de5980c950da"
+    },
+    {
+      "id": "b2a89387-eaaa-4ea0-a670-ef38b9753489",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:13.523945+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_e1ab070d7878"
+    },
+    {
+      "id": "1dac6925-b71f-45cf-acec-bd15546e1c01",
+      "symbol": "BTC-USD",
+      "name": null,
+      "quantity": 0.5,
+      "avg_cost": 30000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "created_at": "2026-09-18T13:50:13.532509+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_e1ab070d7878"
+    },
+    {
+      "id": "ca57978b-0f2d-47a0-8ebc-7d8a694a27fd",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 15.0,
+      "avg_cost": 175.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:18.777172+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_9fe8fc4b0ae4"
+    },
+    {
+      "id": "f1360b20-50dc-4ae2-9ece-520c73438119",
+      "symbol": "MSFT",
+      "name": null,
+      "quantity": 20.0,
+      "avg_cost": 300.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:21.115196+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_02c443d13d4a"
+    },
+    {
+      "id": "9f5916ef-670e-42bb-b2b8-2406008e7cf4",
+      "symbol": "NVDA",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 110.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:36.027276+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_2c056a27639b"
+    },
+    {
+      "id": "1d7c4046-8532-46e0-ad70-aec8cfeb05e8",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 160.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:37.716334+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_8501e6b972c5"
+    },
+    {
+      "id": "bbada6ad-13e2-407b-8f3d-93b024943f2d",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:39.749521+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "f4aa9c38-16e7-4edf-9123-1feb48bf3049",
+      "symbol": "NVDA",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 120.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:39.778720+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_dd7d0ad3290c"
+    },
+    {
+      "id": "b35e287f-a55d-4dcd-be62-1263c4a79d48",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 100.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:45.014129+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_b43a9fbf8b6a"
+    },
+    {
+      "id": "6d174574-8ff8-49c1-94b0-0f59b7d4fe57",
+      "symbol": "JPM",
+      "name": null,
+      "quantity": 2.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-18T13:50:45.021383+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_b43a9fbf8b6a"
+    },
+    {
+      "id": "c0972d17-0f03-4bf7-afb2-4110bb025b58",
+      "symbol": "BTC-USD",
+      "name": null,
+      "quantity": 1.0,
+      "avg_cost": 50000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "created_at": "2026-09-18T13:50:46.247888+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_2263ca5a3ace"
+    },
+    {
+      "id": "51c09cb4-3ae2-473d-84af-7fab184aaac4",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "quantity": 0.01,
+      "avg_cost": 60000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "date_of_purchase": "2026-08-10",
+      "lot_count": 1,
+      "created_at": "2026-09-24T03:26:33.463201+00:00"
+    },
+    {
+      "id": "4c12df97-a8f9-462c-be52-3b9b4e461440",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "VOO",
+      "name": "Vanguard S&P 500 ETF",
+      "quantity": 0.5,
+      "avg_cost": 700.0,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "date_of_purchase": "2026-08-17",
+      "lot_count": 1,
+      "created_at": "2026-09-24T03:26:33.463201+00:00"
+    },
+    {
+      "id": "ef6ce03d-6ce2-4541-a115-35759d8fc7b4",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "quantity": 2.0,
+      "avg_cost": 3000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "date_of_purchase": "2026-08-01",
+      "lot_count": 1,
+      "created_at": "2026-09-24T03:26:33.478296+00:00"
     }
   ],
   "notify_prefs": [
@@ -665,10 +3773,60 @@
     {
       "user_id": "user_7f21834c89b7",
       "email": "trader@terminus.local",
-      "enabled": true
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_5171bed7f2c8",
+      "email": "custom@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_59f3837c4719",
+      "last_sent_date": "2026-09-18"
+    },
+    {
+      "user_id": "user_6a38249c90dc",
+      "email": "digest-1789739431693@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_a618dd4df3ab",
+      "email": "trigger-1789739086061@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_33663d6bb922",
+      "email": "scheduler-guard-1789739086088@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_9c88e72c4d9f",
+      "email": "trigger-1789739431829@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
+    },
+    {
+      "user_id": "user_4f7b7faeeb86",
+      "email": "scheduler-guard-1789739434507@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-24"
     }
   ],
-  "watchlist": [],
+  "watchlist": [
+    {
+      "user_id": "user_336bd6085d37",
+      "symbol": "BABA"
+    },
+    {
+      "user_id": "user_ad7a5cbbdf1b",
+      "symbol": "AAPL"
+    }
+  ],
   "chat_conversations": [
     {
       "user_id": "user_d8af5ace5f1e",
@@ -739,6 +3897,1046 @@
         }
       ],
       "updated_at": "2026-09-12T16:10:48.956402+00:00"
+    },
+    {
+      "user_id": "user_f70e08113cf3",
+      "conversation_id": "conv_c05480ae074e",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What do I hold?",
+          "ts": "2026-09-18T13:45:52.601799+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for your portfolio\n\n- Portfolio Total Value: **$0.00** (+0.00% total return)\n- Total Positions: **0** (0 stocks, 0 crypto)\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "macro",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQWtlaHBuZzFtWE53S2UwVkR1dVFKQS0wVXRuTFNnQWtpX21USzI2dVI0VVEyZDROem9FU3BrVElobktNX21Zb2kxM0l3N2pEWUQ4QVBGaEh1YmU5b2hKeFVsSGRLbWgwZV84bk1URS1VMkhIY3U2VzZKWTRsbDFCeG1iWG5wdGZraHplTlpZZDVUQVFmR2g5WnpoYjF5Umh5?oc=5",
+              "source": "Yahoo Finance"
+            },
+            {
+              "type": "macro",
+              "title": "You Decide: Why Did the Fed Raise Its Interest Rate?",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSU5RQ0FVa196SklqNmc1V3A2NFRjS0lSMmVPb1VMS0ZQWElIUDg2SjhjZ05sM0dQTTlBSXNsSXI1VkVrRi11TlBpVXloNEFrZU5pM1NfZnYyT0s1clkzblhHdV8tLU9VbzY3WkJZYUdEQTNIMnYwWFJrRTBuZFFMUTJKOTQ?oc=5",
+              "source": "NC State University"
+            },
+            {
+              "type": "macro",
+              "title": "Federal Reserve\u2019s inflation fight shifts to how far rates will have to rise",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPYjc4aG5qZHdvX3JiQk5WMDRidFFURnNxdHlxdi1UN3lIeXI1VENPWkhscUdhT1hDMkxlSnI1RkFReFZzRzdmd0ZYU3ZBUFFMVzZqWHFnTkZTaDFjYnh1Z2QxT2R6Nk9vNEY3c2ZJOVBaa3kxcVoyNUVzMzdRbU4zZC1TTXhIRVFvZWRnWl81Ym5fSlYzOG1fd3FOOFVwXzAzckY1UGNPU0hjc1JnUlg4Z1BFMndwdw?oc=5",
+              "source": "baltimoresun.com"
+            },
+            {
+              "type": "macro",
+              "title": "Japan raises interest rates to 31-year high to curb impact of rising prices",
+              "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNOVhza1NzR202aG1nOTNQMGFmN1ExZGgxb3NfaWZGWTRaUi11blRFaHZaazBDZ2k4MVR6ckpzSi1wa1QzQjNTeTRuQkRYOXZoUzEyaWt4YVJZczdtaGRTNnZpWHNxWXlmTndSaU50bjhtSG8yMVhSb0xyZGpGQldpUDdfQjNQSUU5ZVFUNVlUemU3TXQ5a3RmbmZuSWZFX3dYcmxRNzhVZDVudw?oc=5",
+              "source": "The Guardian"
+            },
+            {
+              "type": "macro",
+              "title": "Gold Holds Gain as Lower Oil and Fed Hike Temper Inflation Fears",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNRXA0T0RVa3FhR3N3MmVldzhfM1dNcTlQMjl2M2hzY1gweUdjcFFfMGJvRFQxMC11UWlITEt0TFY2TjdRbHdGTVBDR251bjZPUi0tRmF3U1pPNHlIcDctaGhXYWtIWWFiNHNGR19QdTh5VjlFOUdoRmJGb0NvV1pyekJKZVJJWmRyaEY1RDdFdEdIdFlCZkowZ2gyd1VVeXJoUVNkYVZLaDg5YTBNWVpxcnlibjZvUQ?oc=5",
+              "source": "Bloomberg.com"
+            },
+            {
+              "type": "macro",
+              "title": "COMMENTARY: Morning Bid: Apocalypse later",
+              "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPRjRPVC1yMEp3QzUzT2pHQnlxallOazNCcVMtMlFSS25yczVEUTdJNzZTQ1FIRF8zb203cmI5SkFkd0hVTExMUWh6cTFYakhHeE5kUGRxNzYzc3NwdUtSYkN6UWpJMmhZdHRxbW5uaV9kU2ZMZ1E4bU1LYkFBajBjZVVIbTgtQ1hNX19pQzZzNXNfTkt1Rzcw?oc=5",
+              "source": "Reuters"
+            },
+            {
+              "type": "macro",
+              "title": "County housing market remains steady as Federal Reserve hikes interest rates",
+              "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNYVBKanFuUXBLTHU1NVRjbjNMVENMQlhscUhGdUs0RWFFUTh0LVhjcmlFcXdRbV9aS21DN1BQOF9MTmY3RWJFbERrMjJyQ0h3U0V6QUJZNWhSMWJheGtndzRXUkV0ZmQyQVhzVUxPSzViS3BUQXhVMzljWmlqQlh5eEtRV05uc3ZGRnBweGlqcGwxMExDSFRTTEVRaTgwSnpFZ3E4?oc=5",
+              "source": "Lookout Santa Cruz"
+            },
+            {
+              "type": "macro",
+              "title": "Why the Federal Reserve hiked rates this week",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVUtVSDBnTFpEaUVCYXRtc3Uyb3g1Tjl4ZllBbGFaMUhTTUVaMVFuckZreTlZMGFtMXFRamRzaDhrMHAtVjFnRFpHSWxLeDROc1RZaGVfTWNpM01pN2JmdmFSQWROT0ExbkpQWDN3Nmg0NzBva21zMDN3STdaNk5aanlyTlE?oc=5",
+              "source": "Axios"
+            }
+          ],
+          "tickers": [],
+          "ts": "2026-09-18T13:45:52.601806+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:45:52.601810+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_8650db28556d",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What do I hold in my portfolio?",
+          "ts": "2026-09-18T13:46:48.663796+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $336.18 (+0.015%) \u00b7 Sentiment: **Neutral**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.9596 (+0.332%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Erases Losses; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Just Announced a Groundbreaking iPhone, but It Has Alienated a Key Market",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-just-announced-a-groundbreaking-iphone-but-it-has-alienated-a-key-market/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:46:48.663803+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:46:48.663809+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_0edf61063cf7",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is my portfolio total return?",
+          "ts": "2026-09-18T13:46:49.317563+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $336.18 (+0.015%) \u00b7 Sentiment: **Neutral**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.9596 (+0.332%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Erases Losses; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Just Announced a Groundbreaking iPhone, but It Has Alienated a Key Market",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-just-announced-a-groundbreaking-iphone-but-it-has-alienated-a-key-market/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:46:49.317574+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:46:49.317580+00:00"
+    },
+    {
+      "user_id": "user_44aa5d010caa",
+      "conversation_id": "conv_3efa7859eadd",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. ",
+          "ts": "2026-09-18T13:46:50.607035+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for your portfolio\n\n- Portfolio Total Value: **$0.00** (+0.00% total return)\n- Total Positions: **0** (0 stocks, 0 crypto)\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "macro",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQWtlaHBuZzFtWE53S2UwVkR1dVFKQS0wVXRuTFNnQWtpX21USzI2dVI0VVEyZDROem9FU3BrVElobktNX21Zb2kxM0l3N2pEWUQ4QVBGaEh1YmU5b2hKeFVsSGRLbWgwZV84bk1URS1VMkhIY3U2VzZKWTRsbDFCeG1iWG5wdGZraHplTlpZZDVUQVFmR2g5WnpoYjF5Umh5?oc=5",
+              "source": "Yahoo Finance"
+            },
+            {
+              "type": "macro",
+              "title": "You Decide: Why Did the Fed Raise Its Interest Rate?",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSU5RQ0FVa196SklqNmc1V3A2NFRjS0lSMmVPb1VMS0ZQWElIUDg2SjhjZ05sM0dQTTlBSXNsSXI1VkVrRi11TlBpVXloNEFrZU5pM1NfZnYyT0s1clkzblhHdV8tLU9VbzY3WkJZYUdEQTNIMnYwWFJrRTBuZFFMUTJKOTQ?oc=5",
+              "source": "NC State University"
+            },
+            {
+              "type": "macro",
+              "title": "Federal Reserve\u2019s inflation fight shifts to how far rates will have to rise",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPYjc4aG5qZHdvX3JiQk5WMDRidFFURnNxdHlxdi1UN3lIeXI1VENPWkhscUdhT1hDMkxlSnI1RkFReFZzRzdmd0ZYU3ZBUFFMVzZqWHFnTkZTaDFjYnh1Z2QxT2R6Nk9vNEY3c2ZJOVBaa3kxcVoyNUVzMzdRbU4zZC1TTXhIRVFvZWRnWl81Ym5fSlYzOG1fd3FOOFVwXzAzckY1UGNPU0hjc1JnUlg4Z1BFMndwdw?oc=5",
+              "source": "baltimoresun.com"
+            },
+            {
+              "type": "macro",
+              "title": "Japan raises interest rates to 31-year high to curb impact of rising prices",
+              "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNOVhza1NzR202aG1nOTNQMGFmN1ExZGgxb3NfaWZGWTRaUi11blRFaHZaazBDZ2k4MVR6ckpzSi1wa1QzQjNTeTRuQkRYOXZoUzEyaWt4YVJZczdtaGRTNnZpWHNxWXlmTndSaU50bjhtSG8yMVhSb0xyZGpGQldpUDdfQjNQSUU5ZVFUNVlUemU3TXQ5a3RmbmZuSWZFX3dYcmxRNzhVZDVudw?oc=5",
+              "source": "The Guardian"
+            },
+            {
+              "type": "macro",
+              "title": "Gold Holds Gain as Lower Oil and Fed Hike Temper Inflation Fears",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNRXA0T0RVa3FhR3N3MmVldzhfM1dNcTlQMjl2M2hzY1gweUdjcFFfMGJvRFQxMC11UWlITEt0TFY2TjdRbHdGTVBDR251bjZPUi0tRmF3U1pPNHlIcDctaGhXYWtIWWFiNHNGR19QdTh5VjlFOUdoRmJGb0NvV1pyekJKZVJJWmRyaEY1RDdFdEdIdFlCZkowZ2gyd1VVeXJoUVNkYVZLaDg5YTBNWVpxcnlibjZvUQ?oc=5",
+              "source": "Bloomberg.com"
+            },
+            {
+              "type": "macro",
+              "title": "COMMENTARY: Morning Bid: Apocalypse later",
+              "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPRjRPVC1yMEp3QzUzT2pHQnlxallOazNCcVMtMlFSS25yczVEUTdJNzZTQ1FIRF8zb203cmI5SkFkd0hVTExMUWh6cTFYakhHeE5kUGRxNzYzc3NwdUtSYkN6UWpJMmhZdHRxbW5uaV9kU2ZMZ1E4bU1LYkFBajBjZVVIbTgtQ1hNX19pQzZzNXNfTkt1Rzcw?oc=5",
+              "source": "Reuters"
+            },
+            {
+              "type": "macro",
+              "title": "County housing market remains steady as Federal Reserve hikes interest rates",
+              "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNYVBKanFuUXBLTHU1NVRjbjNMVENMQlhscUhGdUs0RWFFUTh0LVhjcmlFcXdRbV9aS21DN1BQOF9MTmY3RWJFbERrMjJyQ0h3U0V6QUJZNWhSMWJheGtndzRXUkV0ZmQyQVhzVUxPSzViS3BUQXhVMzljWmlqQlh5eEtRV05uc3ZGRnBweGlqcGwxMExDSFRTTEVRaTgwSnpFZ3E4?oc=5",
+              "source": "Lookout Santa Cruz"
+            },
+            {
+              "type": "macro",
+              "title": "Why the Federal Reserve hiked rates this week",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVUtVSDBnTFpEaUVCYXRtc3Uyb3g1Tjl4ZllBbGFaMUhTTUVaMVFuckZreTlZMGFtMXFRamRzaDhrMHAtVjFnRFpHSWxLeDROc1RZaGVfTWNpM01pN2JmdmFSQWROT0ExbkpQWDN3Nmg0NzBva21zMDN3STdaNk5aanlyTlE?oc=5",
+              "source": "Axios"
+            }
+          ],
+          "tickers": [],
+          "ts": "2026-09-18T13:46:50.607043+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:46:50.607048+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_8fecbc990563",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What do I hold in my portfolio?",
+          "ts": "2026-09-18T13:49:05.348481+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $335.475 (-0.195%) \u00b7 Sentiment: **Neutral**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.72 (+0.223%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Prices Turn Higher; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Just Announced a Groundbreaking iPhone, but It Has Alienated a Key Market",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-just-announced-a-groundbreaking-iphone-but-it-has-alienated-a-key-market/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:49:05.348489+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:49:05.348495+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_40fd65f72ab1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is my portfolio total return?",
+          "ts": "2026-09-18T13:49:06.395939+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $335.41 (-0.214%) \u00b7 Sentiment: **Neutral**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.685 (+0.207%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Prices Turn Higher; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Just Announced a Groundbreaking iPhone, but It Has Alienated a Key Market",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-just-announced-a-groundbreaking-iphone-but-it-has-alienated-a-key-market/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:49:06.395948+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:49:06.395954+00:00"
+    },
+    {
+      "user_id": "user_f2a1e42662cd",
+      "conversation_id": "conv_868563f6a709",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. ",
+          "ts": "2026-09-18T13:49:07.721306+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for your portfolio\n\n- Portfolio Total Value: **$0.00** (+0.00% total return)\n- Total Positions: **0** (0 stocks, 0 crypto)\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "macro",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQWtlaHBuZzFtWE53S2UwVkR1dVFKQS0wVXRuTFNnQWtpX21USzI2dVI0VVEyZDROem9FU3BrVElobktNX21Zb2kxM0l3N2pEWUQ4QVBGaEh1YmU5b2hKeFVsSGRLbWgwZV84bk1URS1VMkhIY3U2VzZKWTRsbDFCeG1iWG5wdGZraHplTlpZZDVUQVFmR2g5WnpoYjF5Umh5?oc=5",
+              "source": "Yahoo Finance"
+            },
+            {
+              "type": "macro",
+              "title": "You Decide: Why Did the Fed Raise Its Interest Rate?",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSU5RQ0FVa196SklqNmc1V3A2NFRjS0lSMmVPb1VMS0ZQWElIUDg2SjhjZ05sM0dQTTlBSXNsSXI1VkVrRi11TlBpVXloNEFrZU5pM1NfZnYyT0s1clkzblhHdV8tLU9VbzY3WkJZYUdEQTNIMnYwWFJrRTBuZFFMUTJKOTQ?oc=5",
+              "source": "NC State University"
+            },
+            {
+              "type": "macro",
+              "title": "Federal Reserve\u2019s inflation fight shifts to how far rates will have to rise",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPYjc4aG5qZHdvX3JiQk5WMDRidFFURnNxdHlxdi1UN3lIeXI1VENPWkhscUdhT1hDMkxlSnI1RkFReFZzRzdmd0ZYU3ZBUFFMVzZqWHFnTkZTaDFjYnh1Z2QxT2R6Nk9vNEY3c2ZJOVBaa3kxcVoyNUVzMzdRbU4zZC1TTXhIRVFvZWRnWl81Ym5fSlYzOG1fd3FOOFVwXzAzckY1UGNPU0hjc1JnUlg4Z1BFMndwdw?oc=5",
+              "source": "baltimoresun.com"
+            },
+            {
+              "type": "macro",
+              "title": "Japan raises interest rates to 31-year high to curb impact of rising prices",
+              "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNOVhza1NzR202aG1nOTNQMGFmN1ExZGgxb3NfaWZGWTRaUi11blRFaHZaazBDZ2k4MVR6ckpzSi1wa1QzQjNTeTRuQkRYOXZoUzEyaWt4YVJZczdtaGRTNnZpWHNxWXlmTndSaU50bjhtSG8yMVhSb0xyZGpGQldpUDdfQjNQSUU5ZVFUNVlUemU3TXQ5a3RmbmZuSWZFX3dYcmxRNzhVZDVudw?oc=5",
+              "source": "The Guardian"
+            },
+            {
+              "type": "macro",
+              "title": "Gold Holds Gain as Lower Oil and Fed Hike Temper Inflation Fears",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNRXA0T0RVa3FhR3N3MmVldzhfM1dNcTlQMjl2M2hzY1gweUdjcFFfMGJvRFQxMC11UWlITEt0TFY2TjdRbHdGTVBDR251bjZPUi0tRmF3U1pPNHlIcDctaGhXYWtIWWFiNHNGR19QdTh5VjlFOUdoRmJGb0NvV1pyekJKZVJJWmRyaEY1RDdFdEdIdFlCZkowZ2gyd1VVeXJoUVNkYVZLaDg5YTBNWVpxcnlibjZvUQ?oc=5",
+              "source": "Bloomberg.com"
+            },
+            {
+              "type": "macro",
+              "title": "COMMENTARY: Morning Bid: Apocalypse later",
+              "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPRjRPVC1yMEp3QzUzT2pHQnlxallOazNCcVMtMlFSS25yczVEUTdJNzZTQ1FIRF8zb203cmI5SkFkd0hVTExMUWh6cTFYakhHeE5kUGRxNzYzc3NwdUtSYkN6UWpJMmhZdHRxbW5uaV9kU2ZMZ1E4bU1LYkFBajBjZVVIbTgtQ1hNX19pQzZzNXNfTkt1Rzcw?oc=5",
+              "source": "Reuters"
+            },
+            {
+              "type": "macro",
+              "title": "County housing market remains steady as Federal Reserve hikes interest rates",
+              "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNYVBKanFuUXBLTHU1NVRjbjNMVENMQlhscUhGdUs0RWFFUTh0LVhjcmlFcXdRbV9aS21DN1BQOF9MTmY3RWJFbERrMjJyQ0h3U0V6QUJZNWhSMWJheGtndzRXUkV0ZmQyQVhzVUxPSzViS3BUQXhVMzljWmlqQlh5eEtRV05uc3ZGRnBweGlqcGwxMExDSFRTTEVRaTgwSnpFZ3E4?oc=5",
+              "source": "Lookout Santa Cruz"
+            },
+            {
+              "type": "macro",
+              "title": "Why the Federal Reserve hiked rates this week",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVUtVSDBnTFpEaUVCYXRtc3Uyb3g1Tjl4ZllBbGFaMUhTTUVaMVFuckZreTlZMGFtMXFRamRzaDhrMHAtVjFnRFpHSWxLeDROc1RZaGVfTWNpM01pN2JmdmFSQWROT0ExbkpQWDN3Nmg0NzBva21zMDN3STdaNk5aanlyTlE?oc=5",
+              "source": "Axios"
+            }
+          ],
+          "tickers": [],
+          "ts": "2026-09-18T13:49:07.721314+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:49:07.721321+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_9024a789ab83",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What do I hold in my portfolio?",
+          "ts": "2026-09-18T13:50:40.927507+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $335.15 (-0.292%) \u00b7 Sentiment: **Bearish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.4999 (+0.123%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Survey shows Apple is seeing a better-than-expected iPhone refresh cycle",
+              "url": "https://finance.yahoo.com/markets/stocks/articles/survey-shows-apple-seeing-better-134359665.html",
+              "source": "Investing.com"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Prices Turn Higher; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:50:40.927526+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:50:40.927540+00:00"
+    },
+    {
+      "user_id": "user_dd7d0ad3290c",
+      "conversation_id": "conv_996f273737f4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is my portfolio total return?",
+          "ts": "2026-09-18T13:50:41.925544+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for AAPL, NVDA\n\n- **AAPL**: $335.15 (-0.292%) \u00b7 Sentiment: **Bearish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Sale (Partial) $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Ed Case Purchase $1,001 - $15,000 on 2026-08-13\n- **NVDA**: $219.49 (+0.118%) \u00b7 Sentiment: **Very Bullish**\n  \u00b7 Congress: Johnjmr Mcguire Iii Purchase $1,001 - $15,000 on 2026-08-18\n  \u00b7 Congress: Gilbert Cisneros Sale (Partial) $1,001 - $15,000 on 2026-08-18\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Survey shows Apple is seeing a better-than-expected iPhone refresh cycle",
+              "url": "https://finance.yahoo.com/markets/stocks/articles/survey-shows-apple-seeing-better-134359665.html",
+              "source": "Investing.com"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Stock Market Today: Dow Falls As Oil Prices Turn Higher; Buffett Departs Berkshire (Live Coverage)",
+              "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-oil-prices-apple-amd-micron-sandisk/?src=A00220&yptr=yahoo",
+              "source": "Investor's Business Daily"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple Stock: The $1,999 iPhone Hides A Bigger Problem (NASDAQ:AAPL)",
+              "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONWREd3Y0eWpNNHVBTmdHYWFhc0dUZEpUUnI0Zk1DNEF5SHVpenJSd1Q0ZjJ5b3I1N3R4dDE2VGxULUFlOWMyTE5uRmR1S1RSNlFUUFBxVkY5VUlnNmZQQTU3V0J3UXVjOFhBWVB0ZEhTbmlmTVhaOUZQR01VME9TaHdNZ0ZXR1pnclF3?oc=5",
+              "source": "Seeking Alpha"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Dan Ives Says AI Leaders Can't 'Stop The Elevator' With Meta In The 'Ferrari Left Lane' As AI Race Accelerates",
+              "url": "https://stocktwits.com/news-articles/markets/equity/dan-ives-says-ai-leaders-cant-stop-the-elevator-with-meta-in-the-ferrari-left-lane/cZtuDjwRB3r",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "What Did Microsoft Tell You Before Its Stock Ran?",
+              "url": "https://www.trefis.com/articles/615893/what-did-microsoft-tell-you-before-its-stock-ran/2026-09-18",
+              "source": "Trefis"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple, Nvidia, Microsoft, Alphabet, and Amazon: I Ranked the 5 Largest Companies by Market Cap, and 1 Stands Above the Rest",
+              "url": "https://www.fool.com/investing/2026/09/18/apple-nvidia-microsoft-i-ranked-the-5-largest-comp/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Berkshire Stock Peaked the Day Before Warren Buffett Said He'd Step Down as CEO",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/berkshire-stock-peaked-the-day-before-warren-buffett-said-he-d-step-down-as-ceo-P7dfpIHZRWK28JvtWk5j?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Coinbase Files to List U.S. Single-Stock Perpetual Futures",
+              "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-09-18-2026/card/coinbase-files-to-list-u-s-single-stock-perpetual-futures-f2q6W4mtxLA3hkVHvqcT?siteid=yhoof2&yptr=yahoo",
+              "source": "The Wall Street Journal"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "Apple iPhone Refresh Cycle Better-Than-Expected, Says Evercore As AAPL Stock Heads For 5th Straight Weekly Gain",
+              "url": "https://stocktwits.com/news-articles/markets/equity/aapl-stock-5th-straight-weekly-gain-evercore-iphone-refresh-cycle/cZtuHk3RB3F",
+              "source": "Stocktwits"
+            },
+            {
+              "type": "news",
+              "symbol": "AAPL",
+              "title": "5 Things to Know Before the Stock Market Opens on Friday",
+              "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-on-friday-september-18-2026-12127250",
+              "source": "Investopedia"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The HBM Bottleneck: 3 Tech Companies Have Locked Up 85% of the Supply of AI's Scarcest Asset",
+              "url": "https://www.fool.com/investing/2026/09/18/the-hbm-bottleneck-3-stocks-that-have-locked-up-85/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Why Evolution Metals & Technologies Stock Is Rocketing Higher This Week",
+              "url": "https://www.fool.com/investing/2026/09/18/why-evolution-metals-technologies-stock-is-rocketi/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "NVIDIA, Google, Emerald AI launch AI data center power coalition",
+              "url": "https://qz.com/nvidia-google-emerald-ai-energy-management-alliance-091826",
+              "source": "Quartz"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://www.fool.com/investing/2026/09/18/the-federal-reserve-just-raised-interest-rates-for/",
+              "source": "Motley Fool"
+            },
+            {
+              "type": "news",
+              "symbol": "NVDA",
+              "title": "Most Americans Don\u2019t Want a Data Center Near Them. Their Retirement Accounts Are Paying to Build Them Anyway.",
+              "url": "https://247wallst.com/personal-finance/2026/09/18/most-americans-dont-want-a-data-center-near-them-their-retirement-accounts-are-paying-to-build-them-anyway/",
+              "source": "24/7 Wall St."
+            }
+          ],
+          "tickers": [
+            "AAPL",
+            "NVDA"
+          ],
+          "ts": "2026-09-18T13:50:41.925551+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:50:41.925557+00:00"
+    },
+    {
+      "user_id": "user_af4840afd773",
+      "conversation_id": "conv_f85dea45dffe",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. Explain market risk and inflation indicators in deep detail. ",
+          "ts": "2026-09-18T13:50:43.151584+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "### Terminal Grounded Intelligence for your portfolio\n\n- Portfolio Total Value: **$0.00** (+0.00% total return)\n- Total Positions: **0** (0 stocks, 0 crypto)\n\n*(Add `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GEMINI_API_KEY` for synthesized conversational responses.)*\n\nNot financial advice.",
+          "sources": [
+            {
+              "type": "macro",
+              "title": "The Federal Reserve Just Raised Interest Rates for the First Time Since 2023. Here's What History Says Happens in the Stock Market Next.",
+              "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQWtlaHBuZzFtWE53S2UwVkR1dVFKQS0wVXRuTFNnQWtpX21USzI2dVI0VVEyZDROem9FU3BrVElobktNX21Zb2kxM0l3N2pEWUQ4QVBGaEh1YmU5b2hKeFVsSGRLbWgwZV84bk1URS1VMkhIY3U2VzZKWTRsbDFCeG1iWG5wdGZraHplTlpZZDVUQVFmR2g5WnpoYjF5Umh5?oc=5",
+              "source": "Yahoo Finance"
+            },
+            {
+              "type": "macro",
+              "title": "You Decide: Why Did the Fed Raise Its Interest Rate?",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSU5RQ0FVa196SklqNmc1V3A2NFRjS0lSMmVPb1VMS0ZQWElIUDg2SjhjZ05sM0dQTTlBSXNsSXI1VkVrRi11TlBpVXloNEFrZU5pM1NfZnYyT0s1clkzblhHdV8tLU9VbzY3WkJZYUdEQTNIMnYwWFJrRTBuZFFMUTJKOTQ?oc=5",
+              "source": "NC State University"
+            },
+            {
+              "type": "macro",
+              "title": "Federal Reserve\u2019s inflation fight shifts to how far rates will have to rise",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPYjc4aG5qZHdvX3JiQk5WMDRidFFURnNxdHlxdi1UN3lIeXI1VENPWkhscUdhT1hDMkxlSnI1RkFReFZzRzdmd0ZYU3ZBUFFMVzZqWHFnTkZTaDFjYnh1Z2QxT2R6Nk9vNEY3c2ZJOVBaa3kxcVoyNUVzMzdRbU4zZC1TTXhIRVFvZWRnWl81Ym5fSlYzOG1fd3FOOFVwXzAzckY1UGNPU0hjc1JnUlg4Z1BFMndwdw?oc=5",
+              "source": "baltimoresun.com"
+            },
+            {
+              "type": "macro",
+              "title": "Japan raises interest rates to 31-year high to curb impact of rising prices",
+              "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNOVhza1NzR202aG1nOTNQMGFmN1ExZGgxb3NfaWZGWTRaUi11blRFaHZaazBDZ2k4MVR6ckpzSi1wa1QzQjNTeTRuQkRYOXZoUzEyaWt4YVJZczdtaGRTNnZpWHNxWXlmTndSaU50bjhtSG8yMVhSb0xyZGpGQldpUDdfQjNQSUU5ZVFUNVlUemU3TXQ5a3RmbmZuSWZFX3dYcmxRNzhVZDVudw?oc=5",
+              "source": "The Guardian"
+            },
+            {
+              "type": "macro",
+              "title": "Gold Holds Gain as Lower Oil and Fed Hike Temper Inflation Fears",
+              "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNRXA0T0RVa3FhR3N3MmVldzhfM1dNcTlQMjl2M2hzY1gweUdjcFFfMGJvRFQxMC11UWlITEt0TFY2TjdRbHdGTVBDR251bjZPUi0tRmF3U1pPNHlIcDctaGhXYWtIWWFiNHNGR19QdTh5VjlFOUdoRmJGb0NvV1pyekJKZVJJWmRyaEY1RDdFdEdIdFlCZkowZ2gyd1VVeXJoUVNkYVZLaDg5YTBNWVpxcnlibjZvUQ?oc=5",
+              "source": "Bloomberg.com"
+            },
+            {
+              "type": "macro",
+              "title": "COMMENTARY: Morning Bid: Apocalypse later",
+              "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPRjRPVC1yMEp3QzUzT2pHQnlxallOazNCcVMtMlFSS25yczVEUTdJNzZTQ1FIRF8zb203cmI5SkFkd0hVTExMUWh6cTFYakhHeE5kUGRxNzYzc3NwdUtSYkN6UWpJMmhZdHRxbW5uaV9kU2ZMZ1E4bU1LYkFBajBjZVVIbTgtQ1hNX19pQzZzNXNfTkt1Rzcw?oc=5",
+              "source": "Reuters"
+            },
+            {
+              "type": "macro",
+              "title": "County housing market remains steady as Federal Reserve hikes interest rates",
+              "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNYVBKanFuUXBLTHU1NVRjbjNMVENMQlhscUhGdUs0RWFFUTh0LVhjcmlFcXdRbV9aS21DN1BQOF9MTmY3RWJFbERrMjJyQ0h3U0V6QUJZNWhSMWJheGtndzRXUkV0ZmQyQVhzVUxPSzViS3BUQXhVMzljWmlqQlh5eEtRV05uc3ZGRnBweGlqcGwxMExDSFRTTEVRaTgwSnpFZ3E4?oc=5",
+              "source": "Lookout Santa Cruz"
+            },
+            {
+              "type": "macro",
+              "title": "Why the Federal Reserve hiked rates this week",
+              "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVUtVSDBnTFpEaUVCYXRtc3Uyb3g1Tjl4ZllBbGFaMUhTTUVaMVFuckZreTlZMGFtMXFRamRzaDhrMHAtVjFnRFpHSWxLeDROc1RZaGVfTWNpM01pN2JmdmFSQWROT0ExbkpQWDN3Nmg0NzBva21zMDN3STdaNk5aanlyTlE?oc=5",
+              "source": "Axios"
+            }
+          ],
+          "tickers": [],
+          "ts": "2026-09-18T13:50:43.151592+00:00"
+        }
+      ],
+      "updated_at": "2026-09-18T13:50:43.151598+00:00"
     }
   ],
   "trade_lots": [
@@ -963,7 +5161,7 @@
       "imported_at": "2026-09-13T18:45:12.890040+00:00"
     },
     {
-      "id": "13533f2a-8fcb-4a13-ae73-978b25817fcc",
+      "id": "be2d4e3d-1ad1-43e9-b6ab-7d3dfbbce139",
       "user_id": "user_7f21834c89b7",
       "symbol": "BTC",
       "asset_type": "crypto",
@@ -971,21 +5169,21 @@
       "price": 60000.0,
       "trade_date": "2026-08-10",
       "broker": "robinhood",
-      "imported_at": "2026-09-13T22:31:51.904089+00:00"
+      "imported_at": "2026-09-24T03:26:33.463201+00:00"
     },
     {
-      "id": "7d2170ab-bd5a-4ca0-b2d4-7458472a9863",
+      "id": "672bd46e-69fd-4fe8-a615-055e889ff95a",
       "user_id": "user_7f21834c89b7",
       "symbol": "VOO",
-      "asset_type": "stock",
+      "asset_type": "etf",
       "quantity": 0.5,
       "price": 700.0,
       "trade_date": "2026-08-17",
       "broker": "robinhood",
-      "imported_at": "2026-09-13T22:31:51.904089+00:00"
+      "imported_at": "2026-09-24T03:26:33.463201+00:00"
     },
     {
-      "id": "73f5505f-f139-400d-9512-319b508755c3",
+      "id": "6fb8cbe9-5fd6-462e-8f5c-990edc6ef115",
       "user_id": "user_7f21834c89b7",
       "symbol": "ETH",
       "asset_type": "crypto",
@@ -993,7 +5191,7 @@
       "price": 3000.0,
       "trade_date": "2026-08-01",
       "broker": "robinhood",
-      "imported_at": "2026-09-13T22:31:51.917193+00:00"
+      "imported_at": "2026-09-24T03:26:33.478296+00:00"
     }
   ]
 }

@@ -4,8 +4,10 @@ import re
 import time
 import asyncio
 import logging
+from datetime import datetime, time as dtime, timedelta
 from typing import Any, Optional, Dict, List
 
+import pytz
 import httpx
 import yfinance as yf
 
@@ -300,3 +302,227 @@ async def get_market_indices() -> List[Dict[str, Any]]:
         _INDICES_CACHE = out
         _INDICES_CACHE_TIME = now
     return _INDICES_CACHE or out
+
+
+def get_market_status() -> Dict[str, Any]:
+    """Calculate US equity market session status and countdown in Eastern Time."""
+    try:
+        et_tz = pytz.timezone("America/New_York")
+        now = datetime.now(et_tz)
+    except Exception:
+        et_tz = None
+        now = datetime.utcnow() - timedelta(hours=4)
+
+    weekday = now.weekday()  # 0=Mon, 4=Fri, 5=Sat, 6=Sun
+    t = now.time()
+
+    pre_start = dtime(4, 0)
+    reg_start = dtime(9, 30)
+    reg_end = dtime(16, 0)
+    post_end = dtime(20, 0)
+
+    if weekday >= 5:  # Weekend
+        days_ahead = (7 - weekday) % 7
+        if days_ahead == 0:
+            days_ahead = 7
+        next_open = datetime.combine(now.date() + timedelta(days=days_ahead), reg_start)
+        if et_tz:
+            next_open = et_tz.localize(next_open)
+        secs = max(0, int((next_open - now).total_seconds()))
+        return {
+            "state": "CLOSED",
+            "session": "Weekend / Closed",
+            "countdown_label": "Opens Mon 9:30 AM ET",
+            "seconds_remaining": secs,
+            "is_open": False,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+
+    if t < pre_start:
+        next_open = datetime.combine(now.date(), reg_start)
+        if et_tz:
+            next_open = et_tz.localize(next_open)
+        secs = max(0, int((next_open - now).total_seconds()))
+        return {
+            "state": "CLOSED",
+            "session": "Overnight / Closed",
+            "countdown_label": "Opens at 9:30 AM ET",
+            "seconds_remaining": secs,
+            "is_open": False,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+    elif t < reg_start:
+        next_open = datetime.combine(now.date(), reg_start)
+        if et_tz:
+            next_open = et_tz.localize(next_open)
+        secs = max(0, int((next_open - now).total_seconds()))
+        return {
+            "state": "PRE_MARKET",
+            "session": "Pre-Market",
+            "countdown_label": "Regular Open in",
+            "seconds_remaining": secs,
+            "is_open": False,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+    elif t < reg_end:
+        next_close = datetime.combine(now.date(), reg_end)
+        if et_tz:
+            next_close = et_tz.localize(next_close)
+        secs = max(0, int((next_close - now).total_seconds()))
+        return {
+            "state": "OPEN",
+            "session": "Market Open",
+            "countdown_label": "Closes in",
+            "seconds_remaining": secs,
+            "is_open": True,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+    elif t < post_end:
+        next_close = datetime.combine(now.date(), post_end)
+        if et_tz:
+            next_close = et_tz.localize(next_close)
+        secs = max(0, int((next_close - now).total_seconds()))
+        return {
+            "state": "AFTER_HOURS",
+            "session": "After-Hours",
+            "countdown_label": "After-Hours ends in",
+            "seconds_remaining": secs,
+            "is_open": False,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+    else:
+        days_ahead = 3 if weekday == 4 else 1  # If Friday night, next open is Monday
+        next_open = datetime.combine(now.date() + timedelta(days=days_ahead), reg_start)
+        if et_tz:
+            next_open = et_tz.localize(next_open)
+        secs = max(0, int((next_open - now).total_seconds()))
+        return {
+            "state": "CLOSED",
+            "session": "Market Closed",
+            "countdown_label": "Opens in",
+            "seconds_remaining": secs,
+            "is_open": False,
+            "current_time_et": now.strftime("%I:%M:%S %p ET"),
+        }
+
+
+_STOCK_DETAILS_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
+_STOCK_HISTORY_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
+
+
+def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
+    try:
+        yh_sym = _normalize_crypto_symbol(symbol)
+        t = yf.Ticker(yh_sym)
+        fi = t.fast_info
+        price = fi.last_price or fi.get("lastPrice") or fi.get("last_price")
+        prev = fi.previous_close or fi.get("previousClose") or fi.get("previous_close")
+        if price is None:
+            return None
+        change = float(price) - float(prev) if prev else 0.0
+        change_pct = (change / float(prev)) * 100 if prev else 0.0
+
+        info = getattr(t, "info", {}) or {}
+
+        return {
+            "symbol": symbol.upper(),
+            "name": info.get("longName") or info.get("shortName") or symbol.upper(),
+            "price": round(float(price), 4),
+            "previous_close": round(float(prev), 4) if prev else None,
+            "change": round(float(change), 4),
+            "change_percent": round(float(change_pct), 3),
+            "open": round(float(fi.open), 4) if getattr(fi, "open", None) else None,
+            "day_high": round(float(fi.day_high), 4) if getattr(fi, "day_high", None) else None,
+            "day_low": round(float(fi.day_low), 4) if getattr(fi, "day_low", None) else None,
+            "year_high": round(float(fi.year_high), 4) if getattr(fi, "year_high", None) else None,
+            "year_low": round(float(fi.year_low), 4) if getattr(fi, "year_low", None) else None,
+            "volume": int(fi.last_volume) if getattr(fi, "last_volume", None) else None,
+            "avg_volume": int(fi.three_month_average_volume) if getattr(fi, "three_month_average_volume", None) else None,
+            "market_cap": int(fi.market_cap) if getattr(fi, "market_cap", None) else None,
+            "pe_ratio": round(float(info["trailingPE"]), 2) if info.get("trailingPE") else None,
+            "forward_pe": round(float(info["forwardPE"]), 2) if info.get("forwardPE") else None,
+            "dividend_yield": round(float(info["dividendYield"]), 4) if info.get("dividendYield") else None,
+            "beta": round(float(info["beta"]), 3) if info.get("beta") else None,
+            "sector": info.get("sector"),
+            "industry": info.get("industry"),
+            "currency": fi.get("currency", "USD") or "USD",
+            "quote_type": fi.get("quote_type") or ("crypto" if is_crypto(symbol) else "stock"),
+            "summary": info.get("longBusinessSummary"),
+            "updated_at": time.time(),
+        }
+    except Exception as e:
+        logger.warning(f"Stock details fetch failed for {symbol}: {e}")
+        return None
+
+
+async def get_stock_details(symbol: str) -> Optional[Dict[str, Any]]:
+    sym = symbol.upper().strip()
+    now = time.time()
+    if sym in _STOCK_DETAILS_CACHE:
+        val, exp = _STOCK_DETAILS_CACHE[sym]
+        if exp > now:
+            return val
+    res = await asyncio.to_thread(_fetch_stock_details_sync, sym)
+    if res:
+        _STOCK_DETAILS_CACHE[sym] = (res, now + 30.0)  # 30s cache
+    return res
+
+
+def _fetch_stock_history_sync(symbol: str, range_key: str) -> Optional[Dict[str, Any]]:
+    try:
+        yh_sym = _normalize_crypto_symbol(symbol)
+        t = yf.Ticker(yh_sym)
+        rmap = {
+            "1D": ("1d", "5m"),
+            "1W": ("5d", "15m"),
+            "1M": ("1mo", "1d"),
+            "1Y": ("1y", "1d"),
+            "5Y": ("5y", "1wk"),
+        }
+        period, interval = rmap.get(range_key.upper(), ("1d", "5m"))
+        h = t.history(period=period, interval=interval)
+        if h.empty:
+            return None
+        pts = [
+            {
+                "t": ts.isoformat(),
+                "v": round(float(row["Close"]), 2),
+                "vol": int(row.get("Volume", 0)) if "Volume" in row else 0,
+            }
+            for ts, row in h.iterrows()
+            if row["Close"] is not None and not (isinstance(row["Close"], float) and row["Close"] != row["Close"])
+        ]
+        if not pts:
+            return None
+        start_val = pts[0]["v"]
+        end_val = pts[-1]["v"]
+        chg = round(end_val - start_val, 2)
+        pct = round((chg / start_val) * 100, 2) if start_val else 0.0
+        return {
+            "symbol": symbol.upper(),
+            "range": range_key.upper(),
+            "start_value": start_val,
+            "end_value": end_val,
+            "change": chg,
+            "change_percent": pct,
+            "points": pts,
+            "count": len(pts),
+            "updated_at": time.time(),
+        }
+    except Exception as e:
+        logger.warning(f"Stock history fetch failed for {symbol} ({range_key}): {e}")
+        return None
+
+
+async def get_stock_history(symbol: str, range_key: str = "1D") -> Optional[Dict[str, Any]]:
+    cache_key = f"{symbol.upper().strip()}:{range_key.upper().strip()}"
+    now = time.time()
+    if cache_key in _STOCK_HISTORY_CACHE:
+        val, exp = _STOCK_HISTORY_CACHE[cache_key]
+        if exp > now:
+            return val
+    res = await asyncio.to_thread(_fetch_stock_history_sync, symbol.upper().strip(), range_key.upper().strip())
+    if res:
+        ttl = 30.0 if range_key.upper() in ["1D", "1W"] else 300.0
+        _STOCK_HISTORY_CACHE[cache_key] = (res, now + ttl)
+    return res

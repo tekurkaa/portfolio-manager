@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtNum, fmtPct, colorForPL } from "@/lib/api";
+import { api, fmtNum, fmtPct, colorForPL, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
 import { RefreshCw, Plus, Trash2, Search, Eye, Landmark } from "lucide-react";
 
@@ -186,7 +186,19 @@ export default function WatchlistTab() {
               ) : signals.map((s) => (
                 <tr key={s.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26] cursor-pointer" onClick={() => setDrawerSym(s.symbol)}
                   data-testid={`watchlist-row-${s.symbol}`}>
-                  <td className="px-3 py-2.5 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">{s.symbol}</td>
+                  <td className="px-3 py-2.5 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openStockModal(s.symbol);
+                      }}
+                      data-testid={`watchlist-symbol-${s.symbol}`}
+                      className="hover:underline hover:text-amber-300 transition-colors cursor-pointer"
+                      title="Click to view full Bloomberg terminal security details"
+                    >
+                      {s.symbol}
+                    </span>
+                  </td>
                   <td className="px-3 py-2.5 font-mono text-gray-200 whitespace-nowrap">{s.price != null ? `$${fmtNum(s.price, 2)}` : "—"}</td>
                   <td className={`px-3 py-2.5 font-mono whitespace-nowrap ${colorForPL(s.change_pct)}`}>{s.change_pct != null ? fmtPct(s.change_pct) : "—"}</td>
                   <td className="px-3 py-2.5 whitespace-nowrap min-w-[110px] w-[110px]">

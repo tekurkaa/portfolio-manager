@@ -357,3 +357,48 @@ async def test_asset_metadata_service_and_enrichment():
     assert aapl_meta["is_broad_market"] is False
     assert aapl_meta["sub_type"] is None
 
+
+@pytest.mark.asyncio
+async def test_market_status_endpoint():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        res = await client.get("/api/market/status")
+        assert res.status_code == 200
+        data = res.json()
+        assert "state" in data
+        assert data["state"] in ["OPEN", "PRE_MARKET", "AFTER_HOURS", "CLOSED"]
+        assert "session" in data
+        assert "countdown_label" in data
+        assert "seconds_remaining" in data
+        assert isinstance(data["seconds_remaining"], int)
+
+
+@pytest.mark.asyncio
+async def test_market_details_endpoint():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        res = await client.get("/api/market/details/AAPL")
+        assert res.status_code == 200
+        data = res.json()
+        assert data["symbol"] == "AAPL"
+        assert "price" in data
+        assert data["price"] > 0
+        assert "name" in data
+
+        # Check 404 on bad symbol
+        res_bad = await client.get("/api/market/details/INVALID_SYMBOL_99999_XYZ")
+        assert res_bad.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_market_history_endpoint():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        res = await client.get("/api/market/history/AAPL?range=1D")
+        assert res.status_code == 200
+        data = res.json()
+        assert data["symbol"] == "AAPL"
+        assert data["range"] == "1D"
+        assert "points" in data
+        assert len(data["points"]) > 0
+

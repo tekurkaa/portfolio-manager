@@ -14,9 +14,10 @@
 
 ## ✨ Key Features
 
-### 1. 🟢 Sub-Second Streaming Market Ticker Strip
+### 1. 🟢 Sub-Second Streaming Market Ticker Strip & Session Countdown
 - **Real-Time Exchange Data**: 0-second latency institutional feed for **NASDAQ 100** (`.NDX`), **S&P 500** (`.SPX`), **Dow Jones** (`.DJI`), **Russell 2000** (`.RUT`), **10-Year Treasury Yield** (`US10Y`), **Crude Oil** (`@CL.1`), **Gold** (`@GC.1`), **Silver** (`@SI.1`), **VIX** (`.VIX`), **US Dollar DXY** (`.DXY`), **Bitcoin**, **Ethereum**, and **Solana**.
-- **Micro-Animations**: Real-time green/red price flash pulse animations on price movement.
+- **Market Session Indicator & Live Countdown (`/api/market/status`)**: Real-time status badge showing current US equity market session (*Pre-Market*, *Market Open*, *After-Hours*, or *Closed/Weekend*) in Eastern Time with a live second-by-second countdown to the next session open or close.
+- **Micro-Animations & Interactive Tickers**: Real-time green/red price flash pulse animations on price movement; clicking any ticker card instantly opens its detailed Bloomberg security analysis modal.
 - **Infinite Marquee**: Seamless hover-to-pause scrolling ticker.
 
 ### 2. 📰 Multi-Source Stock & Macro Intelligence
@@ -40,13 +41,22 @@
 - Real-time P&L calculations, historical equity curves (1D, 1W, 1M, 1Y, 5Y, ALL), and interactive allocation treemaps.
 - Instant demo portfolio generation with 12 diversified tech, semi, ETF, and crypto positions.
 
-### 6. 🤖 Grounded AI Chat Assistant
+### 6. 📈 Institutional Single-Stock Terminal Modal
+- **Multi-Timeframe Interactive Charts**: Real-time quotes and intraday/historical charts across **`1D`**, **`1W`**, **`1M`**, **`1Y`**, and **`5Y`** intervals powered by Recharts with dynamic gain/loss area gradients.
+- **Visual Range Gauges**: High-contrast sliders displaying current price relative to **Day Low / High** and **52-Week Range**.
+- **Institutional Key Metrics Grid**: Market Cap, Trailing P/E, Forward P/E, Beta (5Y), Day Open, Previous Close, Volume, and Dividend Yield.
+- **Company Profile & Overview**: Business summary with expandable profile text.
+- **Global Click Triggers**: Accessible by clicking ticker items in the top ticker bar, holdings table, or watchlist.
+- **Actions**: One-click "Add to Watchlist" integration and keyboard `ESC` dismissal.
+
+### 7. 🤖 Grounded AI Chat Assistant
 - **Fintech Research Engine**: Multi-turn conversational AI grounded in live portfolio holdings, news events, congress transactions, and quantitative alpha signals.
 - **Auto-Ticker Extraction & Conversation Lifecycle**: Thread persistence, automated conversation creation/deletion, and clickable ticker references.
 
-### 7. 🗄️ Dual-Mode Database Architecture
+### 8. 🗄️ Dual-Mode Database Architecture
 - **Zero-Friction Local Mode**: Automatically detects if MongoDB is running; if not available, gracefully falls back to an embedded JSON document store (`backend/data/local_storage.json`) within 1 second without hanging.
 - **Production Mode**: Seamlessly switches to Cloud MongoDB (MongoDB Atlas) when `MONGO_URL` is configured.
+
 
 ---
 

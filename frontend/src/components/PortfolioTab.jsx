@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { api, fmtMoney, fmtPct, fmtNum, colorForPL } from "@/lib/api";
+import { api, fmtMoney, fmtPct, fmtNum, colorForPL, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
 import { Upload, Plus, Trash2, RefreshCw, Sparkles, Bitcoin, TrendingUp, TrendingDown, DollarSign, FileSpreadsheet } from "lucide-react";
 import { PortfolioHistoryChart, AllocationTreemap } from "@/components/PortfolioCharts";
@@ -432,7 +432,14 @@ export default function PortfolioTab() {
                           <td className="px-3 py-2.5">
                             <div className="flex items-center gap-2">
                               {h.asset_type === "crypto" && <Bitcoin className="w-3.5 h-3.5 text-cyan-400" />}
-                              <span className="font-mono font-bold text-amber-400 tracking-wider">{h.symbol}</span>
+                              <span
+                                onClick={() => openStockModal(h.symbol)}
+                                data-testid={`stock-trigger-${h.symbol}`}
+                                className="font-mono font-bold text-amber-400 tracking-wider cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                                title="Click to view full Bloomberg terminal security details"
+                              >
+                                {h.symbol}
+                              </span>
                             </div>
                             {h.name && <div className="text-[10px] text-gray-500 truncate max-w-[160px]">{h.name}</div>}
                           </td>

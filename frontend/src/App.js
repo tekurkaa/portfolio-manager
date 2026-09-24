@@ -14,6 +14,7 @@ import ScannerTab from "@/components/ScannerTab";
 import ChatTab from "@/components/ChatTab";
 import HowItWorksModal from "@/components/HowItWorksModal";
 import DisclaimerModal from "@/components/DisclaimerModal";
+import StockDetailModal from "@/components/StockDetailModal";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Login from "@/components/Login";
 import AuthCallback from "@/components/AuthCallback";
@@ -36,9 +37,21 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [howOpen, setHowOpen] = useState(false);
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+  const [stockModalSymbol, setStockModalSymbol] = useState(null);
   // auth state: null = checking, false = anon, object = user
   const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
   const [loadTime, setLoadTime] = useState(0);
+
+  // Global listener for opening single-stock terminal modal from any component
+  useEffect(() => {
+    const handleOpenStock = (e) => {
+      if (e.detail?.symbol) {
+        setStockModalSymbol(e.detail.symbol);
+      }
+    };
+    window.addEventListener("open-stock-modal", handleOpenStock);
+    return () => window.removeEventListener("open-stock-modal", handleOpenStock);
+  }, []);
 
   // Set of tabs mounted in the DOM. Always starts with active tab.
   // Other tabs mount ONLY on-demand when clicked by the user, completely eliminating background churn.
@@ -328,6 +341,7 @@ function App() {
 
       <HowItWorksModal open={howOpen} onClose={() => setHowOpen(false)} />
       <DisclaimerModal open={disclaimerOpen} onClose={() => setDisclaimerOpen(false)} />
+      <StockDetailModal symbol={stockModalSymbol} onClose={() => setStockModalSymbol(null)} />
     </div>
   );
 }
