@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, openStockModal } from "@/lib/api";
 import { RefreshCw, Gauge, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -155,7 +155,14 @@ export default function SentimentTab() {
               <div key={s.symbol} className="p-4" data-testid={`sentiment-row-${s.symbol}`}>
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono font-bold text-amber-400 tracking-wider">{s.symbol}</span>
+                    <span
+                      onClick={() => openStockModal(s.symbol)}
+                      data-testid={`stock-trigger-${s.symbol}`}
+                      className="font-mono font-bold text-amber-400 tracking-wider cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                      title="Click to view security terminal details"
+                    >
+                      {s.symbol}
+                    </span>
                     <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${labelColor(s.label)}`}>
                       {s.label}
                     </span>

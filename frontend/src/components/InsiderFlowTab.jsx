@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, timeAgo } from "@/lib/api";
+import { api, timeAgo, openStockModal } from "@/lib/api";
 import { RefreshCw, Landmark, FileText, Users } from "lucide-react";
 import { toast } from "sonner";
 
@@ -81,7 +81,14 @@ export default function InsiderFlowTab() {
             <div key={a.symbol} className={`border p-2 rounded-sm ${a.held ? "border-amber-600 bg-amber-500/5" : "border-[#222C3D]"}`}
               data-testid={`top-${a.symbol}`}>
               <div className="flex items-center justify-between">
-                <span className="font-mono font-bold text-amber-400 tracking-wider">{a.symbol}</span>
+                <span
+                  onClick={() => openStockModal(a.symbol)}
+                  data-testid={`stock-trigger-${a.symbol}`}
+                  className="font-mono font-bold text-amber-400 tracking-wider cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                  title="Click to view security terminal details"
+                >
+                  {a.symbol}
+                </span>
                 {a.held && <span className="text-[9px] font-mono text-amber-400 uppercase">held</span>}
               </div>
               <div className="text-[10px] font-mono text-gray-500 mt-1">{a.trades} trades</div>
@@ -157,7 +164,14 @@ export default function InsiderFlowTab() {
                       <td className="px-3 py-2 text-gray-200">{c.politician || "—"}</td>
                       <td className={`px-3 py-2 font-mono ${partyColor(c.party)}`}>{c.party || "—"}</td>
                       <td className="px-3 py-2">
-                        <span className="font-mono font-bold text-amber-400 tracking-wider">{c.symbol || "—"}</span>
+                        <span
+                          onClick={() => c.symbol && c.symbol !== "—" && openStockModal(c.symbol)}
+                          data-testid={`stock-trigger-${c.symbol}`}
+                          className="font-mono font-bold text-amber-400 tracking-wider cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                          title="Click to view security terminal details"
+                        >
+                          {c.symbol || "—"}
+                        </span>
                         {c.hit && <span className="ml-1 text-[9px] font-mono text-amber-500 uppercase">held</span>}
                       </td>
                       <td className="px-3 py-2">

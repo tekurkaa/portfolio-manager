@@ -43,10 +43,21 @@
 
 ### 6. 📈 Institutional Single-Stock Terminal Modal
 - **Multi-Timeframe Interactive Charts**: Real-time quotes and intraday/historical charts across **`1D`**, **`1W`**, **`1M`**, **`1Y`**, and **`5Y`** intervals powered by Recharts with dynamic gain/loss area gradients.
+- **Off-Hours & Low-Liquidity Intraday Resilience**: Multi-tier chart fallback engine: if 1D intraday interval is empty (e.g. market closed, weekend, or micro-cap equity), automatically extracts the most recent completed market session from a 5-day window, or daily bars, ensuring charts always render without blank states.
 - **Visual Range Gauges**: High-contrast sliders displaying current price relative to **Day Low / High** and **52-Week Range**.
-- **Institutional Key Metrics Grid**: Market Cap, Trailing P/E, Forward P/E, Beta (5Y), Day Open, Previous Close, Volume, and Dividend Yield.
+- **Institutional Key Metrics Grid**: Market Cap, Trailing P/E, Forward P/E, Beta (5Y), Day Open, Previous Close, Volume, and Dividend Yield with safe null/NaN defensive parsing.
 - **Company Profile & Overview**: Business summary with expandable profile text.
-- **Global Click Triggers**: Accessible by clicking ticker items in the top ticker bar, holdings table, or watchlist.
+- **Universal Cross-Tab Click Triggers**: Accessible anywhere a symbol appears across the entire terminal:
+  - **Top Ticker Bar** & **Holdings Table**
+  - **Watchlist Tab**
+  - **Breakout Scanner Tab** (candidate symbols)
+  - **Alpha Signals Tab** (directional models & options flow sweeps)
+  - **Stock News Tab** (clickable article ticker tags)
+  - **Sentiment Tab** (per-ticker sentiment breakdown cards)
+  - **Insider Flow Tab** (congressional trades & top insider tickers)
+  - **AI Chat Assistant Tab** (interactive extracted ticker chips)
+  - **Portfolio Risk Auditor Tab** (trimmable asset chips & profit taking recommendations)
+  - **Portfolio Charts Tab** (interactive allocation treemap tiles)
 - **Actions**: One-click "Add to Watchlist" integration and keyboard `ESC` dismissal.
 
 ### 7. 🤖 Grounded AI Chat Assistant
@@ -168,7 +179,7 @@ cd portfolio-manager
 
 The project features a dual testing setup: backend unit/integration tests with **Pytest** and full end-to-end browser automation with **Playwright (TypeScript)**.
 
-### 1. Backend Integration Tests (Pytest — 24 Tests)
+### 1. Backend Integration Tests (Pytest — 29 Tests)
 Validates core API routes, dual-mode database CRUD, market quote streaming, trade activity import, and scanner scoring:
 
 ```bash
@@ -176,20 +187,20 @@ Validates core API routes, dual-mode database CRUD, market quote streaming, trad
 ./backend/venv/bin/pytest tests/
 ```
 
-- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`.
-- `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer.
+- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, market status, security details & history.
+- `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer, off-hours session history fallback & resilience.
 - `tests/test_news.py`: Stock news by ticker, macro news, HTML cleaner, RFC-822 date parser.
 - `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
 
-### 2. End-to-End Browser Tests (Playwright — 81 Tests across 22 Suites)
+### 2. End-to-End Browser Tests (Playwright — 82 Tests across 22 Suites)
 Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
 
 ```bash
 # Install Playwright browsers (first-time only)
 npx playwright install chromium
 
-# Run all 81 E2E tests (configured with workers: 1 to guarantee database isolation)
+# Run all 82 E2E tests (configured with workers: 1 to guarantee database isolation)
 npx playwright test
 
 # Run a specific suite (e.g. Holdings CRUD)

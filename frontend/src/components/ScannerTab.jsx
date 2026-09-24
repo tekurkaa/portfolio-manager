@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtPct } from "@/lib/api";
+import { api, fmtPct, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
 import { RefreshCw, Radar, Mail, Bell, ChevronRight } from "lucide-react";
 
@@ -147,7 +147,16 @@ export default function ScannerTab() {
               ) : data.candidates.map((c, i) => (
                 <tr key={c.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26]" data-testid={`scan-row-${c.symbol}`}>
                   <td className="px-3 py-2 font-mono text-gray-600 whitespace-nowrap">{i+1}</td>
-                  <td className="px-3 py-2 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">{c.symbol}</td>
+                  <td className="px-3 py-2 font-mono font-bold text-amber-400 tracking-wider whitespace-nowrap">
+                    <span
+                      onClick={() => openStockModal(c.symbol)}
+                      data-testid={`stock-trigger-${c.symbol}`}
+                      className="cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                      title="Click to view security terminal details"
+                    >
+                      {c.symbol}
+                    </span>
+                  </td>
                   <td className="px-3 py-2 whitespace-nowrap min-w-[110px] w-[110px]">
                     <span className={`inline-flex items-center justify-center whitespace-nowrap text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm border shrink-0 ${signalColor(c.signal)}`}>
                       {c.signal ? c.signal.replace(/\s+/g, '\u00A0') : ''}

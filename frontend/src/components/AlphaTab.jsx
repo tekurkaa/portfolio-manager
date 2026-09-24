@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtNum } from "@/lib/api";
+import { api, fmtNum, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
 import { RefreshCw, Zap, Activity, Target } from "lucide-react";
 import BacktestPanel from "@/components/BacktestPanel";
@@ -78,7 +78,14 @@ function AlphaSignals() {
             ) : data.signals.map((s) => (
               <tr key={s.symbol} className="border-b border-[#1A2232] hover:bg-[#161C26]" data-testid={`signal-row-${s.symbol}`}>
                 <td className="px-3 py-2.5 whitespace-nowrap">
-                  <span className="font-mono font-bold text-amber-400 tracking-wider">{s.symbol}</span>
+                  <span
+                    onClick={() => openStockModal(s.symbol)}
+                    data-testid={`stock-trigger-${s.symbol}`}
+                    className="font-mono font-bold text-amber-400 tracking-wider cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                    title="Click to view security terminal details"
+                  >
+                    {s.symbol}
+                  </span>
                 </td>
                 <td className="px-3 py-2.5 whitespace-nowrap min-w-[110px] w-[110px]">
                   <span className={`inline-flex items-center justify-center whitespace-nowrap text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm border shrink-0 ${signalColor(s.signal)}`} data-testid={`signal-${s.symbol}`}>
@@ -182,7 +189,16 @@ function OptionsFlow() {
               <tr><td colSpan={9} className="p-6 text-center text-gray-500 font-mono text-xs">No unusual activity right now. Add stock positions.</td></tr>
             ) : data.unusual.map((f, i) => (
               <tr key={i} className="border-b border-[#1A2232] hover:bg-[#161C26]" data-testid={`option-row-${i}`}>
-                <td className="px-3 py-2 font-mono font-bold text-amber-400">{f.symbol}</td>
+                <td className="px-3 py-2 font-mono font-bold text-amber-400">
+                  <span
+                    onClick={() => openStockModal(f.symbol)}
+                    data-testid={`stock-trigger-${f.symbol}`}
+                    className="cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                    title="Click to view security terminal details"
+                  >
+                    {f.symbol}
+                  </span>
+                </td>
                 <td className="px-3 py-2">
                   <span className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-sm border ${
                     f.kind === "call" ? "text-emerald-400 border-emerald-800 bg-emerald-950/40"

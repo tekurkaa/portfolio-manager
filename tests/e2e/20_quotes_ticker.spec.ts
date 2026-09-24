@@ -91,5 +91,24 @@ test.describe('20. Market Quotes & Ticker Bar (TC-QUOTE)', () => {
     await closeBtn.click();
     await expect(modal).toBeHidden({ timeout: 5000 });
   });
+
+  test('TC-QUOTE-07 — Universal Security Click opens modal with chart resilience for equities', async ({ page }) => {
+    await loginViaUI(page, 'universal-modal-tester@terminus.local');
+
+    // Trigger open-stock-modal via window event simulating clicking from Scanner/News/Alpha
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('open-stock-modal', { detail: { symbol: 'AAPL' } }));
+    });
+
+    const modal = page.locator('[data-testid="stock-detail-modal"]');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="stock-modal-price"]')).toBeVisible();
+    await expect(page.locator('text=AAPL')).toBeVisible();
+
+    // Close via ESC key
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden({ timeout: 5000 });
+  });
 });
+
 

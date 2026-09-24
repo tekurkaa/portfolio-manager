@@ -72,22 +72,68 @@ export default function StockDetailModal({ symbol, onClose }) {
       const res = await api.get(`/market/details/${symbol}`);
       setDetails(res.data);
     } catch (err) {
-      console.error("Failed to fetch stock details:", err);
+      console.warn("Details fetch failed, trying quote fallback for", symbol, err);
+      try {
+        const qRes = await api.get(`/market/quote/${symbol}`);
+        if (qRes.data) {
+          setDetails({
+            symbol: symbol.toUpperCase(),
+            name: qRes.data.symbol || symbol.toUpperCase(),
+            price: qRes.data.price,
+            previous_close: qRes.data.previous_close,
+            change: qRes.data.change,
+            change_percent: qRes.data.change_percent,
+            quote_type: qRes.data.asset_type || "stock",
+            currency: qRes.data.currency || "USD",
+          });
+          return;
+        }
+      } catch (fallbackErr) {
+        console.error("Quote fallback also failed:", fallbackErr);
+      }
       toast.error(`Unable to load market data for ${symbol}`);
     } finally {
       setLoadingDetails(false);
     }
   };
 
-  // Load history points for selected range
+  // Load history points for selected range with automatic off-hours fallback
   const fetchHistory = async (targetRange) => {
     if (!symbol) return;
     setLoadingHistory(true);
     try {
       const res = await api.get(`/market/history/${symbol}?range=${targetRange}`);
-      setHistory(res.data);
+      if (res.data?.points?.length) {
+        setHistory(res.data);
+      } else if (targetRange === "1D") {
+        // If 1D has no points (off-hours/weekend), try 1W so chart is never blank
+        try {
+          const fbRes = await api.get(`/market/history/${symbol}?range=1W`);
+          if (fbRes.data?.points?.length) {
+            setHistory(fbRes.data);
+            setRange("1W");
+          } else {
+            setHistory(null);
+          }
+        } catch {
+          setHistory(null);
+        }
+      } else {
+        setHistory(res.data);
+      }
     } catch (err) {
       console.error("Failed to fetch stock history:", err);
+      if (targetRange === "1D") {
+        try {
+          const fbRes = await api.get(`/market/history/${symbol}?range=1W`);
+          if (fbRes.data?.points?.length) {
+            setHistory(fbRes.data);
+            setRange("1W");
+            return;
+          }
+        } catch {}
+      }
+      setHistory(null);
     } finally {
       setLoadingHistory(false);
     }

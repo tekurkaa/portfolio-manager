@@ -1,4 +1,4 @@
-import { fmtMoney, fmtPct } from "@/lib/api";
+import { fmtMoney, fmtPct, openStockModal } from "@/lib/api";
 import { ShieldAlert, ShieldCheck, Scale, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
 
 // Symbol -> sector map (common S&P + crypto)
@@ -371,7 +371,16 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
                   <tbody>
                     {trimmable.map((h) => (
                       <tr key={h.symbol} className="border-b border-[#1A2232]">
-                        <td className="px-3 py-2 font-mono font-bold text-amber-400">{h.symbol}</td>
+                        <td className="px-3 py-2 font-mono font-bold text-amber-400">
+                          <span
+                            onClick={() => openStockModal(h.symbol)}
+                            data-testid={`stock-trigger-${h.symbol}`}
+                            className="cursor-pointer hover:underline hover:text-amber-300 transition-colors"
+                            title="Click to view security terminal details"
+                          >
+                            {h.symbol}
+                          </span>
+                        </td>
                         <td className="px-3 py-2 font-mono text-gray-200">{fmtMoney(h.value)}</td>
                         <td className="px-3 py-2 font-mono text-rose-400">{fmtMoney(h.pl)}</td>
                         <td className="px-3 py-2 font-mono text-rose-400">{fmtPct(h.pl_pct)}</td>
@@ -395,7 +404,14 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
                 <div className="flex flex-wrap gap-1.5">
                   {profitTakers.map((h) => (
                     <span key={h.symbol} className="text-[11px] font-mono px-2 py-1 rounded-sm border text-emerald-400 border-emerald-800 bg-emerald-950/40">
-                      <span className="font-bold">{h.symbol}</span> {fmtPct(h.pl_pct)} · Consider rebalancing gains into yield/index assets
+                      <span
+                        onClick={() => openStockModal(h.symbol)}
+                        data-testid={`stock-trigger-${h.symbol}`}
+                        className="font-bold cursor-pointer hover:underline hover:text-emerald-300 transition-colors"
+                        title="Click to view security terminal details"
+                      >
+                        {h.symbol}
+                      </span> {fmtPct(h.pl_pct)} · Consider rebalancing gains into yield/index assets
                     </span>
                   ))}
                 </div>

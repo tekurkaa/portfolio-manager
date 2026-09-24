@@ -72,3 +72,41 @@ async def test_get_quotes_batch():
     assert "NVDA" in quotes
     assert quotes["AAPL"]["price"] > 0
     assert quotes["NVDA"]["price"] > 0
+
+
+@pytest.mark.asyncio
+async def test_stock_details_and_resilience():
+    from quotes import get_stock_details
+    # Test stock
+    d_stock = await get_stock_details("AAPL")
+    assert d_stock is not None
+    assert d_stock["symbol"] == "AAPL"
+    assert d_stock["price"] > 0
+    assert "sector" in d_stock
+
+    # Test holding like RVI
+    d_rvi = await get_stock_details("RVI")
+    assert d_rvi is not None
+    assert d_rvi["symbol"] == "RVI"
+    assert d_rvi["price"] > 0
+
+    # Test crypto
+    d_btc = await get_stock_details("BTC")
+    assert d_btc is not None
+    assert d_btc["price"] > 0
+
+
+@pytest.mark.asyncio
+async def test_stock_history_resilience():
+    from quotes import get_stock_history
+    # Test 1D history with fallback for stocks
+    h = await get_stock_history("AAPL", "1D")
+    assert h is not None
+    assert h["symbol"] == "AAPL"
+    assert len(h["points"]) > 0
+
+    # Test RVI 1D history
+    h_rvi = await get_stock_history("RVI", "1D")
+    assert h_rvi is not None
+    assert len(h_rvi["points"]) > 0
+

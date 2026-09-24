@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { api, timeAgo } from "@/lib/api";
+import { api, timeAgo, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
 import { Bot, User, Send, Plus, Trash2, ExternalLink, Sparkles, MessageSquare, Zap } from "lucide-react";
 
@@ -210,7 +210,13 @@ export default function ChatTab() {
                   {m.tickers?.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {m.tickers.map((t) => (
-                        <span key={t} className="text-[10px] font-mono text-amber-400 border border-amber-800 bg-amber-950/40 px-1.5 py-0.5 rounded-sm">
+                        <span
+                          key={t}
+                          onClick={() => openStockModal(t)}
+                          data-testid={`stock-trigger-${t}`}
+                          className="text-[10px] font-mono text-amber-400 border border-amber-800 bg-amber-950/40 px-1.5 py-0.5 rounded-sm cursor-pointer hover:bg-amber-500/20 hover:text-amber-300 transition-colors"
+                          title="Click to view security terminal details"
+                        >
                           {t}
                         </span>
                       ))}

@@ -415,38 +415,88 @@ def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
         yh_sym = _normalize_crypto_symbol(symbol)
         t = yf.Ticker(yh_sym)
         fi = t.fast_info
-        price = fi.last_price or fi.get("lastPrice") or fi.get("last_price")
-        prev = fi.previous_close or fi.get("previousClose") or fi.get("previous_close")
+
+        def safe_float(v, decimals=4):
+            try:
+                if v is None:
+                    return None
+                f = float(v)
+                if f != f:  # NaN check
+                    return None
+                return round(f, decimals)
+            except Exception:
+                return None
+
+        def safe_int(v):
+            try:
+                if v is None:
+                    return None
+                f = float(v)
+                if f != f:
+                    return None
+                return int(f)
+            except Exception:
+                return None
+
+        price = getattr(fi, "last_price", None) or getattr(fi, "lastPrice", None)
+        prev = getattr(fi, "previous_close", None) or getattr(fi, "previousClose", None)
+
+        if price is None or (isinstance(price, float) and price != price):
+            # Check in-memory quote cache
+            cached_q = _CACHE.get(symbol.upper(), (None, 0))[0]
+            if cached_q and cached_q.get("price"):
+                price = cached_q["price"]
+                prev = cached_q.get("previous_close") or prev
+            else:
+                # Fallback to recent 5d history
+                try:
+                    h_fallback = t.history(period="5d")
+                    if not h_fallback.empty and "Close" in h_fallback:
+                        valid_closes = h_fallback["Close"].dropna()
+                        if not valid_closes.empty:
+                            price = float(valid_closes.iloc[-1])
+                            if len(valid_closes) > 1:
+                                prev = float(valid_closes.iloc[-2])
+                except Exception:
+                    pass
+
         if price is None:
             return None
-        change = float(price) - float(prev) if prev else 0.0
-        change_pct = (change / float(prev)) * 100 if prev else 0.0
 
-        info = getattr(t, "info", {}) or {}
+        price_f = float(price)
+        prev_f = float(prev) if prev else None
+        change = (price_f - prev_f) if prev_f else 0.0
+        change_pct = (change / prev_f * 100) if prev_f else 0.0
+
+        info = {}
+        try:
+            info = getattr(t, "info", {}) or {}
+        except Exception:
+            info = {}
 
         return {
             "symbol": symbol.upper(),
             "name": info.get("longName") or info.get("shortName") or symbol.upper(),
-            "price": round(float(price), 4),
-            "previous_close": round(float(prev), 4) if prev else None,
-            "change": round(float(change), 4),
-            "change_percent": round(float(change_pct), 3),
-            "open": round(float(fi.open), 4) if getattr(fi, "open", None) else None,
-            "day_high": round(float(fi.day_high), 4) if getattr(fi, "day_high", None) else None,
-            "day_low": round(float(fi.day_low), 4) if getattr(fi, "day_low", None) else None,
-            "year_high": round(float(fi.year_high), 4) if getattr(fi, "year_high", None) else None,
-            "year_low": round(float(fi.year_low), 4) if getattr(fi, "year_low", None) else None,
-            "volume": int(fi.last_volume) if getattr(fi, "last_volume", None) else None,
-            "avg_volume": int(fi.three_month_average_volume) if getattr(fi, "three_month_average_volume", None) else None,
-            "market_cap": int(fi.market_cap) if getattr(fi, "market_cap", None) else None,
-            "pe_ratio": round(float(info["trailingPE"]), 2) if info.get("trailingPE") else None,
-            "forward_pe": round(float(info["forwardPE"]), 2) if info.get("forwardPE") else None,
-            "dividend_yield": round(float(info["dividendYield"]), 4) if info.get("dividendYield") else None,
-            "beta": round(float(info["beta"]), 3) if info.get("beta") else None,
+            "price": round(price_f, 4),
+            "previous_close": round(prev_f, 4) if prev_f else None,
+            "change": round(change, 4),
+            "change_percent": round(change_pct, 3),
+            "open": safe_float(getattr(fi, "open", None)),
+            "day_high": safe_float(getattr(fi, "day_high", None)),
+            "day_low": safe_float(getattr(fi, "day_low", None)),
+            "year_high": safe_float(getattr(fi, "year_high", None)),
+            "year_low": safe_float(getattr(fi, "year_low", None)),
+            "volume": safe_int(getattr(fi, "last_volume", None)),
+            "avg_volume": safe_int(getattr(fi, "three_month_average_volume", None)),
+            "market_cap": safe_int(getattr(fi, "market_cap", None)),
+            "pe_ratio": safe_float(info.get("trailingPE"), 2),
+            "forward_pe": safe_float(info.get("forwardPE"), 2),
+            "dividend_yield": safe_float(info.get("dividendYield"), 4),
+            "beta": safe_float(info.get("beta"), 3),
             "sector": info.get("sector"),
             "industry": info.get("industry"),
-            "currency": fi.get("currency", "USD") or "USD",
-            "quote_type": fi.get("quote_type") or ("crypto" if is_crypto(symbol) else "stock"),
+            "currency": getattr(fi, "currency", "USD") or "USD",
+            "quote_type": getattr(fi, "quote_type", None) or ("crypto" if is_crypto(symbol) else "stock"),
             "summary": info.get("longBusinessSummary"),
             "updated_at": time.time(),
         }
@@ -481,23 +531,51 @@ def _fetch_stock_history_sync(symbol: str, range_key: str) -> Optional[Dict[str,
         }
         period, interval = rmap.get(range_key.upper(), ("1d", "5m"))
         h = t.history(period=period, interval=interval)
+
+        # Fallback for stocks during weekend, after-hours, or low-liquidity periods
+        if (h.empty or len(h) < 2) and range_key.upper() == "1D":
+            try:
+                h5 = t.history(period="5d", interval="5m")
+                if not h5.empty:
+                    last_date = h5.index[-1].date()
+                    h_day = h5[h5.index.date == last_date]
+                    if not h_day.empty:
+                        h = h_day
+            except Exception:
+                pass
+
+        if h.empty and range_key.upper() == "1W":
+            try:
+                h = t.history(period="1mo", interval="1d")
+            except Exception:
+                pass
+
         if h.empty:
             return None
-        pts = [
-            {
-                "t": ts.isoformat(),
-                "v": round(float(row["Close"]), 2),
-                "vol": int(row.get("Volume", 0)) if "Volume" in row else 0,
-            }
-            for ts, row in h.iterrows()
-            if row["Close"] is not None and not (isinstance(row["Close"], float) and row["Close"] != row["Close"])
-        ]
+
+        pts = []
+        for ts, row in h.iterrows():
+            close = row.get("Close")
+            if close is not None:
+                try:
+                    cf = float(close)
+                    if cf == cf:  # not NaN
+                        pts.append({
+                            "t": ts.isoformat(),
+                            "v": round(cf, 2),
+                            "vol": int(row.get("Volume", 0)) if "Volume" in row and row["Volume"] == row["Volume"] else 0,
+                        })
+                except Exception:
+                    pass
+
         if not pts:
             return None
+
         start_val = pts[0]["v"]
         end_val = pts[-1]["v"]
         chg = round(end_val - start_val, 2)
         pct = round((chg / start_val) * 100, 2) if start_val else 0.0
+
         return {
             "symbol": symbol.upper(),
             "range": range_key.upper(),
@@ -526,3 +604,4 @@ async def get_stock_history(symbol: str, range_key: str = "1D") -> Optional[Dict
         ttl = 30.0 if range_key.upper() in ["1D", "1W"] else 300.0
         _STOCK_HISTORY_CACHE[cache_key] = (res, now + ttl)
     return res
+

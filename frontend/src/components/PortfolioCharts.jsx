@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtMoney, fmtPct, colorForPL } from "@/lib/api";
+import { api, fmtMoney, fmtPct, colorForPL, openStockModal } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Treemap } from "recharts";
 
 const RANGES = [
@@ -179,8 +179,8 @@ const TreemapCell = (props) => {
   const fontSize = Math.max(9, Math.min(Math.floor(width / 5), 15));
 
   return (
-    <g>
-      <title>{`${name}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%)`}</title>
+    <g onClick={() => openStockModal(name)} style={{ cursor: "pointer" }}>
+      <title>{`${name}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%) · Click to view security terminal`}</title>
       <rect x={x} y={y} width={width} height={height} stroke="#0E131F" strokeWidth={2} fill={fill} rx={2} />
       {showText && (
         <text

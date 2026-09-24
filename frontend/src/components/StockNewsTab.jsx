@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, timeAgo } from "@/lib/api";
+import { api, timeAgo, openStockModal } from "@/lib/api";
 import { RefreshCw, ExternalLink, Newspaper, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -106,7 +106,16 @@ export default function StockNewsTab() {
             >
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 {a.tag && (
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-800 rounded-sm">
+                  <span
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      openStockModal(a.tag);
+                    }}
+                    data-testid={`stock-trigger-${a.tag}`}
+                    className="text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-800 rounded-sm hover:bg-amber-500/20 hover:text-amber-300 transition-colors cursor-pointer"
+                    title="Click to view security terminal details"
+                  >
                     {a.tag}
                   </span>
                 )}
