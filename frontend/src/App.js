@@ -278,7 +278,7 @@ function App() {
       </nav>
 
       {/* Content — Keep-Alive Staggered Mounting for zero-latency switching and cloud backend stability */}
-      <main className="p-3 sm:p-5 flex-1" data-testid="tab-content">
+      <main className="p-3 sm:p-5 flex-1 pb-28 sm:pb-16" data-testid="tab-content">
         <ErrorBoundary>
           {mountedTabs.has("portfolio") && (
             <div className={active === "portfolio" ? "block" : "hidden"} data-tab-container="portfolio"><PortfolioTab /></div>
@@ -310,7 +310,7 @@ function App() {
         </ErrorBoundary>
       </main>
 
-      <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex flex-col md:grid md:grid-cols-3 md:items-center gap-1 md:gap-2 text-center md:text-left mt-auto pb-10">
+      <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex flex-col md:grid md:grid-cols-3 md:items-center gap-1 md:gap-2 text-center md:text-left mt-auto pb-16 sm:pb-12">
         <span className="md:justify-self-start truncate">DATA: YAHOO · GOOGLE NEWS · NEWSAPI · KADOA · SEC · STOCKTWITS</span>
         <span className="md:justify-self-center md:text-center text-gray-400">Sources equivalent to <span className="text-amber-500">$24,000/yr</span> institutional terminals · yours costs nothing</span>
         <span className="md:justify-self-end truncate">ANALYSIS: CLAUDE SONNET 4.6</span>
@@ -318,22 +318,22 @@ function App() {
 
       {/* Fixed Bottom Regulatory Disclaimer Footer */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-30 bg-[#0A0D12]/95 backdrop-blur-md border-t border-[#222C3D] px-3 sm:px-4 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono shadow-lg"
+        className="fixed bottom-0 left-0 right-0 z-30 bg-[#0A0D12]/95 backdrop-blur-md border-t border-[#222C3D] px-3 sm:px-4 py-2 pb-safe flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-[10px] font-mono shadow-lg"
         data-testid="fixed-disclaimer-footer"
       >
-        <div className="flex items-center gap-2 text-gray-300">
-          <span className="px-1.5 py-0.5 rounded-xs bg-amber-500/10 border border-amber-500/40 text-amber-400 text-[9px] font-bold tracking-wider uppercase flex items-center gap-1 shrink-0">
+        <div className="flex items-start sm:items-center gap-2 text-gray-300 min-w-0">
+          <span className="px-1.5 py-0.5 rounded-xs bg-amber-500/10 border border-amber-500/40 text-amber-400 text-[9px] font-bold tracking-wider uppercase flex items-center gap-1 shrink-0 mt-0.5 sm:mt-0">
             <ShieldAlert className="w-3 h-3 text-amber-500" />
             DISCLAIMER
           </span>
-          <span className="text-gray-300 font-medium truncate sm:overflow-visible">
+          <span className="text-gray-300 font-medium text-[9.5px] sm:text-[10px] leading-tight break-words">
             This application is for informational purposes only and does not constitute financial advice.
           </span>
         </div>
         <button
           onClick={() => setDisclaimerOpen(true)}
           data-testid="open-disclaimer-modal-button"
-          className="text-gray-500 hover:text-amber-400 underline transition-colors cursor-pointer text-[10px] ml-auto shrink-0"
+          className="text-gray-400 hover:text-amber-400 underline transition-colors cursor-pointer text-[9.5px] sm:text-[10px] sm:ml-auto shrink-0 self-end sm:self-auto"
         >
           Legal Terms &amp; Disclosures
         </button>

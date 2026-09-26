@@ -111,3 +111,14 @@ code, .font-mono {
 @layer base {
     [data-debug-wrapper="true"] { display: contents !important; }
 }
+
+/* Safe area padding utilities for mobile notches & home indicator */
+.pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+.pb-safe-modal {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+.pt-safe {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+}

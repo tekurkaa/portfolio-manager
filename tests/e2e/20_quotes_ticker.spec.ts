@@ -109,6 +109,36 @@ test.describe('20. Market Quotes & Ticker Bar (TC-QUOTE)', () => {
     await page.keyboard.press('Escape');
     await expect(modal).toBeHidden({ timeout: 5000 });
   });
+
+  test('TC-QUOTE-08 — Mobile Viewport: Regulatory Disclaimer is Not Truncated & Stock Modal Fits Within Mobile Screen', async ({ page }) => {
+    // 1. Emulate iPhone 13/14 mobile viewport
+    await page.setViewportSize({ width: 390, height: 844 });
+    await loginViaUI(page, 'mobile-viewport-tester@terminus.local');
+
+    // 2. Verify disclaimer footer on mobile
+    const footer = page.locator('[data-testid="fixed-disclaimer-footer"]');
+    await expect(footer).toBeVisible({ timeout: 10000 });
+    await expect(footer).toContainText('This application is for informational purposes only and does not constitute financial advice.');
+    await expect(page.locator('[data-testid="open-disclaimer-modal-button"]')).toBeVisible();
+
+    // 3. Open stock modal on mobile
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('open-stock-modal', { detail: { symbol: 'AAPL' } }));
+    });
+    const modal = page.locator('[data-testid="stock-detail-modal"]');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+
+    // 4. Verify modal fits within mobile viewport height
+    const modalBox = await modal.boundingBox();
+    expect(modalBox).not.toBeNull();
+    expect(modalBox.width).toBeLessThanOrEqual(390);
+
+    // 5. Close modal
+    const closeBtn = page.locator('[data-testid="close-stock-modal-btn"]');
+    await closeBtn.click();
+    await expect(modal).toBeHidden({ timeout: 5000 });
+  });
 });
+
 
 

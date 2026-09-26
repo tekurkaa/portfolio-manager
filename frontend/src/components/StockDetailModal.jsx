@@ -206,7 +206,7 @@ export default function StockDetailModal({ symbol, onClose }) {
       }}
     >
       <div
-        className="bg-[#0A0D12] border border-[#222C3D] w-full max-w-4xl max-h-[92vh] flex flex-col rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="bg-[#0A0D12] border border-[#222C3D] w-full max-w-4xl max-h-[94dvh] sm:max-h-[90vh] flex flex-col rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
         role="dialog"
         aria-modal="true"
       >
@@ -436,39 +436,57 @@ export default function StockDetailModal({ symbol, onClose }) {
               <Activity className="w-3.5 h-3.5 text-amber-500" />
               <span>KEY INSTITUTIONAL METRICS</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-              <div className="border-r border-[#1B2332] pr-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-3 text-xs font-mono">
+              {/* 1. Market Cap */}
+              <div className="border-r border-[#1B2332] pr-2 pb-1">
                 <div className="text-[10px] text-gray-500 uppercase">Market Cap</div>
                 <div className="text-gray-100 font-bold mt-0.5">{fmtCompact(details?.market_cap)}</div>
               </div>
-              <div className="border-r border-[#1B2332] pr-2">
+              {/* 2. Trailing P/E */}
+              <div className="pl-2 sm:pl-0 sm:border-r border-[#1B2332] sm:pr-2 pb-1">
                 <div className="text-[10px] text-gray-500 uppercase">Trailing P/E</div>
-                <div className="text-gray-100 font-bold mt-0.5">{details?.pe_ratio ? fmtNum(details.pe_ratio, 2) : "—"}</div>
+                <div className="text-gray-100 font-bold mt-0.5" title={!details?.pe_ratio ? "Not applicable or negative EPS" : undefined}>
+                  {details?.pe_ratio ? fmtNum(details.pe_ratio, 2) : <span className="text-gray-500 text-[11px] font-normal">N/A</span>}
+                </div>
               </div>
-              <div className="border-r border-[#1B2332] pr-2">
+              {/* 3. Forward P/E */}
+              <div className="border-r border-[#1B2332] pr-2 pt-2 border-t sm:border-t-0 border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Forward P/E</div>
-                <div className="text-gray-100 font-bold mt-0.5">{details?.forward_pe ? fmtNum(details.forward_pe, 2) : "—"}</div>
+                <div className="text-gray-100 font-bold mt-0.5" title={!details?.forward_pe ? "No analyst consensus estimates available" : undefined}>
+                  {details?.forward_pe ? fmtNum(details.forward_pe, 2) : <span className="text-gray-500 text-[11px] font-normal">N/A</span>}
+                </div>
               </div>
-              <div>
+              {/* 4. Beta 5Y */}
+              <div className="pl-2 sm:pl-0 pt-2 border-t sm:border-t-0 border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Beta (5Y)</div>
-                <div className="text-gray-100 font-bold mt-0.5">{details?.beta ? fmtNum(details.beta, 2) : "—"}</div>
+                <div className="text-gray-100 font-bold mt-0.5" title={!details?.beta ? "Beta not available for this security" : undefined}>
+                  {details?.beta ? fmtNum(details.beta, 2) : <span className="text-gray-500 text-[11px] font-normal">N/A</span>}
+                </div>
               </div>
 
+              {/* 5. Open */}
               <div className="border-r border-[#1B2332] pr-2 pt-2 border-t border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Open</div>
                 <div className="text-gray-100 font-bold mt-0.5">{fmtMoney(details?.open)}</div>
               </div>
-              <div className="border-r border-[#1B2332] pr-2 pt-2 border-t border-[#1B2332]">
+              {/* 6. Prev Close */}
+              <div className="pl-2 sm:pl-0 sm:border-r border-[#1B2332] sm:pr-2 pt-2 border-t border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Prev Close</div>
                 <div className="text-gray-100 font-bold mt-0.5">{fmtMoney(details?.previous_close)}</div>
               </div>
+              {/* 7. Volume */}
               <div className="border-r border-[#1B2332] pr-2 pt-2 border-t border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Volume</div>
-                <div className="text-gray-100 font-bold mt-0.5">{details?.volume ? fmtCompact(details.volume).replace("$", "") : "—"}</div>
+                <div className="text-gray-100 font-bold mt-0.5">
+                  {details?.volume ? fmtCompact(details.volume).replace("$", "") : <span className="text-gray-500 text-[11px] font-normal">N/A</span>}
+                </div>
               </div>
-              <div className="pt-2 border-t border-[#1B2332]">
+              {/* 8. Dividend Yield */}
+              <div className="pl-2 sm:pl-0 pt-2 border-t border-[#1B2332]">
                 <div className="text-[10px] text-gray-500 uppercase">Dividend Yield</div>
-                <div className="text-gray-100 font-bold mt-0.5">{details?.dividend_yield ? fmtPct(details.dividend_yield * 100) : "—"}</div>
+                <div className="text-gray-100 font-bold mt-0.5" title={!details?.dividend_yield ? "Non-dividend paying asset" : undefined}>
+                  {details?.dividend_yield ? fmtPct(details.dividend_yield * 100) : <span className="text-gray-500 text-[11px] font-normal">N/A</span>}
+                </div>
               </div>
             </div>
           </div>
@@ -496,13 +514,13 @@ export default function StockDetailModal({ symbol, onClose }) {
         </div>
 
         {/* Modal Action Footer */}
-        <div className="px-4 py-3 bg-[#0E131F] border-t border-[#222C3D] flex items-center justify-between shrink-0">
+        <div className="px-4 py-3 pb-safe-modal bg-[#0E131F] border-t border-[#222C3D] flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div className="text-[10px] font-mono text-gray-500 flex items-center gap-1.5">
             <Clock className="w-3 h-3" />
             <span>Updated: {new Date().toLocaleTimeString()}</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <button
               onClick={handleAddToWatchlist}
               disabled={inWatchlist || addingWatchlist}
