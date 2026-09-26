@@ -27,15 +27,13 @@ All metric summary cards (e.g. the 6-card summary strip in `PortfolioTab`) MUST 
 
 ## 2. Risk & Warning Indicators — Clean, Non-Redundant Signals
 
-- **No Duplicate Warning Badges**:
+- **Single Left Warning Triangle Only (No Duplicate Badges)**:
   - In risk sections (such as single-asset exposure alerts in `PortfolioRiskAuditor`), do NOT display duplicate warning indicators on the same row.
-  - Keep ONLY the triangle warning icon on the left (`<AlertTriangle /> Warning: ...`) and the asset class badge on the right.
-  - **Do NOT render a second badge with a yellow square (`■ WARNING`)**.
+  - Keep ONLY the triangle warning icon and message on the left (`<AlertTriangle /> Warning: ...` or `<AlertTriangle /> High Exposure: ...`) and the asset class badge on the right (`Thematic / Leveraged ETF`, etc.).
+  - **Do NOT render any secondary warning badge on the right side** — neither yellow square (`■ WARNING`) nor red high exposure (`▲ HIGH EXPOSURE`). The left triangle icon and clear prefix text provide clean, non-color-distinguishable signaling without visual repetition.
 - **Clean Sector Balance Warnings**:
   - In sector overweight alerts, use only the yellow triangle icon (`<AlertTriangle className="w-3 h-3" />`) alongside the alert text.
   - **Do NOT insert a redundant yellow square symbol (`■`)** inside the alert message string.
-- **Critical Exposure Badges (RED)**:
-  - For critical high-exposure alerts (RED level), use the shape-prefixed badge `▲ HIGH EXPOSURE` alongside the text to ensure non-color distinguishability for WCAG 1.4.1 compliance.
 
 ---
 

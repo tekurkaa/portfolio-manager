@@ -229,10 +229,12 @@ test.describe('26. Design Audit Batch 3: Detail Polish, A11y & Robust Micro-Inte
     const concWarn = page.locator('[data-testid="conc-warn"]');
     await expect(concWarn).toBeVisible({ timeout: 10000 });
 
-    // Assert that the exposure badge contains ▲ or ■ shape indicator alongside text
-    const badge = concWarn.locator('span.uppercase').first();
-    await expect(badge).toBeVisible();
-    const text = await badge.textContent();
-    expect(text).toMatch(/[▲■●]/);
+    // Assert that the alert row contains a non-color shape indicator (triangle warning icon) alongside text
+    const alertRow = concWarn.locator('div').filter({ hasText: 'DOGE-USD' }).first();
+    await expect(alertRow).toBeVisible();
+    const triangle = alertRow.locator('svg');
+    await expect(triangle.first()).toBeVisible();
+    const text = await alertRow.textContent();
+    expect(text).toContain('High Exposure: DOGE-USD');
   });
 });

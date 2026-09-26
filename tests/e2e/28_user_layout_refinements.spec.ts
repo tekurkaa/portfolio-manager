@@ -115,4 +115,43 @@ test.describe('28. User Layout Refinements: Risk Warnings & KPI Fixed Structure 
     await cashFlowCard.click();
     await expect(page.locator('[data-testid="dividends-tab-view"]')).toBeVisible({ timeout: 10000 });
   });
+
+  test('TC-LAYOUT-04 — Single-Asset High Exposure (RED): Only Warning Triangle on Left, No Second HIGH EXPOSURE Badge on Right', async ({ page, request }) => {
+    await loginViaUI(page, 'red-exposure-tester@terminus.local');
+    const token = await page.evaluate(() => localStorage.getItem('pm_session_token'));
+    if (token) await resetHoldingsViaApi(request, token);
+
+    // Seed SOXL exceeding hard ceiling (15% limit): SOXL $200 (20%), SPY $800 (80%)
+    await request.post(`${BACKEND_URL}/api/portfolio/holdings`, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { symbol: 'SPY', quantity: 2, avg_cost: 400 },
+    });
+    await request.post(`${BACKEND_URL}/api/portfolio/holdings`, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { symbol: 'SOXL', quantity: 10, avg_cost: 20 },
+    });
+
+    await page.goto('/');
+    const riskAuditor = page.locator('[data-testid="portfolio-risk-auditor"]');
+    await expect(riskAuditor).toBeVisible({ timeout: 15000 });
+
+    const concWarn = page.locator('[data-testid="conc-warn"]');
+    await expect(concWarn).toBeVisible({ timeout: 10000 });
+
+    const alertRow = concWarn.locator('div').filter({ hasText: 'SOXL' }).first();
+    await expect(alertRow).toBeVisible();
+
+    // Verify triangle warning icon is present on the left
+    const triangle = alertRow.locator('svg');
+    await expect(triangle.first()).toBeVisible();
+    await expect(alertRow).toContainText('High Exposure: SOXL');
+
+    // Verify there is NO second "HIGH EXPOSURE" badge on the right
+    const highExposureBadge = alertRow.locator('text="▲ HIGH EXPOSURE"');
+    await expect(highExposureBadge).toHaveCount(0);
+    const textContent = await alertRow.textContent();
+    expect(textContent).not.toContain('▲ HIGH EXPOSURE');
+    expect(textContent).not.toContain('HIGH EXPOSURE');
+  });
 });
+

@@ -300,11 +300,6 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
                       <span>{a.message}</span>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                      {a.level === "RED" && (
-                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-600/60">
-                          ▲ HIGH EXPOSURE
-                        </span>
-                      )}
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-sm border ${ASSET_CLASS_META[a.assetClass]?.badgeCls || "text-gray-400 border-gray-700"}`}>
                         {ASSET_CLASS_META[a.assetClass]?.label || a.assetClass}
                       </span>
