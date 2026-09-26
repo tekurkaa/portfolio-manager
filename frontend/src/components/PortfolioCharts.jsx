@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api, fmtMoney, fmtPct, colorForPL, openStockModal } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Treemap } from "recharts";
 
@@ -170,42 +170,111 @@ export function PortfolioHistoryChart({ currentValue = null }) {
 }
 
 const TreemapCell = (props) => {
-  const { x, y, width, height, name, value, pl_pct } = props;
+  const { x, y, width, height, onHover, onLeave } = props;
   if (!width || !height || width <= 0 || height <= 0) return null;
+
+  const payload = props.payload || {};
+  const name = props.name || payload.name || payload.symbol || "";
+  const companyName = props.companyName || payload.companyName || payload.name || "";
+  const value = props.value !== undefined ? props.value : payload.value;
+  const pl_pct = props.pl_pct !== undefined ? props.pl_pct : payload.pl_pct;
+  const weight_pct = props.weight_pct !== undefined ? props.weight_pct : payload.weight_pct;
+
+  const itemData = {
+    name,
+    companyName,
+    value,
+    pl_pct,
+    weight_pct,
+  };
+
   const up = (pl_pct ?? 0) >= 0;
   const fill = up ? "rgba(16,185,129,0.85)" : "rgba(239,68,68,0.85)";
-  const showText = width >= 32 && height >= 24;
+
+  // Adaptive orientation: when tile is tall and narrow, switch to vertical rotated text
+  const isVertical = width < 34 && height >= 40;
+  const showHorizontalText = width >= 30 && height >= 22;
   const showPct = width >= 44 && height >= 38;
-  const fontSize = Math.max(9, Math.min(Math.floor(width / 5), 15));
+
+  const hFontSize = Math.max(9, Math.min(Math.floor(width / 5), 15));
+  const vFontSize = Math.max(8, Math.min(Math.floor(width * 0.6), 11));
 
   return (
-    <g onClick={() => openStockModal(name)} style={{ cursor: "pointer" }}>
-      <title>{`${name}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%) · Click to view security terminal`}</title>
-      <rect x={x} y={y} width={width} height={height} stroke="#0E131F" strokeWidth={2} fill={fill} rx={2} />
-      {showText && (
+    <g
+      onClick={() => openStockModal(name)}
+      onMouseEnter={(e) => onHover?.(itemData, e)}
+      onMouseMove={(e) => onHover?.(itemData, e)}
+      onMouseLeave={() => onLeave?.()}
+      data-testid={`treemap-cell-${name}`}
+      style={{ cursor: "pointer" }}
+    >
+      <title>{`${name}${companyName && companyName !== name ? ` (${companyName})` : ""}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%) · Click to view security terminal`}</title>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        stroke="#0E131F"
+        strokeWidth={2}
+        fill={fill}
+        rx={2}
+        className="transition-colors hover:brightness-110"
+      />
+      {isVertical ? (
         <text
           x={x + width / 2}
-          y={showPct ? y + height / 2 - 4 : y + height / 2 + 4}
+          y={y + height / 2}
+          transform={`rotate(-90, ${x + width / 2}, ${y + height / 2})`}
           textAnchor="middle"
+          dominantBaseline="central"
           fill="#0A0D12"
-          fontSize={fontSize}
+          fontSize={vFontSize}
           fontWeight="bold"
+          data-testid={`treemap-label-${name}`}
           style={{ fontFamily: "monospace", pointerEvents: "none" }}
         >
           {name}
         </text>
-      )}
-      {showPct && (
+      ) : showHorizontalText ? (
+        <>
+          <text
+            x={x + width / 2}
+            y={showPct ? y + height / 2 - 4 : y + height / 2 + 4}
+            textAnchor="middle"
+            fill="#0A0D12"
+            fontSize={hFontSize}
+            fontWeight="bold"
+            data-testid={`treemap-label-${name}`}
+            style={{ fontFamily: "monospace", pointerEvents: "none" }}
+          >
+            {name}
+          </text>
+          {showPct && (
+            <text
+              x={x + width / 2}
+              y={y + height / 2 + 11}
+              textAnchor="middle"
+              fill="#0A0D12"
+              fontSize={10}
+              fontWeight="600"
+              style={{ fontFamily: "monospace", pointerEvents: "none" }}
+            >
+              {fmtPct(pl_pct)}
+            </text>
+          )}
+        </>
+      ) : (
         <text
           x={x + width / 2}
-          y={y + height / 2 + 11}
+          y={y + height / 2 + 3}
           textAnchor="middle"
           fill="#0A0D12"
-          fontSize={10}
-          fontWeight="600"
+          fontSize={8}
+          fontWeight="bold"
+          data-testid={`treemap-label-${name}`}
           style={{ fontFamily: "monospace", pointerEvents: "none" }}
         >
-          {fmtPct(pl_pct)}
+          {name.slice(0, 3)}
         </text>
       )}
     </g>
@@ -213,6 +282,30 @@ const TreemapCell = (props) => {
 };
 
 export function AllocationTreemap({ holdings, activeFilter = "all" }) {
+  const containerRef = useRef(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleHover = (item, e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = (e.clientX || 0) - rect.left;
+    const mouseY = (e.clientY || 0) - rect.top;
+    setHoveredItem(item);
+
+    // Smart boundary offset: flip left/up if cursor is close to the container edges
+    const tipWidth = 195;
+    const tipHeight = 72;
+    const posX = mouseX + tipWidth + 16 > rect.width ? Math.max(8, mouseX - tipWidth - 14) : mouseX + 16;
+    const posY = mouseY + tipHeight + 12 > rect.height ? Math.max(8, mouseY - tipHeight - 10) : Math.max(8, mouseY - 25);
+
+    setMousePos({ x: posX, y: posY });
+  };
+
+  const handleLeave = () => {
+    setHoveredItem(null);
+  };
+
   const filtered = (holdings || []).filter((h) => {
     if (!h || !h.symbol) return false;
     if (activeFilter && activeFilter !== "all") {
@@ -221,14 +314,23 @@ export function AllocationTreemap({ holdings, activeFilter = "all" }) {
     return true;
   });
 
+  const totalPortfolioVal = filtered.reduce((acc, h) => {
+    const val = Number(h.value ?? (h.quantity * (h.price ?? h.avg_cost ?? 0)));
+    return acc + (val > 0 ? val : 0);
+  }, 0);
+
   const items = filtered
     .map((h) => {
       const val = Number(h.value ?? (h.quantity * (h.price ?? h.avg_cost ?? 0)));
       return {
         name: h.symbol,
+        companyName: h.name || h.symbol,
         value: val > 0 ? Number(val.toFixed(2)) : 0.01,
         pl_pct: h.pl_pct ?? 0,
         asset_type: h.asset_type || "stock",
+        quantity: h.quantity,
+        price: h.price ?? h.avg_cost ?? 0,
+        weight_pct: totalPortfolioVal > 0 && val > 0 ? (val / totalPortfolioVal) * 100 : 0,
       };
     })
     .filter((item) => item.value > 0);
@@ -252,26 +354,77 @@ export function AllocationTreemap({ holdings, activeFilter = "all" }) {
       : "No positions to display";
 
   return (
-    <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="allocation-treemap">
+    <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4 relative" data-testid="allocation-treemap">
       <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-3">
         {titleText} · Green = gain, Red = loss, Size = position value
       </div>
-      <div style={{ width: "100%", height: 260 }}>
+      <div
+        ref={containerRef}
+        className="w-full relative h-[320px] sm:h-[340px]"
+        data-testid="treemap-container"
+        onMouseLeave={handleLeave}
+      >
         {items.length === 0 ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">
             {emptyText}
           </div>
         ) : (
-          <ResponsiveContainer>
-            <Treemap
-              data={items}
-              dataKey="value"
-              stroke="#0E131F"
-              content={<TreemapCell />}
-            />
-          </ResponsiveContainer>
+          <>
+            <ResponsiveContainer width="100%" height="100%">
+              <Treemap
+                data={items}
+                dataKey="value"
+                stroke="#0E131F"
+                aspectRatio={4 / 3}
+                content={<TreemapCell onHover={handleHover} onLeave={handleLeave} />}
+              />
+            </ResponsiveContainer>
+            {hoveredItem && (
+              <div
+                data-testid="treemap-hover-hud"
+                className="absolute z-30 pointer-events-none bg-[#0E131F]/95 backdrop-blur-md border border-[#222C3D] shadow-2xl rounded px-3 py-2 text-xs font-mono transition-all duration-75"
+                style={{
+                  left: mousePos.x,
+                  top: mousePos.y,
+                }}
+              >
+                <div className="flex items-center justify-between gap-3 mb-0.5">
+                  <span className="font-bold text-amber-500 text-sm">{hoveredItem.name}</span>
+                  <span
+                    className={`text-[10px] font-semibold px-1 py-0.5 rounded ${
+                      (hoveredItem.pl_pct ?? 0) >= 0
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-rose-500/15 text-rose-400"
+                    }`}
+                  >
+                    {(hoveredItem.pl_pct ?? 0) >= 0 ? "+" : ""}
+                    {Number(hoveredItem.pl_pct || 0).toFixed(2)}%
+                  </span>
+                </div>
+                {hoveredItem.companyName && hoveredItem.companyName !== hoveredItem.name && (
+                  <div className="text-[11px] text-gray-300 truncate max-w-[180px] mb-1 font-sans">
+                    {hoveredItem.companyName}
+                  </div>
+                )}
+                <div className="flex items-center justify-between text-gray-400 text-[10px] pt-1 border-t border-[#1C2533] gap-4">
+                  <span>
+                    VAL:{" "}
+                    <span className="text-gray-100 font-semibold">
+                      ${Number(hoveredItem.value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </span>
+                  {hoveredItem.weight_pct > 0 && (
+                    <span>
+                      WT: <span className="text-gray-100 font-semibold">{Number(hoveredItem.weight_pct).toFixed(1)}%</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
   );
 }
+

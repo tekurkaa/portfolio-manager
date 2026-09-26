@@ -3765,6 +3765,270 @@
       "user_id": "user_ca41f0c2917f",
       "expires_at": "2026-10-03 05:09:18.643487+00:00",
       "created_at": "2026-09-26 05:09:18.643499+00:00"
+    },
+    {
+      "session_token": "sess_0bf9e12ba69c4584b22ac45127be20de",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:25:01.282030+00:00",
+      "created_at": "2026-09-26 05:25:01.282048+00:00"
+    },
+    {
+      "session_token": "sess_0529b65e2cf3412eb46c544a5ffecd5d",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:25:02.690949+00:00",
+      "created_at": "2026-09-26 05:25:02.690970+00:00"
+    },
+    {
+      "session_token": "sess_e267d026794447208c3733a414bbc40d",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:25:03.895634+00:00",
+      "created_at": "2026-09-26 05:25:03.895685+00:00"
+    },
+    {
+      "session_token": "sess_9d203f63b6484b278a9fd1824bf8a535",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:09.009921+00:00",
+      "created_at": "2026-09-26 05:26:09.009933+00:00"
+    },
+    {
+      "session_token": "sess_902be81571054daaa249a5be9c4368af",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:09.993115+00:00",
+      "created_at": "2026-09-26 05:26:09.993131+00:00"
+    },
+    {
+      "session_token": "sess_2c9b97defda64786972d188debeda9f4",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:11.223383+00:00",
+      "created_at": "2026-09-26 05:26:11.223395+00:00"
+    },
+    {
+      "session_token": "sess_cc9387fb17a0475d92e6d6d36cd9ee1a",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:29.416421+00:00",
+      "created_at": "2026-09-26 05:26:29.416434+00:00"
+    },
+    {
+      "session_token": "sess_ca913f3fae044b31b551a19d1447e028",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:30.384091+00:00",
+      "created_at": "2026-09-26 05:26:30.384105+00:00"
+    },
+    {
+      "session_token": "sess_e341a2af94ba45ecb919a577ae363b23",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:26:31.533796+00:00",
+      "created_at": "2026-09-26 05:26:31.533808+00:00"
+    },
+    {
+      "session_token": "sess_a1b6338bc3a2408d97e4b3368164b3cf",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:27:06.352438+00:00",
+      "created_at": "2026-09-26 05:27:06.352452+00:00"
+    },
+    {
+      "session_token": "sess_a8e6129c4be54ce499f3309b16cbd34d",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:27:07.527760+00:00",
+      "created_at": "2026-09-26 05:27:07.527772+00:00"
+    },
+    {
+      "session_token": "sess_98bce2b4806e4b4d9447031442dc1796",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:27:09.081504+00:00",
+      "created_at": "2026-09-26 05:27:09.081515+00:00"
+    },
+    {
+      "session_token": "sess_3e248b9dd24445e4857ad833dde278a1",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:44.874421+00:00",
+      "created_at": "2026-09-26 05:27:44.874431+00:00"
+    },
+    {
+      "session_token": "sess_5f7ae680de0048979a0f1b8030ba7be6",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:46.410445+00:00",
+      "created_at": "2026-09-26 05:27:46.410458+00:00"
+    },
+    {
+      "session_token": "sess_9d87edac6a1c41b79c27155a4c558ac0",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:47.912148+00:00",
+      "created_at": "2026-09-26 05:27:47.912160+00:00"
+    },
+    {
+      "session_token": "sess_4fd53c12174d43bba27736085b6c808d",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:49.265842+00:00",
+      "created_at": "2026-09-26 05:27:49.265857+00:00"
+    },
+    {
+      "session_token": "sess_1c46750f75bb4ab7a5aebc0f984b3545",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:50.495576+00:00",
+      "created_at": "2026-09-26 05:27:50.495588+00:00"
+    },
+    {
+      "session_token": "sess_e096a2eac9dc433b9c1e2a55a7014052",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:51.555979+00:00",
+      "created_at": "2026-09-26 05:27:51.555992+00:00"
+    },
+    {
+      "session_token": "sess_e44b37e2fff24befbf88c90653bc1be0",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:52.573531+00:00",
+      "created_at": "2026-09-26 05:27:52.573543+00:00"
+    },
+    {
+      "session_token": "sess_738392f2e0754545bd714eef4b2843ec",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:54.304970+00:00",
+      "created_at": "2026-09-26 05:27:54.304983+00:00"
+    },
+    {
+      "session_token": "sess_083faa533cdb45229a3db7f4ec91b687",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:55.899390+00:00",
+      "created_at": "2026-09-26 05:27:55.899409+00:00"
+    },
+    {
+      "session_token": "sess_fb2a2f72597e46b6b20b39cc98b0adcb",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:56.868595+00:00",
+      "created_at": "2026-09-26 05:27:56.868608+00:00"
+    },
+    {
+      "session_token": "sess_f5c9b321937d44b6b733fdec6d5d03c1",
+      "user_id": "user_50f59e279cd3",
+      "expires_at": "2026-10-03 05:27:57.933344+00:00",
+      "created_at": "2026-09-26 05:27:57.933357+00:00"
+    },
+    {
+      "session_token": "sess_f812b4e3730b4a0384c98a622f9871fa",
+      "user_id": "user_d40036d41731",
+      "expires_at": "2026-10-03 05:27:58.390404+00:00",
+      "created_at": "2026-09-26 05:27:58.390417+00:00"
+    },
+    {
+      "session_token": "sess_e86115eed48c45ada5f449f0ce15d3f1",
+      "user_id": "user_3ad205fa9acd",
+      "expires_at": "2026-10-03 05:27:58.403332+00:00",
+      "created_at": "2026-09-26 05:27:58.403344+00:00"
+    },
+    {
+      "session_token": "sess_b7200a1795c649839346f1f23b2f1c6b",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-10-03 05:27:59.004789+00:00",
+      "created_at": "2026-09-26 05:27:59.004804+00:00"
+    },
+    {
+      "session_token": "sess_309e9fbb4a264e448dcb57a769152fed",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-10-03 05:28:00.296075+00:00",
+      "created_at": "2026-09-26 05:28:00.296096+00:00"
+    },
+    {
+      "session_token": "sess_c083265994374849bb27d27477d2e644",
+      "user_id": "user_d853654ebc16",
+      "expires_at": "2026-10-03 05:28:00.442382+00:00",
+      "created_at": "2026-09-26 05:28:00.442396+00:00"
+    },
+    {
+      "session_token": "sess_7492a189d676449db68ad00db8a2ee44",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-10-03 05:28:01.925358+00:00",
+      "created_at": "2026-09-26 05:28:01.925374+00:00"
+    },
+    {
+      "session_token": "sess_1408bf14f031486d9ab4898178edde67",
+      "user_id": "user_41bddde21166",
+      "expires_at": "2026-10-03 05:28:02.060194+00:00",
+      "created_at": "2026-09-26 05:28:02.060211+00:00"
+    },
+    {
+      "session_token": "sess_302c248580584288b4df74c38073e332",
+      "user_id": "user_1e036e67b2a0",
+      "expires_at": "2026-10-03 05:28:03.243006+00:00",
+      "created_at": "2026-09-26 05:28:03.243021+00:00"
+    },
+    {
+      "session_token": "sess_e7ab9f37c2bc4dbb924e57b0d35896d8",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:28:04.157761+00:00",
+      "created_at": "2026-09-26 05:28:04.157773+00:00"
+    },
+    {
+      "session_token": "sess_54878c3c7f7e472a99de7c259d406267",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:28:05.808630+00:00",
+      "created_at": "2026-09-26 05:28:05.808645+00:00"
+    },
+    {
+      "session_token": "sess_e5553e10d79b4f63a05fc767a2393acd",
+      "user_id": "user_aa3f74f006d6",
+      "expires_at": "2026-10-03 05:28:07.616691+00:00",
+      "created_at": "2026-09-26 05:28:07.616717+00:00"
+    },
+    {
+      "session_token": "sess_e2cb221f954a4edc894e482a9af8b8d4",
+      "user_id": "user_19f4394925a5",
+      "expires_at": "2026-10-03 05:28:11.082766+00:00",
+      "created_at": "2026-09-26 05:28:11.082788+00:00"
+    },
+    {
+      "session_token": "sess_e86b827673c549909fecb5db586f1999",
+      "user_id": "user_92219a8ec8ce",
+      "expires_at": "2026-10-03 05:28:12.562992+00:00",
+      "created_at": "2026-09-26 05:28:12.563006+00:00"
+    },
+    {
+      "session_token": "sess_d8b933de202343af812ab9bfbb64c1df",
+      "user_id": "user_1b7aee0f0318",
+      "expires_at": "2026-10-03 05:28:13.668467+00:00",
+      "created_at": "2026-09-26 05:28:13.668502+00:00"
+    },
+    {
+      "session_token": "sess_b52517429e3b4e78a39d5ba65c3b2f17",
+      "user_id": "user_7ef71c6884e1",
+      "expires_at": "2026-10-03 05:28:14.774516+00:00",
+      "created_at": "2026-09-26 05:28:14.774528+00:00"
+    },
+    {
+      "session_token": "sess_c2473b78bbbb4732a052faa2b7eca3b3",
+      "user_id": "user_b68163f3298f",
+      "expires_at": "2026-10-03 05:28:15.670529+00:00",
+      "created_at": "2026-09-26 05:28:15.670542+00:00"
+    },
+    {
+      "session_token": "sess_87d9596c002b4bfebdd511343a777141",
+      "user_id": "user_ca41f0c2917f",
+      "expires_at": "2026-10-03 05:28:16.562180+00:00",
+      "created_at": "2026-09-26 05:28:16.562192+00:00"
+    },
+    {
+      "session_token": "sess_81b8da937d224bf8b4dc1836fc9b3bdb",
+      "user_id": "user_ca41f0c2917f",
+      "expires_at": "2026-10-03 05:28:18.239644+00:00",
+      "created_at": "2026-09-26 05:28:18.239661+00:00"
+    },
+    {
+      "session_token": "sess_4179b6e5e06d469084e32e04b145432e",
+      "user_id": "user_ca41f0c2917f",
+      "expires_at": "2026-10-03 05:28:20.010375+00:00",
+      "created_at": "2026-09-26 05:28:20.010388+00:00"
+    },
+    {
+      "session_token": "sess_c730faf6bb564059947f5217319acb14",
+      "user_id": "user_ca41f0c2917f",
+      "expires_at": "2026-10-03 05:28:21.627410+00:00",
+      "created_at": "2026-09-26 05:28:21.627425+00:00"
+    },
+    {
+      "session_token": "sess_301038ad808645c2990881c0202b850e",
+      "user_id": "user_ca41f0c2917f",
+      "expires_at": "2026-10-03 05:28:23.012100+00:00",
+      "created_at": "2026-09-26 05:28:23.012121+00:00"
     }
   ],
   "holdings": [
@@ -4231,34 +4495,6 @@
       "user_id": "user_828512024eaa"
     },
     {
-      "id": "d8501f7b-f444-4b84-940c-536a4b931bed",
-      "symbol": "AAPL",
-      "name": null,
-      "quantity": 10.0,
-      "avg_cost": 100.0,
-      "asset_type": "stock",
-      "is_broad_market": false,
-      "sub_type": null,
-      "created_at": "2026-09-18T13:49:53.307862+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_aa3f74f006d6"
-    },
-    {
-      "id": "31bd85cc-3dca-48bd-8082-1167341a2ed0",
-      "symbol": "TSLA",
-      "name": null,
-      "quantity": 5.0,
-      "avg_cost": 400.0,
-      "asset_type": "stock",
-      "is_broad_market": false,
-      "sub_type": null,
-      "created_at": "2026-09-18T13:49:53.316424+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_aa3f74f006d6"
-    },
-    {
       "id": "de50bc59-9661-429e-83c3-8f664cfdb1d3",
       "symbol": "AAPL",
       "name": "Apple Inc.",
@@ -4679,20 +4915,6 @@
       "user_id": "user_0c00f5369aaf"
     },
     {
-      "id": "b45ae48b-fa1f-41b9-aa50-d10b04973202",
-      "symbol": "AAPL",
-      "name": null,
-      "quantity": 100.0,
-      "avg_cost": 150.0,
-      "asset_type": "stock",
-      "is_broad_market": false,
-      "sub_type": null,
-      "created_at": "2026-09-26T05:00:16.256872+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_d40036d41731"
-    },
-    {
       "id": "14daf766-57eb-43db-abdd-0fae95ca1812",
       "symbol": "ZZZZNOTREAL99",
       "name": null,
@@ -4719,48 +4941,6 @@
       "date_of_purchase": null,
       "lot_count": null,
       "user_id": "user_41bddde21166"
-    },
-    {
-      "id": "60ad36a9-2458-4101-846a-563ce53b9b15",
-      "symbol": "AAPL",
-      "name": null,
-      "quantity": 5.0,
-      "avg_cost": 150.0,
-      "asset_type": "stock",
-      "is_broad_market": false,
-      "sub_type": null,
-      "created_at": "2026-09-26T05:00:21.825215+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_1e036e67b2a0"
-    },
-    {
-      "id": "e5472c95-45fe-4072-82bc-598478738834",
-      "symbol": "VOO",
-      "name": null,
-      "quantity": 2.0,
-      "avg_cost": 400.0,
-      "asset_type": "etf",
-      "is_broad_market": true,
-      "sub_type": "broad_index",
-      "created_at": "2026-09-26T05:00:21.833293+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_1e036e67b2a0"
-    },
-    {
-      "id": "c87ef836-f446-458b-a7b1-da9e35f654b8",
-      "symbol": "BTC-USD",
-      "name": null,
-      "quantity": 0.1,
-      "avg_cost": 30000.0,
-      "asset_type": "crypto",
-      "is_broad_market": false,
-      "sub_type": "blue_chip",
-      "created_at": "2026-09-26T05:00:21.842271+00:00",
-      "date_of_purchase": null,
-      "lot_count": null,
-      "user_id": "user_1e036e67b2a0"
     },
     {
       "id": "6bb2eb2a-6f3b-4528-ae97-969ce1b4efb1",
@@ -4833,7 +5013,175 @@
       "user_id": "user_dd7d0ad3290c"
     },
     {
-      "id": "30044f3b-37f1-4df8-b877-6595cd4448c1",
+      "id": "2e0c5c53-b79c-4fa5-80d0-1dfa48e21cbf",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 100.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:27:58.427608+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d40036d41731"
+    },
+    {
+      "id": "d37a2607-64a3-47b2-b703-ec9300ccbdaa",
+      "symbol": "ZZZZNOTREAL99",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 25.5,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:28:00.477213+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_d853654ebc16"
+    },
+    {
+      "id": "ca364928-b341-42e2-9785-93cc4a552ba9",
+      "symbol": "GIFT",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 0.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:28:02.070122+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_41bddde21166"
+    },
+    {
+      "id": "8698c577-d8e2-40a6-b7c5-f2159102d2b1",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 5.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:28:03.367958+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "f9896fd6-2705-44fa-a203-61c381e8dd25",
+      "symbol": "VOO",
+      "name": null,
+      "quantity": 2.0,
+      "avg_cost": 400.0,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "created_at": "2026-09-26T05:28:03.376477+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "2d3e5782-bade-4ff3-8fd9-78d4723e71e7",
+      "symbol": "BTC-USD",
+      "name": null,
+      "quantity": 0.1,
+      "avg_cost": 30000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "created_at": "2026-09-26T05:28:03.387569+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_1e036e67b2a0"
+    },
+    {
+      "id": "f611bf01-02f4-4337-8ef1-80218f241668",
+      "symbol": "VOO",
+      "name": null,
+      "quantity": 2.78,
+      "avg_cost": 643.61,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "created_at": "2026-09-26T05:28:07.779885+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "18c3f577-cb4f-4e93-82fb-f18bd3566891",
+      "symbol": "QQQ",
+      "name": null,
+      "quantity": 2.0,
+      "avg_cost": 717.71,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "created_at": "2026-09-26T05:28:07.795634+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "6390f9e7-d5cf-4267-9de5-f32798e3bd59",
+      "symbol": "GLD",
+      "name": null,
+      "quantity": 1.5,
+      "avg_cost": 300.0,
+      "asset_type": "etf",
+      "is_broad_market": false,
+      "sub_type": "leveraged_thematic",
+      "created_at": "2026-09-26T05:28:07.807052+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "68677c08-eb50-4d8b-abee-8070595d78e5",
+      "symbol": "SOXL",
+      "name": null,
+      "quantity": 3.0,
+      "avg_cost": 120.14,
+      "asset_type": "etf",
+      "is_broad_market": false,
+      "sub_type": "leveraged_thematic",
+      "created_at": "2026-09-26T05:28:07.816105+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "afcfe6ec-1150-4ed3-8404-db181124a064",
+      "symbol": "RVI",
+      "name": null,
+      "quantity": 6.0,
+      "avg_cost": 39.2,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:28:07.825078+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "502f6aaa-486b-42bf-9d1c-d47e8c5ed8aa",
+      "symbol": "SPCX",
+      "name": "SpaceX",
+      "quantity": 1.0,
+      "avg_cost": 209.35,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-09-26T05:28:07.834782+00:00",
+      "date_of_purchase": null,
+      "lot_count": null,
+      "user_id": "user_aa3f74f006d6"
+    },
+    {
+      "id": "e89c408f-4a4c-4af9-8c67-60b4ddc6b8da",
       "symbol": "AAPL",
       "name": null,
       "quantity": 50.0,
@@ -4841,13 +5189,13 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-26T05:09:13.968016+00:00",
+      "created_at": "2026-09-26T05:28:16.703631+00:00",
       "date_of_purchase": null,
       "lot_count": null,
       "user_id": "user_ca41f0c2917f"
     },
     {
-      "id": "9a10a349-7c97-49b2-accd-8e742d71c663",
+      "id": "2e97c4f5-4b93-40bb-9a00-9b0cf906c3ab",
       "symbol": "KO",
       "name": null,
       "quantity": 100.0,
@@ -4855,7 +5203,7 @@
       "asset_type": "stock",
       "is_broad_market": false,
       "sub_type": null,
-      "created_at": "2026-09-26T05:09:13.976311+00:00",
+      "created_at": "2026-09-26T05:28:16.713768+00:00",
       "date_of_purchase": null,
       "lot_count": null,
       "user_id": "user_ca41f0c2917f"

@@ -34,6 +34,8 @@ ts	phase	decision	why	evidence	result
 2026-09-26T00:34:00Z	governance	Enforced Strict TDD and Permanent Test Suite Expansion in execution-rules.md	Guarantee tests are written first to functional specs, never cater to code, and permanently expand suites	.agents/rules/execution-rules.md:29-41	rule codified and enforced for all future runs
 2026-09-26T01:00:00Z	refactor	Created dedicated DividendsTab between Watchlist and Stock News and automated split math in list_holdings	User request: remove dividend calendar from portfolio tab, eliminate split UI panels, and calculate split multipliers automatically on lots	backend/server.py:165-190, frontend/src/components/DividendsTab.jsx, frontend/src/App.js	50/50 backend pytest passed, 22/22 Playwright tests passed
 2026-09-26T01:09:00Z	frontend-ui	Reordered AI CHAT to last tab and applied flex-1 equal width distribution across full navigation bar	User request: place AI CHAT as the last tab and spread all 10 tab buttons equally across the row	frontend/src/App.js:24-36, 266-289, tests/e2e/23_corporate_actions.spec.ts:100-154	TC-CORP-05 passed, verified equal column bounding boxes and clean visual layout
+2026-09-26T01:28:00Z	frontend-ui	Fixed Treemap distortion by tuning squarify aspectRatio={4/3}, increasing container height to 320px/340px, adding vertical text fallback, and instant hover HUD card	Small positions like SpaceX (SPCX) were squeezed into blank vertical slivers due to container aspect ratio and 32px text cutoff	frontend/src/components/PortfolioCharts.jsx:170-420, tests/e2e/05_treemap.spec.ts:44-93	TC-TREEMAP-04 passed, verified balanced blocks and clean hover HUD
+
 
 
 
