@@ -12,24 +12,26 @@ import AlphaTab from "@/components/AlphaTab";
 import WatchlistTab from "@/components/WatchlistTab";
 import ScannerTab from "@/components/ScannerTab";
 import ChatTab from "@/components/ChatTab";
+import DividendsTab from "@/components/DividendsTab";
 import HowItWorksModal from "@/components/HowItWorksModal";
 import DisclaimerModal from "@/components/DisclaimerModal";
 import StockDetailModal from "@/components/StockDetailModal";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Login from "@/components/Login";
 import AuthCallback from "@/components/AuthCallback";
-import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut, Radar, Bot, Info, ShieldAlert } from "lucide-react";
+import { LayoutGrid, Newspaper, Globe2, Gauge, Terminal, Landmark, Zap, Eye, LogOut, Radar, Bot, Info, ShieldAlert, DollarSign } from "lucide-react";
 
 const TABS = [
   { id: "portfolio", label: "PORTFOLIO", icon: LayoutGrid },
-  { id: "chat", label: "AI CHAT", icon: Bot },
   { id: "alpha", label: "ALPHA", icon: Zap },
   { id: "scanner", label: "SCANNER", icon: Radar },
   { id: "watchlist", label: "WATCHLIST", icon: Eye },
+  { id: "dividends", label: "DIVIDENDS", icon: DollarSign },
   { id: "stock-news", label: "STOCK NEWS", icon: Newspaper },
   { id: "macro-news", label: "MACRO", icon: Globe2 },
   { id: "sentiment", label: "SENTIMENT", icon: Gauge },
   { id: "insider", label: "SMART MONEY", icon: Landmark },
+  { id: "chat", label: "AI CHAT", icon: Bot },
 ];
 
 function App() {
@@ -49,8 +51,17 @@ function App() {
         setStockModalSymbol(e.detail.symbol);
       }
     };
+    const handleSwitchTab = (e) => {
+      if (e.detail?.tab) {
+        setActive(e.detail.tab);
+      }
+    };
     window.addEventListener("open-stock-modal", handleOpenStock);
-    return () => window.removeEventListener("open-stock-modal", handleOpenStock);
+    window.addEventListener("terminus:switch-tab", handleSwitchTab);
+    return () => {
+      window.removeEventListener("open-stock-modal", handleOpenStock);
+      window.removeEventListener("terminus:switch-tab", handleSwitchTab);
+    };
   }, []);
 
   // Set of tabs mounted in the DOM. Always starts with active tab.
@@ -253,7 +264,7 @@ function App() {
 
       {/* Nav */}
       <nav
-        className="border-b border-[#222C3D] bg-[#121721] px-2 sm:px-4 flex overflow-x-auto"
+        className="border-b border-[#222C3D] bg-[#121721] w-full flex overflow-x-auto"
         data-testid="tab-navigation"
       >
         {TABS.map((t) => {
@@ -264,14 +275,14 @@ function App() {
               key={t.id}
               onClick={() => setActive(t.id)}
               data-testid={`tab-${t.id}-button`}
-              className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold tracking-widest uppercase whitespace-nowrap transition-colors duration-150 border-b-2 ${
+              className={`flex-1 min-w-max lg:min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-3 text-xs font-semibold tracking-wider sm:tracking-widest uppercase whitespace-nowrap transition-colors duration-150 border-b-2 ${
                 isActive
                   ? "text-amber-500 border-amber-500 bg-[#161C26]"
                   : "text-gray-500 border-transparent hover:text-gray-200 hover:bg-[#161C26]"
               }`}
             >
-              <Icon className="w-4 h-4" />
-              {t.label}
+              <Icon className="w-4 h-4 shrink-0" />
+              <span>{t.label}</span>
             </button>
           );
         })}
@@ -294,6 +305,9 @@ function App() {
           )}
           {mountedTabs.has("watchlist") && (
             <div className={active === "watchlist" ? "block" : "hidden"} data-tab-container="watchlist"><WatchlistTab /></div>
+          )}
+          {mountedTabs.has("dividends") && (
+            <div className={active === "dividends" ? "block" : "hidden"} data-tab-container="dividends"><DividendsTab /></div>
           )}
           {mountedTabs.has("stock-news") && (
             <div className={active === "stock-news" ? "block" : "hidden"} data-tab-container="stock-news"><StockNewsTab /></div>

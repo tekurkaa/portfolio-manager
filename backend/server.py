@@ -35,6 +35,13 @@ from chat_service import chat_answer  # noqa: E402
 from db import get_database  # noqa: E402
 from trade_import_service import parse_robinhood_csv, derive_holdings_fifo  # noqa: E402
 from asset_metadata_service import resolve_asset_metadata  # noqa: E402
+from xirr_service import compute_holding_xirr, compute_portfolio_xirr  # noqa: E402
+from corporate_actions_service import (  # noqa: E402
+    get_symbol_corporate_actions,
+    get_symbols_corporate_actions_batch,
+    compute_portfolio_corporate_actions,
+    apply_split_adjustment_to_holding,
+)
 
 db = get_database()
 
@@ -157,17 +164,41 @@ async def list_holdings(uid: str = Depends(current_user_id)):
     docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
     symbols = [d["symbol"] for d in docs]
     quotes = await get_quotes(symbols) if symbols else {}
+
+    # Fetch active lots and corporate actions to apply automated split/merge capital adjustments
+    lots_docs = await db.trade_lots.find({"user_id": uid}, {"_id": 0}).to_list(5000)
+    lots_by_symbol: Dict[str, List[Dict[str, Any]]] = {}
+    for lot in lots_docs:
+        sym = lot.get("symbol", "").upper()
+        if sym not in lots_by_symbol:
+            lots_by_symbol[sym] = []
+        lots_by_symbol[sym].append(lot)
+
+    actions_map = await get_symbols_corporate_actions_batch(symbols) if symbols else {}
+
     enriched = []
     total_value = 0.0
     total_cost = 0.0
     total_day_change = 0.0
     for d in docs:
+        sym_up = d["symbol"].upper()
         if d.get("is_broad_market") is None or d.get("sub_type") is None:
             meta = resolve_asset_metadata(d.get("symbol", ""), d.get("name", ""), d.get("asset_type"))
             d["asset_type"] = meta["asset_type"]
             d["is_broad_market"] = meta["is_broad_market"]
             d["sub_type"] = meta["sub_type"]
-        q = quotes.get(d["symbol"].upper())
+
+        # Attach active lots if present
+        if sym_up in lots_by_symbol:
+            d["active_lots"] = lots_by_symbol[sym_up]
+
+        # Apply automated split/merge adjustment directly into quantity and cost basis
+        act = actions_map.get(sym_up) or {}
+        splits = act.get("splits") or []
+        if splits and (d.get("date_of_purchase") or d.get("active_lots")):
+            d = apply_split_adjustment_to_holding(d, splits)
+
+        q = quotes.get(sym_up)
         price = q["price"] if q else d.get("avg_cost", 0)
         prev_close = q["previous_close"] if q and q.get("previous_close") else price
         value = price * d["quantity"]
@@ -178,7 +209,7 @@ async def list_holdings(uid: str = Depends(current_user_id)):
         total_value += value
         total_cost += cost_basis
         total_day_change += day_change
-        enriched.append({
+        h_dict = {
             **d,
             "price": price,
             "previous_close": prev_close,
@@ -190,10 +221,13 @@ async def list_holdings(uid: str = Depends(current_user_id)):
             "day_change_pct": round((q.get("change_percent") if q else 0) or 0, 3),
             "quote_source": q["source"] if q else "cost",
             "live": q is not None,
-        })
+        }
+        h_dict["xirr"] = compute_holding_xirr(h_dict)
+        enriched.append(h_dict)
     total_pl = total_value - total_cost
     total_pl_pct = (total_pl / total_cost * 100) if total_cost else 0
     day_pct = (total_day_change / (total_value - total_day_change) * 100) if (total_value - total_day_change) else 0
+    port_xirr = compute_portfolio_xirr(enriched, total_value)
     return {
         "holdings": enriched,
         "summary": {
@@ -203,12 +237,56 @@ async def list_holdings(uid: str = Depends(current_user_id)):
             "total_pl_pct": round(total_pl_pct, 3),
             "day_change": round(total_day_change, 2),
             "day_change_pct": round(day_pct, 3),
+            "xirr": port_xirr,
             "count": len(enriched),
             "stock_count": sum(1 for h in enriched if h.get("asset_type") == "stock"),
             "crypto_count": sum(1 for h in enriched if h.get("asset_type") == "crypto"),
             "etf_count": sum(1 for h in enriched if h.get("asset_type") == "etf"),
         },
     }
+
+
+@api_router.get("/portfolio/corporate-actions")
+async def portfolio_corporate_actions(uid: str = Depends(current_user_id)):
+    """
+    Returns upcoming ex-dividend dates, estimated monthly cash flows,
+    dividend analytics, and stock split notices for current user holdings.
+    """
+    docs = await db.holdings.find({"user_id": uid}, {"_id": 0}).to_list(1000)
+    if not docs:
+        return compute_portfolio_corporate_actions([], {})
+
+    symbols = [d["symbol"] for d in docs]
+    quotes = await get_quotes(symbols) if symbols else {}
+
+    # Fetch active lots to detect pre-split holdings
+    lots_docs = await db.trade_lots.find({"user_id": uid}, {"_id": 0}).to_list(5000)
+    lots_by_symbol: Dict[str, List[Dict[str, Any]]] = {}
+    for lot in lots_docs:
+        sym = lot.get("symbol", "").upper()
+        if sym not in lots_by_symbol:
+            lots_by_symbol[sym] = []
+        lots_by_symbol[sym].append(lot)
+
+    enriched_holdings = []
+    for d in docs:
+        sym_up = d["symbol"].upper()
+        q = quotes.get(sym_up)
+        price = q["price"] if q else d.get("avg_cost", 0)
+        value = price * d["quantity"]
+        cost_basis = d["avg_cost"] * d["quantity"]
+        h_copy = {
+            **d,
+            "price": price,
+            "value": round(value, 2),
+            "cost_basis": round(cost_basis, 2),
+            "active_lots": lots_by_symbol.get(sym_up, []),
+        }
+        enriched_holdings.append(h_copy)
+
+    actions_map = await get_symbols_corporate_actions_batch(symbols)
+    return compute_portfolio_corporate_actions(enriched_holdings, actions_map)
+
 
 
 @api_router.post("/portfolio/holdings")
@@ -510,6 +588,14 @@ async def market_history(symbol: str, range: str = "1D"):
     if not hist:
         raise HTTPException(404, f"No history found for {symbol}")
     return hist
+
+
+@api_router.get("/market/corporate-actions/{symbol}")
+async def market_corporate_actions(symbol: str):
+    data = await asyncio.to_thread(get_symbol_corporate_actions, symbol)
+    if not data:
+        raise HTTPException(404, f"No corporate actions found for {symbol}")
+    return data
 
 
 

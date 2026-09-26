@@ -53,6 +53,9 @@
 
 ### 6. 💼 Portfolio & Risk Management
 - **Robinhood Activity Importer**: Native import for Robinhood Trade Activity CSVs with FIFO lot accounting, buy/sell parsing, and split/rebalance handling.
+- **XIRR (Extended Internal Rate of Return) Engine**: True annualized personal money-weighted return accounting for exact dates and cash sizes of tax lots and purchases. High-precision zero-dependency Newton-Raphson polynomial root-solver with bounded bisection fallback and short-horizon guard.
+- **Dedicated "DIVIDENDS" Tab**: Seamlessly positioned between Watchlist and Stock News, delivering an institutional upcoming ex-dividend schedule, payment dates, dividend rates, and an interactive **12-Month Projected Cash Flow Distribution** grid without cluttering the main portfolio overview.
+- **Automated Backend Split & Merge Engine**: Built directly into portfolio capital calculations. Evaluates historical split events (e.g. NVDA 10:1 forward split, reverse split merges) against lot purchase dates to automatically adjust share counts and cost bases ($Q \times M$, $\text{Cost} / M$), conserving total deployed capital while ensuring P/L and valuations reflect live market reality.
 - **Portfolio Risk & Diversification Auditor**: Single-asset dual-alert exposure thresholds (hard ceilings for crypto blue chips vs altcoins vs stocks), 20% sector concentration rules, health score scoring, and projected annual dividend cash flow KPIs.
 - Real-time P&L calculations, historical equity curves (1D, 1W, 1M, 1Y, 5Y, ALL), and interactive allocation treemaps.
 - Instant demo portfolio generation with 12 diversified tech, semi, ETF, and crypto positions.
@@ -205,19 +208,21 @@ Validates core API routes, dual-mode database CRUD, market quote streaming, trad
 ```
 
 - `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, market status, security details & history.
+- `tests/test_xirr.py`: Unit and integration tests for Newton-Raphson XIRR solver, multi-lot cash flow timing, negative return scenarios, and short-horizon guards.
+- `tests/test_corporate_actions.py`: Ex-dividend calendars, payout frequency estimator, 12-month projected cash flow schedules, and pre-split lot alerts.
 - `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer, off-hours session history fallback & resilience.
 - `tests/test_news.py`: Stock news by ticker, macro news, HTML cleaner, RFC-822 date parser.
 - `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
 
-### 2. End-to-End Browser Tests (Playwright — 82 Tests across 22 Suites)
+### 2. End-to-End Browser Tests (Playwright — 85 Tests across 23 Suites)
 Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
 
 ```bash
 # Install Playwright browsers (first-time only)
 npx playwright install chromium
 
-# Run all 82 E2E tests (configured with workers: 1 to guarantee database isolation)
+# Run all E2E tests (configured with workers: 1 to guarantee database isolation)
 npx playwright test
 
 # Run a specific suite (e.g. Holdings CRUD)
@@ -228,10 +233,10 @@ npx playwright test --ui
 ```
 
 **Coverage Summary**:
-- **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs, History Chart Ranges & Benchmarks, Allocation Treemap.
+- **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs & XIRR, History Chart Ranges & Benchmarks, Allocation Treemap.
 - **Suites 06–10**: CSV Upload, Robinhood Activity Import, Demo Seed, Watchlist Management, Held Stock News.
 - **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner, Email Notifications.
-- **Suites 16–22**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience.
+- **Suites 16–23**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar.
 
 ---
 

@@ -26,11 +26,18 @@ trigger: always_on
 - Prefer targeted patches over rewriting entire multi-hundred-line files from scratch to avoid dropping existing imports or handlers.
 - Never expose, hardcode, or alter secrets/environment variables in the repository.
 
-## 4. Test-Driven Development (TDD) Loop
-- Whenever adding new features, modifying application logic, or fixing bugs, follow test-driven development:
-  - Write failing tests first (RED phase) at the public interface/seam before writing code.
-  - Implement only enough minimal code to pass the tests (GREEN phase).
-  - Run the test suite (`pytest tests/` and relevant Playwright E2E tests) to verify correctness and prevent regressions.
+## 4. Strict Test-Driven Development (TDD) & Permanent Suite Expansion
+- **Write Tests FIRST (RED Phase)**:
+  - Tests must ALWAYS be written first based strictly on functional requirements, mathematical specifications, contract boundaries, and edge cases BEFORE writing or modifying any application code.
+  - NEVER write code first and then write tests after the fact to cater to or rubber-stamp the code. The tests define the specification; the code must conform to the tests, not vice-versa.
+  - Always execute the test runner to prove that the newly written tests FAIL first (RED phase confirmation).
+- **Implement Minimal Code (GREEN Phase)**:
+  - Implement only the minimal code necessary to make the failing tests pass cleanly.
+- **Append to Permanent Test Suite**:
+  - For every newly added function, calculation, service, or API route, ALWAYS append new tests to the repository's permanent test suite (`tests/` for Pytest unit/integration tests and `tests/e2e/` for Playwright browser tests).
+  - Never use one-off throwaway test scripts or discard tests after implementation. The permanent suite must grow alongside feature additions.
+- **Regression Prevention**:
+  - Run the full test suite (`pytest tests/` and relevant Playwright E2E tests) to verify correctness and prevent any regressions across existing modules.
 
 ## 5. Automated Documentation Sync (Docs Updater)
 - Whenever new functional capabilities, endpoints, or features are added or modified, update `README.md` to document the user-facing capability, endpoints, and behaviors.

@@ -113,9 +113,10 @@ const AddHoldingForm = ({ onDone }) => {
   );
 };
 
-const SummaryCard = ({ label, value, sub, subColor, icon: Icon }) => (
+const SummaryCard = ({ label, value, sub, subColor, icon: Icon, onClick, className }) => (
   <div
-    className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm"
+    onClick={onClick}
+    className={`border border-[#222C3D] bg-[#121721] p-4 rounded-sm ${className || ""}`}
     data-testid={`summary-${label.toLowerCase().replace(/\s/g, "-")}`}
   >
     <div className="flex items-center justify-between mb-2">
@@ -205,6 +206,10 @@ export default function PortfolioTab() {
         va = a.date_of_purchase || "";
         vb = b.date_of_purchase || "";
       }
+      if (key === "xirr") {
+        va = a.xirr ?? -999999;
+        vb = b.xirr ?? -999999;
+      }
       if (typeof va === "string") return dir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
       return dir === "asc" ? va - vb : vb - va;
     });
@@ -291,7 +296,7 @@ export default function PortfolioTab() {
 
       {/* Summary */}
       {s && (
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3" data-testid="summary-grid">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3" data-testid="summary-grid">
           <SummaryCard
             label="Total Value"
             value={fmtMoney(s.total_value)}
@@ -313,6 +318,13 @@ export default function PortfolioTab() {
             icon={s.total_pl >= 0 ? TrendingUp : TrendingDown}
           />
           <SummaryCard
+            label="Portfolio XIRR"
+            value={s.xirr != null ? fmtPct(s.xirr) : "—"}
+            sub="annualized money-weighted"
+            subColor={s.xirr != null ? colorForPL(s.xirr) : undefined}
+            icon={s.xirr >= 0 ? TrendingUp : TrendingDown}
+          />
+          <SummaryCard
             label="Cost Basis"
             value={fmtMoney(s.total_cost)}
             sub="lifetime capital deployed"
@@ -325,6 +337,10 @@ export default function PortfolioTab() {
                 value={`${fmtMoney(div.annual)} / yr`}
                 sub={`Est. Monthly: ${fmtMoney(div.monthly)} · Yield on Cost: ${div.yieldOnCost.toFixed(2)}%`}
                 icon={DollarSign}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent("terminus:switch-tab", { detail: { tab: "dividends" } }));
+                }}
+                className="cursor-pointer transition-transform active:scale-[0.98] hover:border-emerald-500/50"
               />
             );
           })()}
@@ -366,7 +382,7 @@ export default function PortfolioTab() {
       {/* Holdings Table */}
       {(() => {
         const hasDateOfPurchase = rows.some((h) => h.date_of_purchase);
-        const colCount = hasDateOfPurchase ? 13 : 11;
+        const colCount = (hasDateOfPurchase ? 13 : 11) + 1;
         const columns = [
           ["symbol", "SYMBOL"],
           ["asset_type", "TYPE"],
@@ -384,6 +400,7 @@ export default function PortfolioTab() {
           ["value", "VALUE"],
           ["pl", "P/L $"],
           ["pl_pct", "P/L %"],
+          ["xirr", "XIRR %"],
         ];
 
         return (
@@ -484,6 +501,11 @@ export default function PortfolioTab() {
                           <td className="px-3 py-2.5 font-mono text-gray-100 font-semibold">{fmtMoney(h.value)}</td>
                           <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl)}`}>{fmtMoney(h.pl)}</td>
                           <td className={`px-3 py-2.5 font-mono ${colorForPL(h.pl_pct)}`}>{fmtPct(h.pl_pct)}</td>
+                          <td className="px-3 py-2.5 font-mono text-right" data-testid={`holding-xirr-${h.symbol}`}>
+                            <span className={h.xirr != null ? colorForPL(h.xirr) : "text-gray-500"}>
+                              {h.xirr != null ? fmtPct(h.xirr) : "—"}
+                            </span>
+                          </td>
                           <td className="px-3 py-2.5">
                             <button
                               onClick={() => delOne(h.id, h.symbol)}
