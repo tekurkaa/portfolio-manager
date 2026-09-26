@@ -50,7 +50,7 @@ export default function InsiderFlowTab() {
 
   return (
     <div data-testid="insider-flow-tab" className="space-y-4">
-      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm flex items-center justify-between">
+      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised flex items-center justify-between">
         <div>
           <div className="text-xs font-mono tracking-widest uppercase text-amber-500 flex items-center gap-2">
             <Landmark className="w-4 h-4" /> Smart Money Flow
@@ -60,19 +60,19 @@ export default function InsiderFlowTab() {
           </div>
         </div>
         <button onClick={() => load(true)} data-testid="refresh-insider"
-          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm">
+          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
           <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
       {data.notice && (
-        <div className="border border-amber-800/40 bg-amber-950/20 rounded-sm p-3 text-xs text-amber-200 font-mono" data-testid="insider-notice">
+        <div className="border border-amber-800/40 bg-amber-950/20 rounded-sm p-3 text-xs text-amber-200 font-mono panel-raised" data-testid="insider-notice">
           <span className="text-amber-500 uppercase tracking-widest text-[10px]">Notice ·</span> {data.notice}
         </div>
       )}
 
       {/* Top activity by ticker */}
-      <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="top-activity">
+      <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4 panel-raised" data-testid="top-activity">
         <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-3 flex items-center gap-2">
           <Users className="w-3.5 h-3.5" /> Most-Traded Tickers (Congress · Last Period)
         </div>
@@ -113,7 +113,7 @@ export default function InsiderFlowTab() {
         ].map(([k, l]) => (
           <button key={k} onClick={() => { setTab(k); setOnlyHeld(k === "held"); }}
             data-testid={`insider-tab-${k}`}
-            className={`text-xs uppercase tracking-widest font-mono px-3 py-1.5 rounded-sm border ${
+            className={`text-xs uppercase tracking-widest font-mono px-3 py-1.5 rounded-sm border transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none ${
               tab === k ? "border-amber-500 text-amber-500 bg-amber-500/10"
               : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
             }`}
@@ -122,7 +122,7 @@ export default function InsiderFlowTab() {
       </div>
 
       {tab === "form4" ? (
-        <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden" data-testid="form4-list">
+        <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised" data-testid="form4-list">
           <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] text-[10px] font-mono tracking-widest text-amber-500 uppercase flex items-center gap-2">
             <FileText className="w-3.5 h-3.5" /> Latest SEC Form 4 · Insider Transactions
           </div>
@@ -138,13 +138,13 @@ export default function InsiderFlowTab() {
           </div>
         </div>
       ) : (
-        <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden">
+        <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised">
           <div className="overflow-x-auto">
             <table className="w-full text-xs" data-testid="congress-table">
               <thead className="bg-[#0E131F] border-b border-[#222C3D]">
                 <tr className="text-left">
                   {["DATE","CHAMBER","POLITICIAN","PARTY","TICKER","TYPE","AMOUNT"].map((h) => (
-                    <th key={h} className="px-3 py-2.5 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
+                    <th key={h} scope="col" className="px-3 py-2.5 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
                   ))}
                 </tr>
               </thead>

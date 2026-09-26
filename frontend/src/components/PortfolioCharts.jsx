@@ -59,6 +59,27 @@ const fmtChartTooltipDate = (t, range) => {
   });
 };
 
+const CustomPortfolioTooltip = ({ active, payload, label, range }) => {
+  if (active && payload && payload.length) {
+    const val = payload[0].value;
+    return (
+      <div
+        data-testid="chart-custom-tooltip"
+        className="bg-[#0E131F]/95 backdrop-blur-md border border-[#222C3D] shadow-2xl rounded px-3 py-2 text-xs font-mono"
+      >
+        <div className="text-amber-500 font-bold mb-1">
+          {fmtChartTooltipDate(label, range)}
+        </div>
+        <div className="text-gray-200 flex items-center justify-between gap-4">
+          <span className="text-gray-400">Value:</span>
+          <span className="font-semibold text-white tabular-nums">{fmtMoney(val)}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function PortfolioHistoryChart({ currentValue = null }) {
   const [range, setRange] = useState("1D");
   const [data, setData] = useState(null);
@@ -121,7 +142,26 @@ export function PortfolioHistoryChart({ currentValue = null }) {
       </div>
       <div style={{ width: "100%", height: 260 }}>
         {loading && !data?.points?.length ? (
-          <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center">Loading {active.sub}...</div>
+          <div
+            data-testid="chart-skeleton"
+            className="w-full h-full flex flex-col justify-between p-4 bg-[#0E131F]/50 rounded-sm animate-pulse"
+          >
+            <div className="flex items-center justify-between">
+              <div className="h-6 w-32 bg-[#222C3D] rounded-sm"></div>
+              <div className="h-4 w-20 bg-[#222C3D] rounded-sm"></div>
+            </div>
+            <div className="h-32 w-full bg-[#161C26] rounded-sm border border-[#222C3D]/50 flex items-center justify-center">
+              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                Synthesizing historical telemetry...
+              </span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <div className="h-3 w-12 bg-[#222C3D] rounded-sm"></div>
+              <div className="h-3 w-12 bg-[#222C3D] rounded-sm"></div>
+              <div className="h-3 w-12 bg-[#222C3D] rounded-sm"></div>
+              <div className="h-3 w-12 bg-[#222C3D] rounded-sm"></div>
+            </div>
+          </div>
         ) : !data?.points?.length ? (
           <div className="text-gray-500 font-mono text-xs h-full flex items-center justify-center" data-testid="history-empty">
             No historical data. Add positions first.
@@ -153,13 +193,7 @@ export function PortfolioHistoryChart({ currentValue = null }) {
                 tickFormatter={(v) => `$${(v/1000).toFixed(1)}k`}
                 width={55}
               />
-              <Tooltip
-                contentStyle={{ background: "#0E131F", border: "1px solid #222C3D", fontFamily: "monospace", fontSize: 11 }}
-                labelStyle={{ color: "#F59E0B", fontWeight: "bold" }}
-                itemStyle={{ color: "#F3F4F6" }}
-                formatter={(v) => [fmtMoney(v), "Value"]}
-                labelFormatter={(t) => fmtChartTooltipDate(t, range)}
-              />
+              <Tooltip content={(props) => <CustomPortfolioTooltip {...props} range={range} />} isAnimationActive={false} />
               <Line type="monotone" dataKey="v" stroke={stroke} strokeWidth={2} dot={false} fill="url(#gradVal)" />
             </LineChart>
           </ResponsiveContainer>
@@ -176,7 +210,7 @@ const TreemapCell = (props) => {
   const payload = props.payload || {};
   const name = props.name || payload.name || payload.symbol || "";
   const companyName = props.companyName || payload.companyName || payload.name || "";
-  const value = props.value !== undefined ? props.value : payload.value;
+  const value = props.actualValue ?? payload.actualValue ?? (props.value !== undefined ? props.value : payload.value);
   const pl_pct = props.pl_pct !== undefined ? props.pl_pct : payload.pl_pct;
   const weight_pct = props.weight_pct !== undefined ? props.weight_pct : payload.weight_pct;
 
@@ -201,12 +235,16 @@ const TreemapCell = (props) => {
 
   return (
     <g
-      onClick={() => openStockModal(name)}
+      onClick={() => {
+        if (name && !name.startsWith("OTHER")) {
+          openStockModal(name);
+        }
+      }}
       onMouseEnter={(e) => onHover?.(itemData, e)}
       onMouseMove={(e) => onHover?.(itemData, e)}
       onMouseLeave={() => onLeave?.()}
       data-testid={`treemap-cell-${name}`}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: name.startsWith("OTHER") ? "default" : "pointer" }}
     >
       <title>{`${name}${companyName && companyName !== name ? ` (${companyName})` : ""}: $${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${(pl_pct ?? 0) >= 0 ? "+" : ""}${Number(pl_pct ?? 0).toFixed(2)}%) · Click to view security terminal`}</title>
       <rect
@@ -319,7 +357,7 @@ export function AllocationTreemap({ holdings, activeFilter = "all" }) {
     return acc + (val > 0 ? val : 0);
   }, 0);
 
-  const items = filtered
+  const rawItems = filtered
     .map((h) => {
       const val = Number(h.value ?? (h.quantity * (h.price ?? h.avg_cost ?? 0)));
       return {
@@ -334,6 +372,36 @@ export function AllocationTreemap({ holdings, activeFilter = "all" }) {
       };
     })
     .filter((item) => item.value > 0);
+
+  // Group micro-allocations (< 1.0% of portfolio) into "OTHER (<1%)" to prevent squishing & distortion
+  const mainItems = [];
+  const microItems = [];
+  rawItems.forEach((item) => {
+    if (totalPortfolioVal > 0 && item.weight_pct < 1.0) {
+      microItems.push(item);
+    } else {
+      mainItems.push(item);
+    }
+  });
+
+  const items = [...mainItems];
+  if (microItems.length > 0) {
+    const microTotalVal = microItems.reduce((acc, it) => acc + it.value, 0);
+    const weightedPl = microItems.reduce((acc, it) => acc + (it.pl_pct * (it.value / (microTotalVal || 1))), 0);
+    const microWeight = totalPortfolioVal > 0 ? (microTotalVal / totalPortfolioVal) * 100 : 0;
+    const visualFloor = totalPortfolioVal > 0 ? totalPortfolioVal * 0.05 : 1;
+    items.push({
+      name: "OTHER (<1%)",
+      companyName: `${microItems.length} Micro Positions (${microItems.map((m) => m.name).join(", ")})`,
+      actualValue: Number(microTotalVal.toFixed(2)),
+      value: Math.max(Number(microTotalVal.toFixed(2)), visualFloor),
+      pl_pct: weightedPl,
+      asset_type: "other",
+      quantity: microItems.length,
+      price: microTotalVal,
+      weight_pct: microWeight,
+    });
+  }
 
   const titleText =
     activeFilter === "stock"

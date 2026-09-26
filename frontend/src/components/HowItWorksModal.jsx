@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X, Database, Zap, Terminal, Bot } from "lucide-react";
 
 const SECTIONS = [
@@ -43,18 +44,33 @@ const SECTIONS = [
 ];
 
 export default function HowItWorksModal({ open, onClose }) {
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={onClose} data-testid="how-modal">
-      <div className="bg-[#0A0D12] border border-[#222C3D] rounded-sm w-full max-w-2xl max-h-[85vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="bg-[#0A0D12] border border-[#222C3D] rounded-sm w-full max-w-2xl max-h-[85vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="how-it-works-title"
+      >
         <div className="px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bot className="w-4 h-4 text-amber-500" />
-            <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
+            <span id="how-it-works-title" className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
               How Portfolio Terminal Works
             </span>
           </div>
-          <button onClick={onClose} data-testid="close-how" className="text-gray-400 hover:text-white">
+          <button onClick={onClose} data-testid="close-how" aria-label="Close how it works modal" className="text-gray-400 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>

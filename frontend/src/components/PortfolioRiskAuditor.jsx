@@ -282,7 +282,7 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
             </div>
             {assetAlerts.length === 0 ? (
               <div className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-sm border text-emerald-400 border-emerald-800 bg-emerald-950/40" data-testid="conc-ok">
-                <ShieldCheck className="w-3 h-3" /> Single Asset Allocations Optimal Across All Asset Classes
+                <ShieldCheck className="w-3 h-3" /> ● Single Asset Allocations Optimal Across All Asset Classes
               </div>
             ) : (
               <div className="space-y-1.5" data-testid="conc-warn">
@@ -300,11 +300,11 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
                       <span>{a.message}</span>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider ${
-                        a.level === "RED" ? "bg-rose-500/20 text-rose-300 border border-rose-600/60" : "bg-amber-500/20 text-amber-300 border border-amber-600/60"
-                      }`}>
-                        {a.level === "RED" ? "HIGH EXPOSURE" : "WARNING"}
-                      </span>
+                      {a.level === "RED" && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-600/60">
+                          ▲ HIGH EXPOSURE
+                        </span>
+                      )}
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-sm border ${ASSET_CLASS_META[a.assetClass]?.badgeCls || "text-gray-400 border-gray-700"}`}>
                         {ASSET_CLASS_META[a.assetClass]?.label || a.assetClass}
                       </span>
@@ -322,7 +322,7 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
             </div>
             {overweightSectors.length === 0 ? (
               <div className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-sm border text-emerald-400 border-emerald-800 bg-emerald-950/40" data-testid="sector-ok">
-                <ShieldCheck className="w-3 h-3" /> Sector Diversification Optimal
+                <ShieldCheck className="w-3 h-3" /> ● Sector Diversification Optimal
               </div>
             ) : (
               <div className="space-y-1" data-testid="sector-warn">
@@ -333,9 +333,37 @@ export default function PortfolioRiskAuditor({ holdings, summary }) {
                 ))}
               </div>
             )}
+
+            {/* Visual Sector Allocation Stack Bar */}
+            <div
+              className="w-full bg-[#121721] h-2 rounded-sm overflow-hidden flex my-2 border border-[#222C3D]"
+              role="progressbar"
+              aria-label="Sector allocation breakdown"
+              aria-valuenow={Math.round(overweightSectors.length ? overweightSectors[0].pct : 20)}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {sectorPcts.map((s, idx) => {
+                const colors = ["bg-amber-500", "bg-blue-500", "bg-emerald-500", "bg-purple-500", "bg-cyan-500", "bg-rose-500"];
+                return (
+                  <div
+                    key={s.sector}
+                    className={`${colors[idx % colors.length]} opacity-80 h-full`}
+                    style={{ width: `${s.pct}%` }}
+                    title={`${s.sector}: ${s.pct.toFixed(1)}%`}
+                  />
+                );
+              })}
+            </div>
+
             <div className="mt-2 flex flex-wrap gap-1">
               {sectorPcts.map((s) => (
-                <span key={s.sector} className="text-[10px] font-mono px-1.5 py-0.5 border border-[#222C3D] text-gray-400 rounded-sm bg-[#121721]">
+                <span
+                  key={s.sector}
+                  title={`${s.sector}: ${s.pct.toFixed(1)}%`}
+                  data-testid={`sector-pill-${s.sector}`}
+                  className="text-[10px] font-mono px-1.5 py-0.5 border border-[#222C3D] text-gray-400 rounded-sm bg-[#121721]"
+                >
                   {s.sector} {s.pct.toFixed(1)}%
                 </span>
               ))}

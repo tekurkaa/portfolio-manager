@@ -47,7 +47,7 @@ export default function Login({ onLoginSuccess }) {
           <div className="flex items-center justify-center gap-2 mb-6">
             <Terminal className="w-8 h-8 text-amber-500" />
             <div className="text-left">
-              <div className="text-amber-500 font-bold text-lg tracking-widest uppercase">Terminus / Invest</div>
+              <div className="text-amber-500 font-bold text-lg tracking-widest uppercase">Terminus</div>
               <div className="text-[10px] text-gray-500 font-mono tracking-widest">PERSONAL INVESTMENT COMMAND CENTER</div>
             </div>
           </div>
@@ -60,7 +60,8 @@ export default function Login({ onLoginSuccess }) {
           <button
             onClick={handleGoogleLogin}
             data-testid="google-login-button"
-            className="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-sm flex items-center justify-center gap-2.5 transition-all shadow-md mb-4"
+            aria-label="Sign in with Google"
+            className="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-sm flex items-center justify-center gap-2.5 transition-all shadow-md mb-4 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -79,11 +80,14 @@ export default function Login({ onLoginSuccess }) {
 
           <form onSubmit={handleDevLogin} className="space-y-3 mt-3">
             <div className="text-left">
-              <label className="text-[10px] font-mono text-gray-400 tracking-wider uppercase block mb-1">
+              <label htmlFor="email-input" className="text-[10px] font-mono text-gray-400 tracking-wider uppercase block mb-1">
                 Account Email / Trader ID
               </label>
               <input
-                type="text"
+                id="email-input"
+                name="email"
+                type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your-email@example.com"
@@ -94,7 +98,7 @@ export default function Login({ onLoginSuccess }) {
               type="submit"
               disabled={loading}
               data-testid="local-login-button"
-              className="w-full bg-[#161C26] hover:bg-[#1E2633] text-amber-400 border border-amber-500/40 hover:border-amber-500 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+              className="w-full bg-[#161C26] hover:bg-[#1E2633] text-amber-400 border border-amber-500/40 hover:border-amber-500 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
             >
               <UserCheck className="w-4 h-4" /> {loading ? "Launching Terminal..." : `Sign In with Email`}
             </button>

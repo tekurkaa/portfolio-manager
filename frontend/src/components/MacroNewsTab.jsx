@@ -58,14 +58,14 @@ export default function MacroNewsTab() {
         <button
           onClick={() => load(true)}
           data-testid="refresh-macro-news"
-          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
+          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
       {data.summary && (
-        <div className="border border-blue-800/40 bg-blue-950/20 rounded-sm p-4" data-testid="macro-ai-summary">
+        <div className="border border-blue-800/40 bg-blue-950/20 rounded-sm p-4 panel-raised" data-testid="macro-ai-summary">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-blue-400" />
             <span className="text-[10px] font-mono tracking-widest text-blue-400 uppercase">
@@ -82,9 +82,10 @@ export default function MacroNewsTab() {
             key={t.id}
             onClick={() => setTheme(t.id)}
             data-testid={`macro-theme-${t.id}`}
-            className={`text-[11px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-sm border ${
+            aria-pressed={theme === t.id}
+            className={`text-[11px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-sm border transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none ${
               theme === t.id
-                ? "border-blue-500 bg-blue-500/10 text-blue-400"
+                ? "border-blue-500 bg-blue-500/10 text-blue-400 font-bold"
                 : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
             }`}
           >
@@ -95,7 +96,18 @@ export default function MacroNewsTab() {
 
       <div className="grid gap-3" data-testid="macro-articles-list">
         {loading && (!data.articles || data.articles.length === 0) ? (
-          <div className="text-center text-gray-500 font-mono text-xs p-8">Loading macro news...</div>
+          <div className="grid gap-3" data-testid="macro-news-skeleton">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm animate-pulse space-y-2.5 panel-raised">
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-16 bg-[#1A2232] rounded-sm" />
+                  <div className="h-3 w-12 bg-[#161C26] rounded-sm" />
+                </div>
+                <div className="h-4 w-3/4 bg-[#1E2638] rounded-sm" />
+                <div className="h-3 w-full bg-[#161C26] rounded-sm" />
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8">No articles in this theme.</div>
         ) : (

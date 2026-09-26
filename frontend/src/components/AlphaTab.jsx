@@ -44,7 +44,7 @@ function AlphaSignals() {
   }, []);
 
   return (
-    <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden" data-testid="alpha-signals-panel">
+    <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised" data-testid="alpha-signals-panel">
       <div className="px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-amber-500" />
@@ -53,7 +53,7 @@ function AlphaSignals() {
           </span>
         </div>
         <button onClick={() => load(false, true)} data-testid="refresh-alpha"
-          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm">
+          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-[11px] uppercase tracking-wider px-2 py-1 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
           <RefreshCw className={`w-3 h-3 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
@@ -61,13 +61,17 @@ function AlphaSignals() {
         <table className="w-full text-xs min-w-[680px]">
           <thead className="bg-[#0E131F] border-b border-[#222C3D]">
             <tr className="text-left">
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SYMBOL</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap min-w-[110px] w-[110px]">SIGNAL</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">COMPOSITE</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOMENTUM</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SENTIMENT</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">OPTIONS</th>
-              <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">DRIVERS</th>
+              {["SYMBOL", "SIGNAL", "COMPOSITE", "MOMENTUM", "SENTIMENT", "OPTIONS", "DRIVERS"].map((h) => (
+                <th
+                  key={h}
+                  scope="col"
+                  className={`px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase ${
+                    h === "DRIVERS" ? "" : "whitespace-nowrap"
+                  } ${h === "SIGNAL" ? "min-w-[110px] w-[110px]" : ""}`}
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -94,15 +98,22 @@ function AlphaSignals() {
                 </td>
                 <td className="px-3 py-2.5 whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <div className="w-16 bg-[#0E131F] h-1.5 rounded-sm overflow-hidden">
+                    <div
+                      className="w-16 bg-[#0E131F] h-1.5 rounded-sm overflow-hidden"
+                      role="progressbar"
+                      aria-valuenow={s.composite}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      aria-label={`${s.symbol} composite score: ${s.composite}`}
+                    >
                       <div className={`${barColor(s.composite)} h-full`} style={{ width: `${s.composite}%` }} />
                     </div>
-                    <span className="font-mono text-gray-100 font-bold">{s.composite}</span>
+                    <span className="font-mono text-gray-100 font-bold tabular-nums">{s.composite}</span>
                   </div>
                 </td>
-                <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.momentum}</td>
-                <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.sentiment}</td>
-                <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.options_tilt}</td>
+                <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.momentum}</td>
+                <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.sentiment}</td>
+                <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.options_tilt}</td>
                 <td className="px-3 py-2.5">
                   <div className="max-w-[240px] md:max-w-[320px] lg:max-w-[400px] text-gray-400 text-[11px] break-words leading-relaxed">
                     {s.drivers?.join(" · ")}
@@ -173,7 +184,12 @@ function OptionsFlow() {
           </button>
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+        role="region"
+        aria-label="Unusual options flow table"
+        tabIndex={0}
+      >
         <table className="w-full text-xs">
           <thead className="bg-[#0E131F] border-b border-[#222C3D]">
             <tr className="text-left">

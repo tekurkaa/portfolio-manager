@@ -122,3 +122,35 @@ code, .font-mono {
 .pt-safe {
     padding-top: max(0.5rem, env(safe-area-inset-top));
 }
+
+/* Tab switch fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.15s ease-out;
+}
+
+/* Motion safety: honor prefers-reduced-motion per WCAG 2.1 AAA */
+@media (prefers-reduced-motion: reduce) {
+    .ticker-scroll,
+    .pulse-green,
+    .pulse-red,
+    .animate-spin,
+    .animate-pulse,
+    .animate-fadeIn {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Surface elevation & inner highlights for terminal panels */
+.panel-raised {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Monospace tabular numbers alignment */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}

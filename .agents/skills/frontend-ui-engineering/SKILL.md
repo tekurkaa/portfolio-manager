@@ -326,3 +326,24 @@ After building UI:
 - [ ] Loading, error, and empty states all handled
 - [ ] Follows the project's design system (spacing, colors, typography)
 - [ ] No accessibility warnings in dev tools or axe-core
+
+---
+
+## Terminus Project-Specific UI Guidelines & Preferences
+
+Always respect `.agents/rules/ui-design-guidelines.md` and `design_guidelines.json`:
+
+1. **Summary KPI Cards Fixed Structure**:
+   - Fixed 3-tier vertical grid alignment: `h-5` single-line title with `whitespace-nowrap truncate` and concise label (`Annual Cash Flow` not wrapping text), `h-8` baseline value with `items-baseline`, and `min-h-[2.5rem]` aligned subscripts.
+2. **Risk & Warning Indicators**:
+   - In risk diversification alerts, keep ONLY the triangle warning icon on the left (`<AlertTriangle /> Warning: ...`) and the asset class badge on the right. Do NOT add a redundant second yellow square badge (`■ WARNING`).
+   - In sector balance warnings, use only the yellow triangle icon (`<AlertTriangle />`). Do NOT insert square symbols (`■`) in the alert message.
+3. **Terminal Numerics & Directional Indicators**:
+   - Monospace numeric data: ALWAYS `tabular-nums font-mono` for all currency, percentages, quantities, dates, and scores.
+   - Financial signs: ALWAYS pair positive/negative values with directional arrows `▲` / `▼` alongside emerald/rose styling.
+4. **Accessible Semantics**:
+   - Modals: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, and `Escape` key listener.
+   - Progress bars & allocation bars: `role="progressbar"`, `aria-valuenow`, `aria-valuemin="0"`, `aria-valuemax="100"`, `aria-label`.
+   - Scrollable tables: `role="region"`, `aria-label`, and `tabIndex={0}`.
+   - Interactive elements: `active:scale-[0.97]`, focus visible rings `focus-visible:ring-2 focus-visible:ring-amber-500`, and kebab-case `data-testid`.
+

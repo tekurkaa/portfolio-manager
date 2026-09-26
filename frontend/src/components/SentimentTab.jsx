@@ -33,8 +33,16 @@ const Gauge180 = ({ score, label }) => {
   const cx = 90, cy = 90;
   const x = cx + r * Math.cos(rad);
   const y = cy + r * Math.sin(rad);
+  const gaugeTitle = `Market Sentiment Gauge: ${score}${label ? ` (${label})` : ""}`;
   return (
-    <svg viewBox="0 0 180 110" className="w-full max-w-[220px]" data-testid="sentiment-gauge">
+    <svg
+      viewBox="0 0 180 110"
+      className="w-full max-w-[220px]"
+      data-testid="sentiment-gauge"
+      role="img"
+      aria-label={gaugeTitle}
+    >
+      <title>{gaugeTitle}</title>
       <defs>
         <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#EF4444" />
@@ -45,7 +53,7 @@ const Gauge180 = ({ score, label }) => {
       <path d="M 20 90 A 70 70 0 0 1 160 90" fill="none" stroke="url(#gaugeGrad)" strokeWidth="14" strokeLinecap="round" />
       <line x1={cx} y1={cy} x2={x} y2={y} stroke="#F3F4F6" strokeWidth="3" strokeLinecap="round" />
       <circle cx={cx} cy={cy} r="4" fill="#F59E0B" />
-      <text x="90" y="106" textAnchor="middle" className="fill-gray-100 font-mono font-bold" fontSize="20">{score}</text>
+      <text x="90" y="106" textAnchor="middle" fill="#F3F4F6" style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }} fontSize="20">{score}</text>
     </svg>
   );
 };
@@ -103,7 +111,7 @@ export default function SentimentTab() {
         <button
           onClick={() => load(false, true)}
           data-testid="refresh-sentiment"
-          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
+          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
@@ -222,7 +230,15 @@ export default function SentimentTab() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full bg-[#0E131F] h-2 rounded-sm overflow-hidden flex mb-2" data-testid={`bull-bear-bar-${s.symbol}`}>
+                <div
+                  className="w-full bg-[#0E131F] h-2 rounded-sm overflow-hidden flex mb-2"
+                  role="progressbar"
+                  aria-valuenow={s.bull_pct}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-label={`${s.symbol} Bull/Bear Sentiment: ${s.bull_pct}% Bullish`}
+                  data-testid={`bull-bear-bar-${s.symbol}`}
+                >
                   <div className={`${scoreBarColor(s.score)}`} style={{ width: `${s.bull_pct}%` }} />
                   <div className="bg-rose-900/50" style={{ width: `${s.bear_pct}%` }} />
                 </div>

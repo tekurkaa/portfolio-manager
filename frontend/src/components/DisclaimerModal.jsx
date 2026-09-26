@@ -1,6 +1,16 @@
+import { useEffect } from "react";
 import { ShieldAlert, X, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export default function DisclaimerModal({ open, onClose, onAccept }) {
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const handleAccept = () => {
@@ -20,12 +30,15 @@ export default function DisclaimerModal({ open, onClose, onAccept }) {
       <div
         className="bg-[#0A0D12] border border-[#222C3D] rounded-sm w-full max-w-xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="disclaimer-modal-title"
       >
         {/* Terminal Header */}
         <div className="px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-500" />
-            <span className="text-[11px] font-mono tracking-widest text-amber-500 font-bold uppercase">
+            <span id="disclaimer-modal-title" className="text-[11px] font-mono tracking-widest text-amber-500 font-bold uppercase">
               Regulatory Notice & Disclaimer
             </span>
           </div>
@@ -34,6 +47,7 @@ export default function DisclaimerModal({ open, onClose, onAccept }) {
             data-testid="close-disclaimer-modal"
             className="text-gray-400 hover:text-white transition-colors"
             title="Close"
+            aria-label="Close disclaimer modal"
           >
             <X className="w-4 h-4" />
           </button>
@@ -60,7 +74,7 @@ export default function DisclaimerModal({ open, onClose, onAccept }) {
                 1. No Investment Advice or Solicitation
               </span>
               <p>
-                Terminus / Invest is a personal analytical intelligence terminal. All tools, automated signals, S&amp;P 500 alpha comparisons, risk audits, stock scanners, and AI financial syntheses are intended strictly for educational, research, and self-directed informational purposes. Nothing within this platform constitutes a recommendation, offer, or solicitation to buy, sell, or hold any security, cryptocurrency, or investment product.
+                Terminus is a personal analytical intelligence terminal. All tools, automated signals, S&amp;P 500 alpha comparisons, risk audits, stock scanners, and AI financial syntheses are intended strictly for educational, research, and self-directed informational purposes. Nothing within this platform constitutes a recommendation, offer, or solicitation to buy, sell, or hold any security, cryptocurrency, or investment product.
               </p>
             </div>
 

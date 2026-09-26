@@ -110,7 +110,7 @@ export default function ChatTab() {
   return (
     <div className="grid lg:grid-cols-[240px_1fr] gap-3" data-testid="chat-tab" style={{ height: "calc(100vh - 200px)", minHeight: 500 }}>
       {/* Sidebar */}
-      <aside className="border border-[#222C3D] bg-[#121721] rounded-sm flex flex-col overflow-hidden">
+      <aside className="border border-[#222C3D] bg-[#121721] rounded-sm flex flex-col overflow-hidden panel-raised">
         <div className="p-3 border-b border-[#222C3D] flex items-center justify-between">
           <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase flex items-center gap-1">
             <MessageSquare className="w-3.5 h-3.5" /> Chats
@@ -118,7 +118,7 @@ export default function ChatTab() {
           <button
             onClick={newChat}
             data-testid="new-chat-button"
-            className="text-xs font-mono text-gray-300 hover:text-amber-400 flex items-center gap-1"
+            className="text-xs font-mono text-gray-300 hover:text-amber-400 flex items-center gap-1 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none rounded-xs"
           >
             <Plus className="w-3 h-3" /> NEW
           </button>
@@ -150,7 +150,7 @@ export default function ChatTab() {
       </aside>
 
       {/* Chat */}
-      <section className="border border-[#222C3D] bg-[#121721] rounded-sm flex flex-col overflow-hidden">
+      <section className="border border-[#222C3D] bg-[#121721] rounded-sm flex flex-col overflow-hidden panel-raised">
         <div className="p-3 border-b border-[#222C3D] flex items-center justify-between gap-2 bg-[#0E131F]">
           <div className="flex items-center gap-2">
             <Bot className="w-4 h-4 text-amber-500" />

@@ -19,7 +19,7 @@ trigger: always_on
 ## 2. Test Integrity & Validation
 - Run existing test suites (`pytest tests/` for backend, npm/yarn test for frontend) before marking any multi-step task complete.
 - Never modify existing test assertions merely to make a failing test pass unless the business logic explicitly changed.
-- Check and respect `design_guidelines.json` whenever modifying frontend components.
+- Check and respect `design_guidelines.json` and `.agents/rules/ui-design-guidelines.md` whenever modifying or adding frontend components.
 
 ## 3. Scope & Non-Destructive Edits
 - Do not make speculative refactors to files unrelated to the prompt's explicit scope.

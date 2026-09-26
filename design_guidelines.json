@@ -119,11 +119,33 @@
     "Ensure tables have sortable columns, search/filter inputs, tight padding, and clear left-aligned structure.",
     "Ensure all interactive elements have data-testid attributes."
   ],
+  "ui_refinements_and_layout_rules": {
+    "kpi_summary_cards": {
+      "alignment": "Strict 3-tier vertical alignment across all cards in summary grid (SummaryCard) to guarantee adjacent cards never wrap or become vertically staggered.",
+      "tier_1_title": "Single-line fixed height (h-5 flex items-center justify-between mb-2 gap-1.5) with whitespace-nowrap truncate and title tooltip. Labels must be concise and never wrap to two lines (e.g. 'Annual Cash Flow').",
+      "tier_2_value": "Fixed baseline container (h-8 flex items-baseline text-2xl font-mono font-bold text-gray-100 tabular-nums whitespace-nowrap truncate) ensuring all numeric values share the exact same horizontal baseline.",
+      "tier_3_subscript": "Fixed starting top offset (mt-1 min-h-[2.5rem] flex flex-col justify-start) with line-clamp-2 so secondary indicators and descriptors start on the exact same horizontal line across all cards."
+    },
+    "risk_warning_presentation": {
+      "single_asset_alerts": "Use ONLY the triangle warning icon on the left (<AlertTriangle /> Warning: ...) and the asset class badge on the right. Do NOT add a redundant second yellow square badge (■ WARNING).",
+      "sector_balance_alerts": "Use only the yellow triangle icon (<AlertTriangle />) alongside the alert text. Do NOT insert a redundant square symbol (■) inside the alert message.",
+      "high_exposure_red": "Use shape-prefixed badge ▲ HIGH EXPOSURE for critical alerts to maintain non-color WCAG 1.4.1 distinguishability."
+    },
+    "branding_and_favicon": {
+      "app_name": "Terminus (uppercase TERMINUS in headers/badges). Never use 'Terminus / Invest' or generic 'Portfolio Manager'.",
+      "subtitle": "PERSONAL INVESTMENT COMMAND CENTER",
+      "document_title": "Terminus · Investment Command Center",
+      "brand_icon_and_favicon": "Terminal prompt '>_' in amber #F59E0B on terminal dark navy #0A0E17. Favicon files must be served from public/ (favicon.svg, favicon.ico, multi-res PNGs) and linked in index.html."
+    }
+  },
   "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
     "Never use full-screen bright gradients on dark themes.",
     "Do not center-align the app container. Maintain left-aligned, structured data density.",
     "Avoid generic centered layouts; use structured grids with high information density.",
     "Always set explicit hover text colors (e.g. hover:bg-slate-800 hover:text-white).",
-    "All interactive elements MUST include data-testid attributes in kebab-case."
+    "All interactive elements MUST include data-testid attributes in kebab-case.",
+    "All summary KPI cards must use the 3-tier fixed layout (h-5 single-line title, h-8 baseline value, min-h-[2.5rem] subscript) so titles, values, and subscripts never stagger vertically.",
+    "Do not display duplicate warning badges: keep the triangle warning icon and remove redundant yellow square (■ WARNING) badges or square symbols in alert messages.",
+    "The application name is Terminus (not 'Terminus / Invest' or 'Portfolio Manager'). The brand mark and favicon is the terminal prompt '>_' in amber (#F59E0B) on terminal dark navy (#0A0E17)."
   ]
 }

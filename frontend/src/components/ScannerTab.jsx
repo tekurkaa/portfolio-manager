@@ -68,7 +68,7 @@ export default function ScannerTab() {
 
   return (
     <div data-testid="scanner-tab" className="space-y-4">
-      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm">
+      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised">
         <div className="flex flex-wrap items-center gap-2 justify-between">
           <div>
             <div className="text-xs font-mono tracking-widest uppercase text-amber-500 flex items-center gap-2">
@@ -79,14 +79,14 @@ export default function ScannerTab() {
             </div>
           </div>
           <button onClick={() => load(false, true)} disabled={loading || refreshing} data-testid="scan-refresh"
-            className="flex items-center gap-1.5 border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm font-semibold disabled:opacity-50">
+            className="flex items-center gap-1.5 border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm font-semibold disabled:opacity-50 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
             <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Rescan
           </button>
         </div>
       </div>
 
       {/* Email notifications */}
-      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm" data-testid="notify-block">
+      <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised" data-testid="notify-block">
         <div className="flex items-center gap-2 mb-3">
           <Bell className="w-4 h-4 text-emerald-400" />
           <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">Email Alerts</span>
@@ -94,19 +94,19 @@ export default function ScannerTab() {
         <div className="flex flex-wrap items-center gap-2">
           <input value={email} onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com" data-testid="notify-email-input"
-            className="bg-[#0E131F] border border-[#222C3D] text-gray-100 text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-amber-500 flex-1 min-w-[240px]"
+            className="bg-[#0E131F] border border-[#222C3D] text-gray-100 text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-amber-500 flex-1 min-w-[240px] focus-visible:ring-2 focus-visible:ring-amber-500"
           />
           <label className="flex items-center gap-2 text-[11px] font-mono text-gray-400 cursor-pointer">
             <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)}
-              data-testid="notify-enabled" />
+              data-testid="notify-enabled" className="accent-amber-500" />
             Daily digest
           </label>
           <button onClick={savePrefs} data-testid="notify-save"
-            className="border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-2 rounded-sm">
+            className="border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-2 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
             Save
           </button>
           <button onClick={sendDigest} disabled={sending || !email} data-testid="notify-send"
-            className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs uppercase tracking-wider px-3 py-2 rounded-sm disabled:opacity-50 flex items-center gap-1">
+            className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs uppercase tracking-wider px-3 py-2 rounded-sm disabled:opacity-50 flex items-center gap-1 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
             <Mail className="w-3.5 h-3.5" /> {sending ? "Sending..." : "Send Now"}
           </button>
         </div>
@@ -116,7 +116,7 @@ export default function ScannerTab() {
       </div>
 
       {/* Candidates */}
-      <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden">
+      <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised">
         <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center gap-2">
           <ChevronRight className="w-3.5 h-3.5 text-amber-500" />
           <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">Top Breakout Candidates</span>
@@ -125,18 +125,28 @@ export default function ScannerTab() {
           <table className="w-full text-xs min-w-[760px]" data-testid="scanner-table">
             <thead className="bg-[#0E131F] border-b border-[#222C3D]">
               <tr className="text-left">
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap w-8">#</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SYMBOL</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap min-w-[110px] w-[110px]">SIGNAL</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">SCORE</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">PRICE</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOM 5D</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">MOM 1M</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">VOL SURGE</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">52W%</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">OPT %</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase whitespace-nowrap">CGR ▲</th>
-                <th className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">DRIVERS</th>
+                {[
+                  ["#", "w-8"],
+                  ["SYMBOL", ""],
+                  ["SIGNAL", "min-w-[110px] w-[110px]"],
+                  ["SCORE", ""],
+                  ["PRICE", ""],
+                  ["MOM 5D", ""],
+                  ["MOM 1M", ""],
+                  ["VOL SURGE", ""],
+                  ["52W%", ""],
+                  ["OPT %", ""],
+                  ["CGR ▲", ""],
+                  ["DRIVERS", ""]
+                ].map(([h, cls]) => (
+                  <th
+                    key={h}
+                    scope="col"
+                    className={`px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase ${h === "DRIVERS" ? "" : "whitespace-nowrap"} ${cls}`}
+                  >
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>

@@ -78,7 +78,8 @@ export default function DividendsTab() {
                 key={tab.id}
                 onClick={() => setActiveSubTab(tab.id)}
                 data-testid={`div-subtab-${tab.id}`}
-                className={`px-3 py-1.5 rounded-sm transition-colors ${
+                aria-current={activeSubTab === tab.id ? "page" : undefined}
+                className={`px-3 py-1.5 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none ${
                   activeSubTab === tab.id
                     ? "bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40"
                     : "text-gray-400 hover:text-gray-200"
@@ -93,8 +94,9 @@ export default function DividendsTab() {
             onClick={fetchDividends}
             disabled={loading}
             data-testid="dividends-refresh-btn"
-            className="p-2 rounded-sm border border-[#222C3D] bg-[#0E131F] hover:bg-[#1A2232] text-gray-400 hover:text-gray-200 transition-colors"
+            className="p-2 rounded-sm border border-[#222C3D] bg-[#0E131F] hover:bg-[#1A2232] text-gray-400 hover:text-gray-200 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
             title="Refresh dividend schedule"
+            aria-label="Refresh dividend schedule"
           >
             <RotateCw className={`w-4 h-4 ${loading ? "animate-spin text-emerald-400" : ""}`} />
           </button>
@@ -110,56 +112,56 @@ export default function DividendsTab() {
 
       {/* Top Metrics Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3" data-testid="dividends-summary-strip">
-        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D]">
+        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D] panel-raised">
           <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase flex items-center justify-between">
             <span>Annual Income</span>
             <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <div className="font-mono text-lg sm:text-xl font-bold text-emerald-400 mt-1" data-testid="div-annual-income">
+          <div className="font-mono text-lg sm:text-xl font-bold text-emerald-400 mt-1 tabular-nums" data-testid="div-annual-income">
             {fmtMoney(summary.total_annual_income)}
           </div>
           <div className="text-[10px] text-gray-400 mt-0.5 font-mono">projected 12-mo cash flow</div>
         </div>
 
-        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D]">
+        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D] panel-raised">
           <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase flex items-center justify-between">
             <span>Monthly Avg</span>
             <Clock className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <div className="font-mono text-lg sm:text-xl font-bold text-gray-100 mt-1" data-testid="div-monthly-income">
+          <div className="font-mono text-lg sm:text-xl font-bold text-gray-100 mt-1 tabular-nums" data-testid="div-monthly-income">
             {fmtMoney(summary.monthly_average_income)}
           </div>
           <div className="text-[10px] text-gray-400 mt-0.5 font-mono">average monthly payout</div>
         </div>
 
-        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D]">
+        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D] panel-raised">
           <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase flex items-center justify-between">
             <span>Portfolio Yield</span>
             <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
           </div>
-          <div className="font-mono text-lg sm:text-xl font-bold text-blue-400 mt-1" data-testid="div-portfolio-yield">
+          <div className="font-mono text-lg sm:text-xl font-bold text-blue-400 mt-1 tabular-nums" data-testid="div-portfolio-yield">
             {fmtPct(summary.portfolio_yield)}
           </div>
           <div className="text-[10px] text-gray-400 mt-0.5 font-mono">weighted forward yield</div>
         </div>
 
-        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D]">
+        <div className="p-3 rounded-sm bg-[#121721] border border-[#222C3D] panel-raised">
           <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase flex items-center justify-between">
             <span>Yield on Cost</span>
             <Sparkles className="w-3.5 h-3.5 text-purple-400" />
           </div>
-          <div className="font-mono text-lg sm:text-xl font-bold text-purple-400 mt-1" data-testid="div-yield-on-cost">
+          <div className="font-mono text-lg sm:text-xl font-bold text-purple-400 mt-1 tabular-nums" data-testid="div-yield-on-cost">
             {fmtPct(summary.yield_on_cost)}
           </div>
           <div className="text-[10px] text-gray-400 mt-0.5 font-mono">on deployed capital basis</div>
         </div>
 
-        <div className="col-span-2 md:col-span-1 p-3 rounded-sm bg-[#121721] border border-[#222C3D]">
+        <div className="col-span-2 md:col-span-1 p-3 rounded-sm bg-[#121721] border border-[#222C3D] panel-raised">
           <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase flex items-center justify-between">
             <span>Dividend Assets</span>
             <Layers className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <div className="font-mono text-lg sm:text-xl font-bold text-gray-100 mt-1" data-testid="div-payer-count">
+          <div className="font-mono text-lg sm:text-xl font-bold text-gray-100 mt-1 tabular-nums" data-testid="div-payer-count">
             {summary.dividend_paying_count} <span className="text-xs font-normal text-gray-500">/ {summary.total_holdings_count}</span>
           </div>
           <div className="text-[10px] text-gray-400 mt-0.5 font-mono">active dividend payers</div>
@@ -187,16 +189,16 @@ export default function DividendsTab() {
               <table className="w-full text-xs">
                 <thead className="bg-[#0E131F] border-b border-[#222C3D]">
                   <tr className="text-left text-[10px] font-mono tracking-wider text-gray-400 uppercase">
-                    <th className="px-3 py-2.5">Symbol</th>
-                    <th className="px-3 py-2.5">Ex-Dividend Date</th>
-                    <th className="px-3 py-2.5">Payment Date</th>
-                    <th className="px-3 py-2.5 text-right">Dividend / Share</th>
-                    <th className="px-3 py-2.5 text-right">Est. Cash Flow</th>
-                    <th className="px-3 py-2.5 text-right">Yield %</th>
-                    <th className="px-3 py-2.5">Frequency</th>
+                    <th scope="col" className="px-3 py-2.5">Symbol</th>
+                    <th scope="col" className="px-3 py-2.5">Ex-Dividend Date</th>
+                    <th scope="col" className="px-3 py-2.5">Payment Date</th>
+                    <th scope="col" className="px-3 py-2.5 text-right">Dividend / Share</th>
+                    <th scope="col" className="px-3 py-2.5 text-right">Est. Cash Flow</th>
+                    <th scope="col" className="px-3 py-2.5 text-right">Yield %</th>
+                    <th scope="col" className="px-3 py-2.5">Frequency</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#1A2232] font-mono">
+                <tbody className="divide-y divide-[#1A2232] font-mono tabular-nums">
                   {upcomingEvents.map((evt) => {
                     const isUpcoming = evt.ex_dividend_date && evt.ex_dividend_date >= new Date().toISOString().slice(0, 10);
                     return (
@@ -268,7 +270,11 @@ export default function DividendsTab() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-2.5">
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-2.5"
+            role="region"
+            aria-label="12-Month Projected Dividend Distribution Grid"
+          >
             {monthlyFlows.map((flow) => {
               const pctHeight = Math.min(Math.round((flow.amount / maxMonthAmount) * 100), 100);
               const isCurrentMonth = new Date().getMonth() + 1 === flow.month_num;
@@ -295,7 +301,14 @@ export default function DividendsTab() {
                   </div>
 
                   {/* Micro progress bar */}
-                  <div className="h-1.5 w-full bg-[#0A0D12] rounded-full overflow-hidden mb-2">
+                  <div
+                    className="h-1.5 w-full bg-[#0A0D12] rounded-full overflow-hidden mb-2"
+                    role="progressbar"
+                    aria-valuenow={pctHeight}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-label={`${flow.month} dividend payout relative level: ${pctHeight}%`}
+                  >
                     <div
                       className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
                       style={{ width: `${pctHeight}%` }}

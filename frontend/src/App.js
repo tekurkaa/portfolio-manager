@@ -150,7 +150,7 @@ function App() {
             <Terminal className="w-5 h-5 text-amber-500" />
             <div className="flex flex-col leading-tight">
               <span className="text-amber-500 font-bold text-sm tracking-widest uppercase">
-                Terminus / Invest
+                Terminus
               </span>
               <span className="text-[10px] text-gray-500 font-mono">
                 PERSONAL INVESTMENT COMMAND CENTER
@@ -194,7 +194,7 @@ function App() {
           <Terminal className="w-5 h-5 text-amber-500" />
           <div className="flex flex-col leading-tight">
             <span className="text-amber-500 font-bold text-sm tracking-widest uppercase">
-              Terminus / Invest
+              Terminus
             </span>
             <span className="text-[10px] text-gray-500 font-mono">
               PERSONAL INVESTMENT COMMAND CENTER
@@ -253,7 +253,7 @@ function App() {
             {user.picture && <img src={user.picture} alt="" className="w-6 h-6 rounded-full border border-[#222C3D]" />}
             <span className="text-gray-300 hidden md:inline max-w-[140px] truncate">{user.email}</span>
             <button onClick={handleLogout} data-testid="logout-button"
-              className="text-gray-500 hover:text-rose-400 transition-colors" title="Sign out">
+              className="text-gray-500 hover:text-rose-400 transition-colors" title="Sign out" aria-label="Sign out">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -275,51 +275,54 @@ function App() {
               key={t.id}
               onClick={() => setActive(t.id)}
               data-testid={`tab-${t.id}-button`}
-              className={`flex-1 min-w-max lg:min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-3 text-xs font-semibold tracking-wider sm:tracking-widest uppercase whitespace-nowrap transition-colors duration-150 border-b-2 ${
+              aria-current={isActive ? "page" : undefined}
+              data-active={isActive ? "true" : undefined}
+              className={`flex-1 min-w-max lg:min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-3 text-xs font-semibold tracking-wider sm:tracking-widest uppercase whitespace-nowrap transition-colors duration-150 border-b-2 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-1 focus-visible:ring-offset-[#121721] focus-visible:outline-none ${
                 isActive
-                  ? "text-amber-500 border-amber-500 bg-[#161C26]"
+                  ? "text-amber-500 border-amber-500 bg-[#161C26] font-bold"
                   : "text-gray-500 border-transparent hover:text-gray-200 hover:bg-[#161C26]"
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span>{t.label}</span>
+              {isActive && <span className="sr-only">(Active)</span>}
             </button>
           );
         })}
       </nav>
 
       {/* Content — Keep-Alive Staggered Mounting for zero-latency switching and cloud backend stability */}
-      <main className="p-3 sm:p-5 flex-1 pb-28 sm:pb-16" data-testid="tab-content">
+      <main className="p-3 sm:p-5 flex-1 pb-28 sm:pb-16 max-w-screen-2xl mx-auto w-full" data-testid="tab-content">
         <ErrorBoundary>
           {mountedTabs.has("portfolio") && (
-            <div className={active === "portfolio" ? "block" : "hidden"} data-tab-container="portfolio"><PortfolioTab /></div>
+            <div className={`${active === "portfolio" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="portfolio"><PortfolioTab /></div>
           )}
           {mountedTabs.has("chat") && (
-            <div className={active === "chat" ? "block" : "hidden"} data-tab-container="chat"><ChatTab /></div>
+            <div className={`${active === "chat" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="chat"><ChatTab /></div>
           )}
           {mountedTabs.has("alpha") && (
-            <div className={active === "alpha" ? "block" : "hidden"} data-tab-container="alpha"><AlphaTab /></div>
+            <div className={`${active === "alpha" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="alpha"><AlphaTab /></div>
           )}
           {mountedTabs.has("scanner") && (
-            <div className={active === "scanner" ? "block" : "hidden"} data-tab-container="scanner"><ScannerTab /></div>
+            <div className={`${active === "scanner" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="scanner"><ScannerTab /></div>
           )}
           {mountedTabs.has("watchlist") && (
-            <div className={active === "watchlist" ? "block" : "hidden"} data-tab-container="watchlist"><WatchlistTab /></div>
+            <div className={`${active === "watchlist" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="watchlist"><WatchlistTab /></div>
           )}
           {mountedTabs.has("dividends") && (
-            <div className={active === "dividends" ? "block" : "hidden"} data-tab-container="dividends"><DividendsTab /></div>
+            <div className={`${active === "dividends" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="dividends"><DividendsTab /></div>
           )}
           {mountedTabs.has("stock-news") && (
-            <div className={active === "stock-news" ? "block" : "hidden"} data-tab-container="stock-news"><StockNewsTab /></div>
+            <div className={`${active === "stock-news" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="stock-news"><StockNewsTab /></div>
           )}
           {mountedTabs.has("macro-news") && (
-            <div className={active === "macro-news" ? "block" : "hidden"} data-tab-container="macro-news"><MacroNewsTab /></div>
+            <div className={`${active === "macro-news" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="macro-news"><MacroNewsTab /></div>
           )}
           {mountedTabs.has("sentiment") && (
-            <div className={active === "sentiment" ? "block" : "hidden"} data-tab-container="sentiment"><SentimentTab /></div>
+            <div className={`${active === "sentiment" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="sentiment"><SentimentTab /></div>
           )}
           {mountedTabs.has("insider") && (
-            <div className={active === "insider" ? "block" : "hidden"} data-tab-container="insider"><InsiderFlowTab /></div>
+            <div className={`${active === "insider" ? "block" : "hidden"} animate-fadeIn`} data-tab-container="insider"><InsiderFlowTab /></div>
           )}
         </ErrorBoundary>
       </main>

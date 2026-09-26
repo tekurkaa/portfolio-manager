@@ -87,7 +87,16 @@
 - **Zero-Friction Local Mode**: Automatically detects if MongoDB is running; if not available, gracefully falls back to an embedded JSON document store (`backend/data/local_storage.json`) within 1 second without hanging.
 - **Production Mode**: Seamlessly switches to Cloud MongoDB (MongoDB Atlas) when `MONGO_URL` is configured.
 
-
+### 10. 🎨 Institutional Design System & Accessibility (WCAG 2.1 AAA)
+- **Accessible Navigation & Tab Semantics**: All 10 navigation tabs and sub-tab switchers feature explicit `aria-current="page"` indicators for screen readers and high-contrast `focus-visible:ring-2 focus-visible:ring-amber-500` rings for keyboard navigation.
+- **Accessible Forms & Input Affordances**: Visible, uppercase monospace `<label htmlFor="...">` associations across trading and auth forms, native `type="email"` autofill, and descriptive `aria-label` tags on all icon-only action buttons.
+- **Motion Safety (`prefers-reduced-motion`)**: Fully respects user motion preferences across all animations, pausing ticker marquees and disabling price flash pulses and tab fade transitions.
+- **Terminal Depth & Numerical Alignment**: Enhanced panel elevation with inset highlight shadows (`.panel-raised`), vertical column alignment with `.tabular-nums` across tables and KPI cards (Watchlist, Dividends, Holdings), tactile press feedback (`active:scale-[0.97]`), custom dark Recharts tooltips, and safe inline two-step confirmation for destructive actions without native blocking dialogs.
+- **Dialog Accessibility & Keyboard Trapping**: Complete `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, and global `Escape` key dismissal across all modal surfaces (`StockDetailModal`, `DisclaimerModal`, `HowItWorksModal`, `CongressDrawer`).
+- **Color-Independent Directional & Risk Encoding (WCAG 1.4.1)**: Directional indicators (`▲` / `▼`) alongside numeric values and explicit shape markers (`▲` High Exposure, `■` Warning, `●` Optimal) on risk badges so color is never the sole semantic differentiator.
+- **Treemap Micro-Holding Aggregation**: Smart aggregation of positions accounting for <1% of the portfolio into an "OTHER (<1%)" bucket, preventing squished slivers and preserving aspect ratio visual clarity.
+- **Full Skeleton Loading Pipeline**: Pulse-animated terminal skeleton loaders across historical charts and macro/stock news feeds that eliminate layout shifts during data fetches.
+- **SVG & Visual Bar Accessibility**: Native SVG font styling ensuring monospace numbers across all browser engines, accompanied by `role="progressbar"` semantic attributes (`aria-valuenow`, `aria-valuemin`, `aria-valuemax`) on composite scores, sentiment meters, and sector allocation bars.
 
 ---
 
@@ -116,9 +125,9 @@ portfolio-manager/
 ├── specs/                   # QA test specifications (Given/When/Then format)
 │   └── feature-tests.md     # Exhaustive 22-suite specification
 ├── tests/
-│   ├── e2e/                 # Playwright TypeScript E2E test suite (81 tests across 22 suites)
+│   ├── e2e/                 # Playwright TypeScript E2E test suite (112 tests across 29 suites)
 │   ├── helpers/             # E2E test session bootstrap & database reset utilities
-│   └── test_*.py            # Pytest backend integration test suite (24 tests)
+│   └── test_*.py            # Pytest backend integration test suite (50 tests)
 ├── playwright.config.ts     # Playwright configuration (workers: 1, dual backend/frontend webServers)
 └── package.json             # Root dependencies & test scripts
 ```
@@ -199,7 +208,7 @@ cd portfolio-manager
 
 The project features a dual testing setup: backend unit/integration tests with **Pytest** and full end-to-end browser automation with **Playwright (TypeScript)**.
 
-### 1. Backend Integration Tests (Pytest — 29 Tests)
+### 1. Backend Integration Tests (Pytest — 50 Tests)
 Validates core API routes, dual-mode database CRUD, market quote streaming, trade activity import, and scanner scoring:
 
 ```bash
@@ -215,7 +224,7 @@ Validates core API routes, dual-mode database CRUD, market quote streaming, trad
 - `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
 
-### 2. End-to-End Browser Tests (Playwright — 85 Tests across 23 Suites)
+### 2. End-to-End Browser Tests (Playwright — 112 Tests across 29 Suites)
 Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
 
 ```bash
@@ -236,7 +245,7 @@ npx playwright test --ui
 - **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs & XIRR, History Chart Ranges & Benchmarks, Allocation Treemap.
 - **Suites 06–10**: CSV Upload, Robinhood Activity Import, Demo Seed, Watchlist Management, Held Stock News.
 - **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner, Email Notifications.
-- **Suites 16–23**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar.
+- **Suites 16–29**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar, Design System & Accessibility Audit (Batches 1–4), User Layout Refinements, and Branding & Webpage Favicon (`>_` terminal motif).
 
 ---
 

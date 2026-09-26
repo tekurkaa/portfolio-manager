@@ -209,12 +209,13 @@ export default function StockDetailModal({ symbol, onClose }) {
         className="bg-[#0A0D12] border border-[#222C3D] w-full max-w-4xl max-h-[94dvh] sm:max-h-[90vh] flex flex-col rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="stock-detail-title"
       >
         {/* Terminal Header Bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span className="font-mono text-xs font-bold text-gray-300 tracking-wider uppercase">
+            <span id="stock-detail-title" className="font-mono text-xs font-bold text-gray-300 tracking-wider uppercase">
               TERMINAL // SECURITY DETAIL
             </span>
             <span className="text-[10px] font-mono text-gray-500">
@@ -228,6 +229,7 @@ export default function StockDetailModal({ symbol, onClose }) {
                 fetchHistory(range);
               }}
               title="Refresh Quotes"
+              aria-label="Refresh quotes"
               className="p-1 rounded-sm border border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26] transition-colors cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -235,6 +237,7 @@ export default function StockDetailModal({ symbol, onClose }) {
             <button
               onClick={onClose}
               data-testid="close-stock-modal-btn"
+              aria-label="Close security detail modal"
               className="p-1 rounded-sm border border-[#222C3D] text-gray-400 hover:text-rose-400 hover:border-rose-900/50 hover:bg-rose-950/20 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -311,7 +314,7 @@ export default function StockDetailModal({ symbol, onClose }) {
                     key={r}
                     onClick={() => handleRangeChange(r)}
                     data-testid={`chart-range-${r}`}
-                    className={`text-[11px] font-mono font-semibold px-2.5 py-1 rounded-sm border transition-colors cursor-pointer ${
+                    className={`text-[11px] font-mono font-semibold px-2.5 py-1 rounded-sm border transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none cursor-pointer ${
                       range === r
                         ? "border-amber-500 text-amber-400 bg-amber-500/10 shadow-xs"
                         : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
@@ -396,7 +399,14 @@ export default function StockDetailModal({ symbol, onClose }) {
                   <span>DAY RANGE</span>
                   <span className="text-gray-400">{fmtMoney(details.day_low)} — {fmtMoney(details.day_high)}</span>
                 </div>
-                <div className="relative w-full h-1.5 bg-[#1F293D] rounded-full overflow-hidden">
+                <div
+                  className="relative w-full h-1.5 bg-[#1F293D] rounded-full overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={Math.round(dayRangePct)}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-label={`${symbol} Day Price Range`}
+                >
                   <div
                     className="absolute top-0 bottom-0 left-0 bg-amber-500 rounded-full"
                     style={{ width: `${dayRangePct}%` }}
@@ -415,7 +425,14 @@ export default function StockDetailModal({ symbol, onClose }) {
                   <span>52-WEEK RANGE</span>
                   <span className="text-gray-400">{fmtMoney(details.year_low)} — {fmtMoney(details.year_high)}</span>
                 </div>
-                <div className="relative w-full h-1.5 bg-[#1F293D] rounded-full overflow-hidden">
+                <div
+                  className="relative w-full h-1.5 bg-[#1F293D] rounded-full overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={Math.round(yearRangePct)}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-label={`${symbol} 52-Week Price Range`}
+                >
                   <div
                     className="absolute top-0 bottom-0 left-0 bg-blue-500 rounded-full"
                     style={{ width: `${yearRangePct}%` }}
@@ -504,7 +521,9 @@ export default function StockDetailModal({ symbol, onClose }) {
               {details.summary.length > 200 && (
                 <button
                   onClick={() => setShowFullSummary(!showFullSummary)}
-                  className="text-[11px] font-mono text-amber-400 hover:text-amber-300 mt-2 underline cursor-pointer"
+                  aria-expanded={showFullSummary}
+                  data-testid="toggle-full-summary-btn"
+                  className="text-[11px] font-mono text-amber-400 hover:text-amber-300 mt-2 underline cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
                 >
                   {showFullSummary ? "Show less" : "Read full profile..."}
                 </button>

@@ -111,13 +111,18 @@ export default function TradeActivityImporter({ isOpen, onClose, onSuccess }) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
       data-testid="trade-importer-modal"
     >
-      <div className="bg-[#0D121D] border border-[#222C3D] rounded-md shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col text-gray-200">
+      <div
+        className="bg-[#0D121D] border border-[#222C3D] rounded-md shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col text-gray-200"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trade-importer-title"
+      >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#222C3D] bg-[#111726]">
           <div className="flex items-center gap-2.5">
             <FileSpreadsheet className="w-5 h-5 text-amber-500" />
             <div>
-              <h2 className="text-sm font-mono font-bold tracking-wider uppercase text-amber-400">
+              <h2 id="trade-importer-title" className="text-sm font-mono font-bold tracking-wider uppercase text-amber-400">
                 Robinhood Trade Activity Import
               </h2>
               <div className="text-[11px] font-mono text-gray-500">
@@ -365,7 +370,6 @@ export default function TradeActivityImporter({ isOpen, onClose, onSuccess }) {
               <div className="space-y-3 font-mono">
                 {/* Replace Option */}
                 <label
-                  onClick={() => setImportMode("replace")}
                   className={`block border p-4 rounded-sm cursor-pointer transition-all ${
                     importMode === "replace"
                       ? "border-amber-500 bg-amber-500/10"
@@ -397,7 +401,6 @@ export default function TradeActivityImporter({ isOpen, onClose, onSuccess }) {
 
                 {/* Merge Option */}
                 <label
-                  onClick={() => setImportMode("merge")}
                   className={`block border p-4 rounded-sm cursor-pointer transition-all ${
                     importMode === "merge"
                       ? "border-amber-500 bg-amber-500/10"

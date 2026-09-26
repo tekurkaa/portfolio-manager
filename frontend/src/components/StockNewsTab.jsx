@@ -50,14 +50,14 @@ export default function StockNewsTab() {
         <button
           onClick={() => load(true)}
           data-testid="refresh-stock-news"
-          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm"
+          className="flex items-center gap-1.5 border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
         </button>
       </div>
 
       {data.summary && (
-        <div className="border border-amber-800/40 bg-amber-950/20 rounded-sm p-4" data-testid="ai-summary-card">
+        <div className="border border-amber-800/40 bg-amber-950/20 rounded-sm p-4 panel-raised" data-testid="ai-summary-card">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-amber-400" />
             <span className="text-[10px] font-mono tracking-widest text-amber-400 uppercase">
@@ -75,9 +75,10 @@ export default function StockNewsTab() {
               key={t}
               onClick={() => setFilter(t)}
               data-testid={`stock-filter-${t}`}
-              className={`text-[11px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-sm border ${
+              aria-pressed={filter === t}
+              className={`text-[11px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-sm border transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none ${
                 filter === t
-                  ? "border-amber-500 bg-amber-500/10 text-amber-500"
+                  ? "border-amber-500 bg-amber-500/10 text-amber-500 font-bold"
                   : "border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26]"
               }`}
             >
@@ -89,7 +90,18 @@ export default function StockNewsTab() {
 
       <div className="grid gap-3" data-testid="news-articles-list">
         {loading && (!data.articles || data.articles.length === 0) ? (
-          <div className="text-center text-gray-500 font-mono text-xs p-8">Loading news...</div>
+          <div className="grid gap-3" data-testid="stock-news-skeleton">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm animate-pulse space-y-2.5 panel-raised">
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-16 bg-[#1A2232] rounded-sm" />
+                  <div className="h-3 w-12 bg-[#161C26] rounded-sm" />
+                </div>
+                <div className="h-4 w-3/4 bg-[#1E2638] rounded-sm" />
+                <div className="h-3 w-full bg-[#161C26] rounded-sm" />
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-gray-500 font-mono text-xs p-8" data-testid="empty-news">
             {data.symbols?.length ? "No news for selected filter." : "Add positions in Portfolio tab to get filtered news."}

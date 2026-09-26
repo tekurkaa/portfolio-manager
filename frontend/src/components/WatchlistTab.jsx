@@ -12,6 +12,15 @@ const signalColor = (sig) => {
 function CongressDrawer({ symbol, onClose }) {
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   useEffect(() => {
     if (!symbol) return;
     setLoading(true);
@@ -23,15 +32,21 @@ function CongressDrawer({ symbol, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-4" onClick={onClose} data-testid="congress-drawer">
-      <div className="bg-[#121721] border border-[#222C3D] rounded-sm w-full max-w-3xl max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="congress-drawer-title"
+        className="bg-[#121721] border border-[#222C3D] rounded-sm w-full max-w-3xl max-h-[80vh] overflow-hidden panel-raised"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Landmark className="w-4 h-4 text-amber-500" />
-            <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
+            <span id="congress-drawer-title" className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
               Congress Trades · {symbol}
             </span>
           </div>
-          <button onClick={onClose} data-testid="close-drawer" className="text-gray-400 hover:text-white text-xs font-mono">✕ CLOSE</button>
+          <button onClick={onClose} data-testid="close-drawer" aria-label="Close congress drawer" className="text-gray-400 hover:text-white text-xs font-mono">✕ CLOSE</button>
         </div>
         <div className="overflow-y-auto max-h-[60vh]">
           {loading ? (
@@ -43,7 +58,7 @@ function CongressDrawer({ symbol, onClose }) {
               <thead className="bg-[#0E131F] border-b border-[#222C3D]">
                 <tr className="text-left">
                   {["DATE","CHAMBER","POLITICIAN","TYPE","AMOUNT"].map((h) => (
-                    <th key={h} className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
+                    <th key={h} scope="col" className="px-3 py-2 font-mono text-[10px] tracking-widest text-gray-500 uppercase">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -148,18 +163,18 @@ export default function WatchlistTab() {
               className="bg-[#0E131F] border border-[#222C3D] text-gray-100 text-xs font-mono px-3 py-1.5 rounded-sm focus:outline-none focus:border-amber-500 w-40 tracking-widest"
             />
             <button onClick={add} disabled={busy} data-testid="watchlist-add"
-              className="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm disabled:opacity-50 flex items-center gap-1">
+              className="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm disabled:opacity-50 flex items-center gap-1 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
               <Plus className="w-3.5 h-3.5" /> Add
             </button>
             <button onClick={() => load(true)} data-testid="watchlist-refresh"
-              className="border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm flex items-center gap-1">
+              className="border border-[#222C3D] text-gray-300 hover:bg-[#161C26] hover:text-white text-xs uppercase tracking-wider px-3 py-1.5 rounded-sm flex items-center gap-1 transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none">
               <RefreshCw className={`w-3.5 h-3.5 ${loading || refreshing ? "animate-spin" : ""}`} />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden">
+      <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised">
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[760px]">
             <thead className="bg-[#0E131F] border-b border-[#222C3D]">
@@ -199,17 +214,17 @@ export default function WatchlistTab() {
                       {s.symbol}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 font-mono text-gray-200 whitespace-nowrap">{s.price != null ? `$${fmtNum(s.price, 2)}` : "—"}</td>
-                  <td className={`px-3 py-2.5 font-mono whitespace-nowrap ${colorForPL(s.change_pct)}`}>{s.change_pct != null ? fmtPct(s.change_pct) : "—"}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-200 tabular-nums whitespace-nowrap">{s.price != null ? `$${fmtNum(s.price, 2)}` : "—"}</td>
+                  <td className={`px-3 py-2.5 font-mono tabular-nums whitespace-nowrap ${colorForPL(s.change_pct)}`}>{s.change_pct != null ? fmtPct(s.change_pct) : "—"}</td>
                   <td className="px-3 py-2.5 whitespace-nowrap min-w-[110px] w-[110px]">
                     <span className={`inline-flex items-center justify-center whitespace-nowrap text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-sm border shrink-0 ${signalColor(s.signal)}`}>
                       {s.signal ? s.signal.replace(/\s+/g, '\u00A0') : ''}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 font-mono text-gray-100 font-bold whitespace-nowrap">{s.composite}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.momentum}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.sentiment}</td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300 whitespace-nowrap">{s.options_tilt}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-100 font-bold tabular-nums whitespace-nowrap">{s.composite}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.momentum}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.sentiment}</td>
+                  <td className="px-3 py-2.5 font-mono text-gray-300 tabular-nums whitespace-nowrap">{s.options_tilt}</td>
                   <td className="px-3 py-2.5">
                     <div className="max-w-[220px] md:max-w-[280px] lg:max-w-[360px] text-gray-400 text-[11px] break-words leading-relaxed">
                       {s.drivers?.join(" · ")}
