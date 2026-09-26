@@ -50,6 +50,14 @@ const Gauge180 = ({ score, label }) => {
   );
 };
 
+const INDICATOR_NAMES = {
+  market_volatility_vix: "Volatility (VIX)",
+  put_call_options: "Put/Call Options",
+  stock_price_breadth: "Price Breadth",
+  safe_haven_demand: "Safe Haven Demand",
+  junk_bond_demand: "Junk Bond Demand",
+};
+
 export default function SentimentTab() {
   const [data, setData] = useState({ per_symbol: [], average_score: 50, fear_greed: null });
   const [loading, setLoading] = useState(true);
@@ -86,10 +94,10 @@ export default function SentimentTab() {
       <div className="border border-[#222C3D] bg-[#121721] p-4 rounded-sm flex items-center justify-between">
         <div>
           <div className="text-xs font-mono tracking-widest uppercase text-amber-500 flex items-center gap-2">
-            <Gauge className="w-4 h-4" /> Public Sentiment · Reddit + StockTwits
+            <Gauge className="w-4 h-4" /> Market Sentiment · CNN Fear & Greed · Reddit & StockTwits
           </div>
           <div className="text-[11px] text-gray-500 font-mono mt-0.5">
-            Live from r/wallstreetbets · r/stocks · r/investing · StockTwits
+            Official CNN Institutional Indicators · ApeWisdom r/wallstreetbets & Social Tracking · StockTwits Realtime
           </div>
         </div>
         <button
@@ -117,18 +125,46 @@ export default function SentimentTab() {
         </div>
 
         <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="fear-greed-card">
-          <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase mb-2">Market Fear & Greed</div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase">CNN Market Fear & Greed</div>
+            {data.fear_greed?.crypto_fear_greed && (
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm border border-[#222C3D] bg-[#0E131F] text-gray-400">
+                Crypto F&G: <span className="text-amber-400 font-bold">{data.fear_greed.crypto_fear_greed.score}</span> ({data.fear_greed.crypto_fear_greed.label})
+              </span>
+            )}
+          </div>
           {data.fear_greed ? (
-            <div className="flex items-center gap-4">
-              <Gauge180 score={data.fear_greed.score} />
-              <div>
-                <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${labelColor(data.fear_greed.label)}`}>
-                  {data.fear_greed.label}
-                </span>
-                <div className="text-xs text-gray-400 mt-2 font-mono max-w-[200px]">
-                  {data.fear_greed.reasoning}
+            <div>
+              <div className="flex items-center gap-4 mb-3">
+                <Gauge180 score={data.fear_greed.score} />
+                <div>
+                  <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${labelColor(data.fear_greed.label)}`}>
+                    {data.fear_greed.label}
+                  </span>
+                  <div className="text-xs text-gray-400 mt-2 font-mono max-w-[240px]">
+                    {data.fear_greed.reasoning}
+                  </div>
+                  {data.fear_greed.historical && (
+                    <div className="text-[10px] text-gray-500 font-mono mt-1">
+                      Prev Close: {data.fear_greed.historical.previous_close} · 1W Ago: {data.fear_greed.historical.previous_1_week}
+                    </div>
+                  )}
                 </div>
               </div>
+
+              {data.fear_greed.indicators && Object.keys(data.fear_greed.indicators).length > 0 && (
+                <div className="border-t border-[#1A2232] pt-2 mt-2">
+                  <div className="text-[9px] font-mono uppercase text-gray-500 mb-1.5 tracking-wider">Institutional Sub-Indicators (CNN)</div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {Object.entries(data.fear_greed.indicators).map(([key, val]) => (
+                      <div key={key} className="flex items-center justify-between text-[10px] font-mono px-2 py-1 bg-[#0E131F] border border-[#222C3D] rounded-sm">
+                        <span className="text-gray-400 truncate max-w-[120px]">{INDICATOR_NAMES[key] || key}</span>
+                        <span className="text-gray-200 font-bold ml-1">{val.rating || val.score}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-gray-500 text-xs font-mono">Loading...</div>
@@ -137,11 +173,14 @@ export default function SentimentTab() {
       </div>
 
       <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden" data-testid="per-symbol-panel">
-        <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
-            Per-Symbol Sentiment · Reddit + StockTwits
-          </span>
+        <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">
+              Per-Symbol Sentiment · Reddit Mentions & StockTwits Buzz
+            </span>
+          </div>
+          <span className="text-[10px] font-mono text-gray-500">Live ApeWisdom + StockTwits</span>
         </div>
         {loading && (!data.per_symbol || data.per_symbol.length === 0) ? (
           <div className="p-8 text-center text-gray-500 font-mono text-xs">Analyzing headlines...</div>
@@ -166,10 +205,21 @@ export default function SentimentTab() {
                     <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-sm border ${labelColor(s.label)}`}>
                       {s.label}
                     </span>
+                    {s.reddit_rank && (
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm bg-amber-950/40 border border-amber-800 text-amber-400">
+                        WSB #{s.reddit_rank}
+                      </span>
+                    )}
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-xl font-mono font-bold text-gray-100">{s.score}<span className="text-xs text-gray-500">/100</span></div>
-                    <div className="text-[10px] font-mono text-gray-500">{s.article_count} articles</div>
+                    <div className="text-[10px] font-mono text-gray-500">
+                      {s.reddit_mentions > 0
+                        ? `${s.reddit_mentions} Reddit mentions`
+                        : s.stocktwits_msg_count > 0
+                        ? `${s.stocktwits_msg_count} StockTwits msgs`
+                        : null}
+                    </div>
                   </div>
                 </div>
                 <div className="w-full bg-[#0E131F] h-2 rounded-sm overflow-hidden flex mb-2" data-testid={`bull-bear-bar-${s.symbol}`}>
@@ -179,8 +229,22 @@ export default function SentimentTab() {
                 <div className="flex items-center gap-3 text-[10px] font-mono text-gray-500 mb-2">
                   <span className="text-emerald-500">▲ {s.bull_pct}% bull</span>
                   <span className="text-rose-500">▼ {s.bear_pct}% bear</span>
-                  <span className="text-gray-500">· {s.post_count} reddit posts · {s.stocktwits_msg_count} stocktwits</span>
+                  {(() => {
+                    const redditCount = s.reddit_mentions || s.post_count || 0;
+                    const items = [];
+                    if (redditCount > 0) {
+                      items.push(`${redditCount} Reddit mentions${s.reddit_upvotes ? ` (${s.reddit_upvotes} upvotes)` : ""}`);
+                    }
+                    if (s.stocktwits_msg_count > 0) {
+                      items.push(`${s.stocktwits_msg_count} StockTwits`);
+                    }
+                    if (items.length > 0) {
+                      return <span className="text-gray-400">· {items.join(" · ")}</span>;
+                    }
+                    return null;
+                  })()}
                 </div>
+
                 <p className="text-xs text-gray-300 leading-relaxed">{s.reasoning}</p>
                 {s.top_themes?.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
@@ -209,3 +273,4 @@ export default function SentimentTab() {
     </div>
   );
 }
+

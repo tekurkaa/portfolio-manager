@@ -139,6 +139,68 @@ async def _fetch_google_news(query: str, when: str = "1d", limit: int = 15) -> L
     return await _fetch_google_news_rss(f"{query} when:{when}", max_results=limit)
 
 
+# ---------- 2B. DIRECT FINANCIAL RSS FEEDS (FREE, NO KEYS) ----------
+async def _fetch_rss_feed(
+    url: str,
+    source_name: str = "Financial News",
+    tag: Optional[str] = None,
+    limit: int = 15,
+) -> List[Dict[str, Any]]:
+    """Fetch and parse any standard RSS/Atom financial feed (CNBC, Federal Reserve, Yahoo RSS)."""
+    articles = []
+    try:
+        async with httpx.AsyncClient(headers=HEADERS, timeout=10.0, follow_redirects=True) as client:
+            r = await client.get(url)
+            if r.status_code != 200:
+                return []
+            root = ET.fromstring(r.content)
+            items = root.findall(".//item")
+            if not items:
+                items = root.findall(".//{http://www.w3.org/2005/Atom}entry")
+
+            for item in items[:limit]:
+                title_el = item.find("title")
+                if title_el is None:
+                    title_el = item.find("{http://www.w3.org/2005/Atom}title")
+                title = title_el.text if title_el is not None and title_el.text else ""
+
+                link_el = item.find("link")
+                if link_el is not None:
+                    link = link_el.text if link_el.text else link_el.attrib.get("href", "")
+                else:
+                    link_atom = item.find("{http://www.w3.org/2005/Atom}link")
+                    link = link_atom.attrib.get("href", "") if link_atom is not None else ""
+
+                pub_el = item.find("pubDate")
+                if pub_el is None:
+                    pub_el = item.find("{http://www.w3.org/2005/Atom}published")
+                if pub_el is None:
+                    pub_el = item.find("{http://www.w3.org/2005/Atom}updated")
+                pub_str = pub_el.text if pub_el is not None and pub_el.text else ""
+
+                desc_el = item.find("description")
+                if desc_el is None:
+                    desc_el = item.find("{http://www.w3.org/2005/Atom}summary")
+                desc = desc_el.text if desc_el is not None and desc_el.text else ""
+
+                src_el = item.find("source")
+                item_src = src_el.text if src_el is not None and src_el.text else source_name
+
+                if title and link:
+                    articles.append({
+                        "title": _clean_text(title),
+                        "description": _clean_text(desc),
+                        "url": link.strip(),
+                        "source": item_src,
+                        "published_at": _parse_rfc822_date(pub_str),
+                        "image": None,
+                        "tag": tag.upper() if tag else None,
+                    })
+    except Exception as e:
+        logger.debug(f"RSS feed fetch failed for {url}: {e}")
+    return articles
+
+
 def _dedupe_news(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
     seen_urls, seen_titles, unique = set(), set(), []
     for a in articles:
@@ -156,15 +218,17 @@ def _dedupe_news(articles: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 async def fetch_symbol_news_live(symbol: str) -> list[dict[str, Any]]:
-    """Combined live news for symbol: Yahoo Finance + Google News + NewsAPI. Deduplicated & sorted newest first."""
-    yh, gn, na = await asyncio.gather(
+    """Combined live news for symbol: Yahoo Finance + Yahoo Ticker RSS + Google News + NewsAPI."""
+    yh, y_rss, gn, na = await asyncio.gather(
         asyncio.to_thread(_fetch_yfinance_news_sync, symbol),
+        _fetch_rss_feed(f"https://finance.yahoo.com/rss/headline?s={symbol}", source_name="Yahoo Finance", tag=symbol, limit=10),
         _fetch_google_news(f'"{symbol}"+stock', when="1d", limit=15),
         _fetch_newsapi(f'"{symbol}"', page_size=10, days=1),
         return_exceptions=True,
     )
     def _safe(v): return v if isinstance(v, list) else []
-    return _dedupe_news(_safe(yh) + _safe(gn) + _safe(na))
+    return _dedupe_news(_safe(yh) + _safe(y_rss) + _safe(gn) + _safe(na))
+
 
 
 # ---------- 3. NEWSAPI.ORG (OPTIONAL) ----------
@@ -312,6 +376,8 @@ async def get_stock_news(symbols: List[str]) -> Dict[str, Any]:
         tasks.append(asyncio.to_thread(_fetch_yfinance_news_sync, sym))
         # Google news RSS search per symbol
         tasks.append(_fetch_google_news_rss(f"{sym} stock OR shares OR earnings", tag=sym, max_results=6))
+        # Direct Yahoo Finance ticker RSS
+        tasks.append(_fetch_rss_feed(f"https://finance.yahoo.com/rss/headline?s={sym}", source_name="Yahoo Finance", tag=sym, limit=6))
 
     # Optional NewsAPI
     if NEWSAPI_KEY and active_symbols:
@@ -339,6 +405,11 @@ async def get_macro_news() -> Dict[str, Any]:
 
     tasks = [_fetch_google_news_rss(q, tag="MACRO", max_results=8) for q in macro_queries]
 
+    # Additional high-authority free RSS sources: CNBC Economy, CNBC Finance, and Federal Reserve
+    tasks.append(_fetch_rss_feed("https://www.cnbc.com/id/20910258/device/rss/rss.html", source_name="CNBC Economy", tag="MACRO", limit=10))
+    tasks.append(_fetch_rss_feed("https://www.cnbc.com/id/10000664/device/rss/rss.html", source_name="CNBC Finance", tag="MACRO", limit=10))
+    tasks.append(_fetch_rss_feed("https://www.federalreserve.gov/feeds/press_monetary.xml", source_name="Federal Reserve FOMC", tag="FED", limit=8))
+
     if NEWSAPI_KEY:
         tasks.append(_fetch_newsapi(
             '(tariffs OR "Federal Reserve" OR "interest rates" OR "bond yields" OR "gold price" OR "oil price" OR inflation OR recession)',
@@ -351,3 +422,4 @@ async def get_macro_news() -> Dict[str, Any]:
     unique = _dedupe_news(combined)
     summary = await _llm_summarize(unique[:15], focus="global macroeconomic landscape and capital markets")
     return {"articles": unique[:50], "summary": summary}
+

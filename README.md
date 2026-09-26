@@ -21,27 +21,43 @@
 - **Infinite Marquee**: Seamless hover-to-pause scrolling ticker.
 
 ### 2. 📰 Multi-Source Stock & Macro Intelligence
-- **Held Position News (`/api/news/stocks`)**: Real-time articles tagged by portfolio symbols (`AAPL`, `NVDA`, `TSLA`, `MSFT`, `BTC`, etc.) aggregating Yahoo Finance ticker feeds and Google Financial News.
-- **Macroeconomic Intelligence (`/api/news/macro`)**: Curated macroeconomic wire covering Federal Reserve & rate policy, tariffs & trade disputes, treasury yields, OPEC & energy, inflation / CPI, and geopolitics.
-- **NewsAPI Integration**: Optional auto-enrichment via NewsAPI.org.
+- **Held Position News (`/api/news/stocks`)**: Real-time articles tagged by portfolio symbols (`AAPL`, `NVDA`, `TSLA`, `MSFT`, `BTC`, etc.) aggregating yfinance news, Yahoo Finance Ticker RSS feeds (`https://finance.yahoo.com/rss/headline?s={sym}`), and Google Financial News RSS.
+- **Macroeconomic Intelligence (`/api/news/macro`)**: Curated macroeconomic wire aggregating high-authority direct RSS feeds and targeted search queries:
+  - **CNBC Economy & Finance Feeds**: Live reporting on central bank moves, debt markets, and economic prints.
+  - **Federal Reserve Monetary Policy Press Releases**: Official FOMC announcements directly from `federalreserve.gov`.
+  - **Google Financial News**: Targeted macro search queries covering interest rates, trade war/tariffs, 10-year Treasury yields, crude oil OPEC actions, CPI/PPI inflation, and geopolitics.
+- **NewsAPI Integration**: Optional auto-enrichment via NewsAPI.org when key is present.
+- **Zero-Key Operational Resilience**: Operates at 100% capability without requiring any paid subscriptions or external API keys.
 
-### 3. 🎯 Breakout Scanner & Automated Daily Email Digest
+### 3. 🌡️ Market Sentiment & Institutional Fear & Greed (`/api/sentiment/portfolio`)
+- **Official CNN Fear & Greed Index**: Direct integration with CNN's institutional market data endpoint providing the benchmark 0–100 composite index, qualitative rating (*Extreme Fear*, *Fear*, *Neutral*, *Greed*, *Extreme Greed*), historical comparisons (Previous Close, 1 Week Ago, 1 Month Ago), and 7 underlying market metrics:
+  - Market Volatility (VIX)
+  - Put and Call Options Ratio
+  - Stock Price Breadth
+  - Safe Haven Demand
+  - Junk Bond Demand
+- **Alternative.me Crypto Fear & Greed Index**: Real-time crypto market sentiment tracking.
+- **ApeWisdom Reddit Intelligence**: Live sentiment tracking across `r/wallstreetbets`, `r/stocks`, `r/investing`, and `r/crypto` bypassing Reddit's anti-scraping blocks to provide verified Reddit mentions, upvotes, and WSB trending ranks.
+- **StockTwits Real-time Stream**: Micro-sentiment and retail message velocity integration per security.
+
+
+### 4. 🎯 Breakout Scanner & Automated Daily Email Digest
 - **Cross-Sector Scanning**: Scans 60+ high-momentum equities (semis, mega-cap tech, biotech, crypto proxies) combining price momentum, 52-week breakout proximity, unusual call options flow, and recent congressional purchases.
 - **Automated Morning Delivery**: Built-in background cron scheduler (`_daily_scheduler_loop`) dispatches styled HTML daily breakout digests to opted-in users via **Resend**.
 - **Instant Dispatch**: One-click "Send Now" button from the Scanner tab.
 
-### 4. 🧠 Quantitative Alpha & Options Flow Signals
+### 5. 🧠 Quantitative Alpha & Options Flow Signals
 - **12-Factor Predictive Signal Engine**: Composite directional scoring (*STRONG BUY*, *BUY*, *HOLD*, *REDUCE*).
 - **Options Flow & Tilt Tracker**: Tracks call-to-put volume ratios and institutional sweep alerts.
 - **Congressional Trading Tracker**: Real-time monitoring of House and Senate financial disclosures.
 
-### 5. 💼 Portfolio & Risk Management
+### 6. 💼 Portfolio & Risk Management
 - **Robinhood Activity Importer**: Native import for Robinhood Trade Activity CSVs with FIFO lot accounting, buy/sell parsing, and split/rebalance handling.
 - **Portfolio Risk & Diversification Auditor**: Single-asset dual-alert exposure thresholds (hard ceilings for crypto blue chips vs altcoins vs stocks), 20% sector concentration rules, health score scoring, and projected annual dividend cash flow KPIs.
 - Real-time P&L calculations, historical equity curves (1D, 1W, 1M, 1Y, 5Y, ALL), and interactive allocation treemaps.
 - Instant demo portfolio generation with 12 diversified tech, semi, ETF, and crypto positions.
 
-### 6. 📈 Institutional Single-Stock Terminal Modal
+### 7. 📈 Institutional Single-Stock Terminal Modal
 - **Multi-Timeframe Interactive Charts**: Real-time quotes and intraday/historical charts across **`1D`**, **`1W`**, **`1M`**, **`1Y`**, and **`5Y`** intervals powered by Recharts with dynamic gain/loss area gradients.
 - **Off-Hours & Low-Liquidity Intraday Resilience**: Multi-tier chart fallback engine: if 1D intraday interval is empty (e.g. market closed, weekend, or micro-cap equity), automatically extracts the most recent completed market session from a 5-day window, or daily bars, ensuring charts always render without blank states.
 - **Visual Range Gauges**: High-contrast sliders displaying current price relative to **Day Low / High** and **52-Week Range**.
@@ -60,13 +76,14 @@
   - **Portfolio Charts Tab** (interactive allocation treemap tiles)
 - **Actions**: One-click "Add to Watchlist" integration and keyboard `ESC` dismissal.
 
-### 7. 🤖 Grounded AI Chat Assistant
+### 8. 🤖 Grounded AI Chat Assistant
 - **Fintech Research Engine**: Multi-turn conversational AI grounded in live portfolio holdings, news events, congress transactions, and quantitative alpha signals.
 - **Auto-Ticker Extraction & Conversation Lifecycle**: Thread persistence, automated conversation creation/deletion, and clickable ticker references.
 
-### 8. 🗄️ Dual-Mode Database Architecture
+### 9. 🗄️ Dual-Mode Database Architecture
 - **Zero-Friction Local Mode**: Automatically detects if MongoDB is running; if not available, gracefully falls back to an embedded JSON document store (`backend/data/local_storage.json`) within 1 second without hanging.
 - **Production Mode**: Seamlessly switches to Cloud MongoDB (MongoDB Atlas) when `MONGO_URL` is configured.
+
 
 
 ---
