@@ -98,6 +98,12 @@
 - **Full Skeleton Loading Pipeline**: Pulse-animated terminal skeleton loaders across historical charts and macro/stock news feeds that eliminate layout shifts during data fetches.
 - **SVG & Visual Bar Accessibility**: Native SVG font styling ensuring monospace numbers across all browser engines, accompanied by `role="progressbar"` semantic attributes (`aria-valuenow`, `aria-valuemin`, `aria-valuemax`) on composite scores, sentiment meters, and sector allocation bars.
 
+### 11. 🔐 Native Google Identity Services & Account Isolation
+- **Direct Google OAuth 2.0**: Native integration with Google Identity Services (GIS) using official Google Client ID credentials, eliminating third-party proxy intermediaries.
+- **Account Chooser Popup & Instant Session**: Clicking "Continue with Google" opens Google's native account chooser directly over the application without full-page navigation. Google ID tokens and access tokens are verified server-side against Google's public tokeninfo endpoints (`/api/auth/google`).
+- **Complete Per-User Data Isolation**: Portfolios, watchlists, trade history, and custom scanner preferences are strictly partitioned per authenticated Google account in MongoDB.
+- **Developer & Trader Quick Login**: Fallback instant email/trader authentication (`/api/auth/dev-login`) for rapid local development and automated CI/CD runs.
+
 ---
 
 ## 🛠️ Architecture & Tech Stack
@@ -119,15 +125,15 @@ portfolio-manager/
 │   ├── trade_import_service.py # Robinhood trade activity CSV parser & lot accountant
 │   ├── chat_service.py      # Grounded AI conversation engine
 │   ├── insider_service.py   # Congressional trading integration
-│   ├── auth.py              # Session management & dev login
+│   ├── auth.py              # Google OAuth 2.0 token verification & session manager
 │   ├── db.py                # Dual-mode (MongoDB + Local JSON) database engine
 │   └── .env                 # Environment configuration & API keys
 ├── specs/                   # QA test specifications (Given/When/Then format)
 │   └── feature-tests.md     # Exhaustive 22-suite specification
 ├── tests/
-│   ├── e2e/                 # Playwright TypeScript E2E test suite (117 tests across 30 suites)
+│   ├── e2e/                 # Playwright TypeScript E2E test suite (143 tests across 30 suites)
 │   ├── helpers/             # E2E test session bootstrap & database reset utilities
-│   └── test_*.py            # Pytest backend integration test suite (50 tests)
+│   └── test_*.py            # Pytest backend integration test suite (53 tests)
 ├── playwright.config.ts     # Playwright configuration (workers: 1, dual backend/frontend webServers)
 └── package.json             # Root dependencies & test scripts
 ```

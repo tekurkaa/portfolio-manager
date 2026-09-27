@@ -11,6 +11,8 @@ from fastapi import Request, HTTPException, Response
 logger = logging.getLogger(__name__)
 
 EMERGENT_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+GOOGLE_TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "695086018873-b62qtmctg53m3mfsph6a28c8m8gh03kh.apps.googleusercontent.com")
 SESSION_DAYS = 7
 
 
@@ -98,6 +100,58 @@ async def _upsert_user_and_session(db, response: Response, email: str, name: str
 
     _set_auth_cookie(response, session_token)
     return {"user_id": user_id, "email": email, "name": name, "picture": picture, "session_token": session_token}
+
+
+GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+
+
+async def verify_google_credential(credential: str, db, response: Response) -> dict:
+    """Verify Google ID token or OAuth access token via Google APIs and issue session."""
+    if not credential or not isinstance(credential, str):
+        raise HTTPException(status_code=400, detail="Missing Google credential")
+
+    data = None
+    async with httpx.AsyncClient() as client:
+        # First attempt: tokeninfo (standard for ID tokens / JWTs)
+        try:
+            r = await client.get(GOOGLE_TOKENINFO_URL, params={"id_token": credential}, timeout=10.0)
+            if r.status_code == 200:
+                data = r.json()
+        except Exception as e:
+            logger.error(f"Google tokeninfo request failed: {e}")
+
+        # Second attempt: userinfo (standard for OAuth access tokens)
+        if not data:
+            try:
+                r_userinfo = await client.get(
+                    GOOGLE_USERINFO_URL,
+                    headers={"Authorization": f"Bearer {credential}"},
+                    timeout=10.0
+                )
+                if r_userinfo.status_code == 200:
+                    data = r_userinfo.json()
+            except Exception as e:
+                logger.error(f"Google userinfo request failed: {e}")
+
+    if not data:
+        raise HTTPException(status_code=401, detail="Invalid Google token")
+
+    # Verify audience matches client ID if set and present
+    expected_aud = os.environ.get("GOOGLE_CLIENT_ID") or GOOGLE_CLIENT_ID
+    aud = data.get("aud")
+    if expected_aud and aud and aud != expected_aud:
+        logger.warning(f"Google token aud mismatch: {aud} != {expected_aud}")
+        raise HTTPException(status_code=401, detail="Google client ID mismatch")
+
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=401, detail="No email provided in Google token")
+
+    name = (data.get("name") or "").strip() or email.split("@")[0].capitalize()
+    picture = data.get("picture")
+    session_token = f"sess_{uuid.uuid4().hex}"
+
+    return await _upsert_user_and_session(db, response, email, name, picture, session_token)
 
 
 async def exchange_session(session_id: str, db, response: Response) -> dict:

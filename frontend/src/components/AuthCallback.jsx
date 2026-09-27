@@ -8,8 +8,26 @@ export default function AuthCallback({ onDone }) {
     if (processed.current) return;
     processed.current = true;
     const hash = window.location.hash || "";
-    const m = hash.match(/session_id=([^&]+)/);
-    const sid = m ? m[1] : null;
+    const mGoogle = hash.match(/(?:access_token|id_token)=([^&]+)/);
+    const mSid = hash.match(/session_id=([^&]+)/);
+
+    if (mGoogle) {
+      const token = mGoogle[1];
+      api.post("/auth/google", { credential: token })
+        .then((r) => {
+          if (r.data?.session_token) setToken(r.data.session_token);
+          if (r.data?.email) {
+            localStorage.setItem("pm_last_email", r.data.email);
+            localStorage.setItem("pm_last_auth_provider", "google");
+          }
+          window.history.replaceState(null, "", window.location.pathname);
+          onDone(true, r.data);
+        })
+        .catch(() => onDone(false));
+      return;
+    }
+
+    const sid = mSid ? mSid[1] : null;
     if (!sid) { onDone(false); return; }
     api.post("/auth/callback", { session_id: sid })
       .then((r) => {

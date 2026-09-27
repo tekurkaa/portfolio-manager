@@ -30,6 +30,99 @@ async def test_auth_dev_login_and_me():
 
 
 @pytest.mark.asyncio
+async def test_auth_google_missing_credential():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        res = await client.post("/api/auth/google", json={})
+        assert res.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_auth_google_invalid_token(monkeypatch):
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        # Mock Google tokeninfo endpoint returning 400 invalid token
+        async def mock_get(self, url, *args, **kwargs):
+            class MockResponse:
+                status_code = 400
+                def json(self):
+                    return {"error": "invalid_token"}
+            return MockResponse()
+
+        monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
+
+        res = await client.post("/api/auth/google", json={"credential": "invalid_jwt_token"})
+        assert res.status_code == 401
+        assert "Invalid Google token" in res.json().get("detail", "")
+
+
+@pytest.mark.asyncio
+async def test_auth_google_success_mocked(monkeypatch):
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        async def mock_get(self, url, *args, **kwargs):
+            class MockResponse:
+                status_code = 200
+                def json(self):
+                    return {
+                        "iss": "https://accounts.google.com",
+                        "aud": "695086018873-b62qtmctg53m3mfsph6a28c8m8gh03kh.apps.googleusercontent.com",
+                        "email": "investor@example.com",
+                        "name": "Jane Doe",
+                        "picture": "https://lh3.googleusercontent.com/a/mock_pic",
+                    }
+            return MockResponse()
+
+        monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
+
+        res = await client.post("/api/auth/google", json={"credential": "valid_mock_jwt"})
+        assert res.status_code == 200
+        data = res.json()
+        assert data["email"] == "investor@example.com"
+        assert data["name"] == "Jane Doe"
+        assert "session_token" in data
+        assert "session_token" in res.cookies
+
+        # Verify /api/auth/me works with this session
+        me_res = await client.get("/api/auth/me", cookies=res.cookies)
+        assert me_res.status_code == 200
+        assert me_res.json()["email"] == "investor@example.com"
+
+
+@pytest.mark.asyncio
+async def test_auth_google_success_access_token_fallback(monkeypatch):
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        async def mock_get(self, url, *args, **kwargs):
+            class MockResponse:
+                def __init__(self, code, payload):
+                    self.status_code = code
+                    self._payload = payload
+                def json(self):
+                    return self._payload
+
+            if "tokeninfo" in str(url):
+                return MockResponse(400, {"error": "not_id_token"})
+            elif "userinfo" in str(url):
+                return MockResponse(200, {
+                    "sub": "google_12345",
+                    "email": "access_trader@example.com",
+                    "name": "Access Trader",
+                    "picture": "https://lh3.googleusercontent.com/pic.jpg",
+                })
+            return MockResponse(404, {})
+
+        monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
+
+        res = await client.post("/api/auth/google", json={"credential": "mock_access_token_ya29"})
+        assert res.status_code == 200
+        data = res.json()
+        assert data["email"] == "access_trader@example.com"
+        assert data["name"] == "Access Trader"
+        assert "session_token" in data
+
+
+@pytest.mark.asyncio
 async def test_market_indices_endpoint():
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:

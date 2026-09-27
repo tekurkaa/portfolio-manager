@@ -13,15 +13,21 @@ test.describe('1. Authentication (TC-AUTH)', () => {
     const googleBtn = page.locator('[data-testid="google-login-button"]');
     await expect(googleBtn).toBeVisible();
 
-    // Intercept navigation or check redirect destination
-    const [navigation] = await Promise.all([
-      page.waitForNavigation({ url: (url) => url.hostname.includes('auth.emergentagent.com'), timeout: 10000 }).catch(() => null),
-      googleBtn.click(),
-    ]);
+    // Listen for either a popup window (GIS TokenClient) or main window navigation
+    const popupPromise = page.waitForEvent('popup', { timeout: 8000 }).catch(() => null);
+    const navPromise = page.waitForNavigation({ url: (url) => url.hostname.includes('accounts.google.com'), timeout: 8000 }).catch(() => null);
 
-    if (!navigation) {
-      // In case navigation was prevented or caught before unload, check URL
-      expect(page.url()).toContain('auth.emergentagent.com');
+    await googleBtn.click();
+
+    const popup = await popupPromise;
+    const nav = await navPromise;
+
+    if (popup) {
+      await popup.waitForLoadState('domcontentloaded').catch(() => null);
+      expect(popup.url()).toContain('accounts.google.com');
+      await popup.close();
+    } else {
+      expect(page.url()).toContain('accounts.google.com');
     }
   });
 

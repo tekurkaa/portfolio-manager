@@ -41,7 +41,13 @@ function App() {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const [stockModalSymbol, setStockModalSymbol] = useState(null);
   // auth state: null = checking, false = anon, object = user
-  const [user, setUser] = useState(window.location.hash?.includes("session_id=") ? "callback" : null);
+  const [user, setUser] = useState(
+    (window.location.hash?.includes("session_id=") ||
+     window.location.hash?.includes("access_token=") ||
+     window.location.hash?.includes("id_token="))
+      ? "callback"
+      : null
+  );
   const [loadTime, setLoadTime] = useState(0);
 
   // Global listener for opening single-stock terminal modal from any component

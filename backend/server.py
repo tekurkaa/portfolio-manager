@@ -29,7 +29,7 @@ from insider_service import get_insider_summary, get_congress_trades, get_sec_fo
 from history_service import portfolio_history  # noqa: E402
 from signal_service import get_portfolio_options_flow, get_options_flow, alpha_signal  # noqa: E402
 from backtest_service import backtest_portfolio  # noqa: E402
-from auth import get_current_user, exchange_session, logout_session, create_dev_session  # noqa: E402
+from auth import get_current_user, exchange_session, logout_session, create_dev_session, verify_google_credential  # noqa: E402
 from scanner_service import scan_breakouts, build_digest_html, send_digest_email  # noqa: E402
 from chat_service import chat_answer  # noqa: E402
 from db import get_database  # noqa: E402
@@ -63,6 +63,10 @@ async def current_user_id(request: Request) -> str:
 
 
 # ---------- AUTH ROUTES ----------
+class GoogleLoginRequest(BaseModel):
+    credential: str
+
+
 class SessionExchange(BaseModel):
     session_id: str
 
@@ -70,6 +74,11 @@ class SessionExchange(BaseModel):
 class DevLoginRequest(BaseModel):
     email: Optional[str] = "trader@terminus.local"
     name: Optional[str] = "Senior Trader"
+
+
+@api_router.post("/auth/google")
+async def auth_google(data: GoogleLoginRequest, response: Response):
+    return await verify_google_credential(data.credential, db, response)
 
 
 @api_router.post("/auth/callback")

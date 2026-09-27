@@ -9,9 +9,57 @@ export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState(lastEmail || "trader@terminus.local");
   const [loading, setLoading] = useState(false);
 
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || "695086018873-b62qtmctg53m3mfsph6a28c8m8gh03kh.apps.googleusercontent.com";
+
+  const processGoogleCredential = async (tokenOrCredential) => {
+    setLoading(true);
+    try {
+      const res = await api.post("/auth/google", { credential: tokenOrCredential });
+      if (res.data?.session_token) setToken(res.data.session_token);
+      if (res.data?.email) {
+        localStorage.setItem("pm_last_email", res.data.email);
+        localStorage.setItem("pm_last_auth_provider", "google");
+      }
+      toast.success(`Welcome back, ${res.data?.name || res.data?.email}!`);
+      if (onLoginSuccess) {
+        onLoginSuccess(res.data);
+      } else {
+        window.location.reload();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.detail || "Google Sign-In failed. Please try again or use Email sign-in.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGoogleLogin = () => {
+    // 1. If Google Identity Services OAuth2 token client is available, open popup
+    if (typeof window !== "undefined" && window.google?.accounts?.oauth2) {
+      try {
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: "openid email profile",
+          callback: async (tokenResponse) => {
+            if (tokenResponse?.error) {
+              toast.error(`Google Sign-In: ${tokenResponse.error}`);
+              return;
+            }
+            if (tokenResponse?.access_token) {
+              await processGoogleCredential(tokenResponse.access_token);
+            }
+          },
+        });
+        tokenClient.requestAccessToken({ prompt: "select_account" });
+        return;
+      } catch (e) {
+        console.warn("Failed to launch Google TokenClient, falling back to direct OAuth redirect:", e);
+      }
+    }
+
+    // 2. Direct Google OAuth 2.0 endpoint (native accounts.google.com redirect)
     const redirectUrl = window.location.origin + "/";
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(GOOGLE_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=token&scope=openid%20email%20profile&prompt=select_account`;
   };
 
   const handleDevLogin = async (e) => {
