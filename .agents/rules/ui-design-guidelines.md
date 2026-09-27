@@ -11,17 +11,18 @@ All metric summary cards (e.g. the 6-card summary strip in `PortfolioTab`) MUST 
 - **Tier 1 (Metric Title Header)**:
   - Single-line fixed height: `h-5 flex items-center justify-between mb-2 gap-1.5`.
   - Title text MUST be concise and single-line: `text-[10px] font-mono tracking-widest text-gray-500 uppercase whitespace-nowrap truncate` with a `title={label}` attribute.
-  - **Never allow title text to wrap to a second line**. For example, use `"Annual Cash Flow"` instead of `"Projected Annual Cash Flow"`.
-  - Any accompanying icon must have `shrink-0 w-4 h-4 text-gray-500`.
+  - **Never allow title text to wrap to a second line or truncate into ellipsis (...)**. For example, use `"Annual Cash Flow"` instead of `"Projected Annual Cash Flow"`, and `"Personal Return"` (with `"Annualized (XIRR)"` subtitle) instead of `"Personal Return (MWR)"` which causes `...` ellipsis truncation.
+  - All 6 cards in the summary grid MUST include a top-right icon (`shrink-0 w-4 h-4 text-gray-500`) for visual balance and symmetry (e.g. `DollarSign` on Total Value, Cost Basis, and Annual Cash Flow; `TrendingUp`/`TrendingDown` on Day P/L, Total P/L, and Personal Return).
+  - When providing a card tooltip, render an inline `<Info className="w-3 h-3" />` trigger with a non-clipping hover/focus popup (`z-50`, `bottom-full mb-2`) that preserves the `h-5` header height.
 - **Tier 2 (Metric Value)**:
   - Fixed baseline container: `h-8 flex items-baseline text-2xl font-mono font-bold text-gray-100 tabular-nums whitespace-nowrap truncate`.
   - Guarantees all large numbers across adjacent cards share the exact same horizontal baseline regardless of currency symbol or decimals.
 - **Tier 3 (Subscripts & Metadata)**:
   - Fixed starting top offset: `min-h-[2.5rem] flex flex-col justify-start mt-1`.
   - Text styling: `text-xs font-mono leading-relaxed line-clamp-2 ${subColor || "text-gray-400"}`.
-  - Ensures secondary indicators (positions, percent changes, yields, descriptions) begin on the exact same horizontal line across all cards.
+  - Ensures secondary indicators (positions, percent changes, yields, descriptions) begin on the exact same horizontal line across all cards (e.g. `"Annualized (XIRR)"`).
 - **Card Container Shell**:
-  - `border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised transition-transform active:scale-[0.98] flex flex-col justify-between h-full`.
+  - `border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised transition-transform active:scale-[0.98] flex flex-col justify-between h-full relative`.
 
 ---
 

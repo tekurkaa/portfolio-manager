@@ -122,9 +122,9 @@
   "ui_refinements_and_layout_rules": {
     "kpi_summary_cards": {
       "alignment": "Strict 3-tier vertical alignment across all cards in summary grid (SummaryCard) to guarantee adjacent cards never wrap or become vertically staggered.",
-      "tier_1_title": "Single-line fixed height (h-5 flex items-center justify-between mb-2 gap-1.5) with whitespace-nowrap truncate and title tooltip. Labels must be concise and never wrap to two lines (e.g. 'Annual Cash Flow').",
+      "tier_1_title": "Single-line fixed height (h-5 flex items-center justify-between mb-2 gap-1.5) with whitespace-nowrap truncate and title tooltip. Labels must be concise and never wrap to two lines or truncate into ellipsis (e.g. 'Annual Cash Flow', 'Personal Return').",
       "tier_2_value": "Fixed baseline container (h-8 flex items-baseline text-2xl font-mono font-bold text-gray-100 tabular-nums whitespace-nowrap truncate) ensuring all numeric values share the exact same horizontal baseline.",
-      "tier_3_subscript": "Fixed starting top offset (mt-1 min-h-[2.5rem] flex flex-col justify-start) with line-clamp-2 so secondary indicators and descriptors start on the exact same horizontal line across all cards."
+      "tier_3_subscript": "Fixed starting top offset (mt-1 min-h-[2.5rem] flex flex-col justify-start) with line-clamp-2 so secondary indicators and descriptors start on the exact same horizontal line across all cards (e.g. 'Annualized (XIRR)')."
     },
     "risk_warning_presentation": {
       "single_asset_alerts": "Use ONLY the triangle warning icon and text prefix on the left (<AlertTriangle /> Warning: ... or High Exposure: ...) and the asset class badge on the right. Do NOT add any redundant secondary badge on the right (neither ■ WARNING nor ▲ HIGH EXPOSURE).",

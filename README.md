@@ -125,7 +125,7 @@ portfolio-manager/
 ├── specs/                   # QA test specifications (Given/When/Then format)
 │   └── feature-tests.md     # Exhaustive 22-suite specification
 ├── tests/
-│   ├── e2e/                 # Playwright TypeScript E2E test suite (112 tests across 29 suites)
+│   ├── e2e/                 # Playwright TypeScript E2E test suite (117 tests across 30 suites)
 │   ├── helpers/             # E2E test session bootstrap & database reset utilities
 │   └── test_*.py            # Pytest backend integration test suite (50 tests)
 ├── playwright.config.ts     # Playwright configuration (workers: 1, dual backend/frontend webServers)
@@ -224,7 +224,7 @@ Validates core API routes, dual-mode database CRUD, market quote streaming, trad
 - `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
 
-### 2. End-to-End Browser Tests (Playwright — 112 Tests across 29 Suites)
+### 2. End-to-End Browser Tests (Playwright — 117 Tests across 30 Suites)
 Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
 
 ```bash
@@ -245,7 +245,7 @@ npx playwright test --ui
 - **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs & XIRR, History Chart Ranges & Benchmarks, Allocation Treemap.
 - **Suites 06–10**: CSV Upload, Robinhood Activity Import, Demo Seed, Watchlist Management, Held Stock News.
 - **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner, Email Notifications.
-- **Suites 16–29**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar, Design System & Accessibility Audit (Batches 1–4), User Layout Refinements, and Branding & Webpage Favicon (`>_` terminal motif).
+- **Suites 16–30**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar, Design System & Accessibility Audit (Batches 1–4), User Layout Refinements, Branding & Webpage Favicon (`>_` terminal motif), and Personal Return (MWR / XIRR) KPI Card.
 
 ---
 

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { api, fmtMoney, fmtPct, fmtNum, colorForPL, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
-import { Upload, Plus, Trash2, RefreshCw, Sparkles, Bitcoin, TrendingUp, TrendingDown, DollarSign, FileSpreadsheet } from "lucide-react";
+import { Upload, Plus, Trash2, RefreshCw, Sparkles, Bitcoin, TrendingUp, TrendingDown, DollarSign, FileSpreadsheet, Info } from "lucide-react";
 import { PortfolioHistoryChart, AllocationTreemap } from "@/components/PortfolioCharts";
 import PortfolioRiskAuditor, { assetRole, computeDividendKPI } from "@/components/PortfolioRiskAuditor";
 import AlphaReportCard from "@/components/AlphaReportCard";
@@ -141,19 +141,47 @@ const AddHoldingForm = ({ onDone }) => {
   );
 };
 
-const SummaryCard = ({ label, value, sub, subColor, icon: Icon, onClick, className, testId }) => (
+const SummaryCard = ({ label, value, sub, subColor, icon: Icon, tooltip, onClick, className, testId }) => (
   <div
     onClick={onClick}
-    className={`border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised transition-transform active:scale-[0.98] flex flex-col justify-between h-full ${
+    className={`border border-[#222C3D] bg-[#121721] p-4 rounded-sm panel-raised transition-transform active:scale-[0.98] flex flex-col justify-between h-full relative ${
       onClick ? "cursor-pointer hover:border-gray-500" : ""
     } ${className || ""}`}
     data-testid={testId || `summary-${label.toLowerCase().replace(/\s/g, "-")}`}
   >
     {/* Row 1: Fixed single-line Metric Title */}
-    <div className="h-5 flex items-center justify-between mb-2 gap-1.5">
-      <span className="text-[10px] font-mono tracking-widest text-gray-500 uppercase whitespace-nowrap truncate" title={label}>
-        {label}
-      </span>
+    <div className="h-5 flex items-center justify-between mb-2 gap-1.5 relative">
+      <div className="flex items-center gap-1 min-w-0">
+        <span className="text-[10px] font-mono tracking-widest text-gray-500 uppercase whitespace-nowrap truncate" title={label}>
+          {label}
+        </span>
+        {tooltip && (
+          <div className="relative group/tip flex items-center shrink-0">
+            <button
+              type="button"
+              onClick={(e) => e.stopPropagation()}
+              aria-label={typeof tooltip === "string" ? tooltip : "Info"}
+              className="text-gray-500 hover:text-amber-400 focus:text-amber-400 focus:outline-none transition-colors p-0.5"
+              data-testid="summary-card-info-btn"
+            >
+              <Info className="w-3 h-3 shrink-0" />
+            </button>
+            <div
+              role="tooltip"
+              data-testid="summary-card-tooltip"
+              className="pointer-events-none absolute left-0 bottom-full mb-2 hidden group-hover/tip:block group-focus-within/tip:block z-50 w-64 p-2.5 text-[11px] font-mono text-gray-200 bg-[#0E131F] border border-[#222C3D] rounded shadow-2xl leading-relaxed whitespace-normal normal-case break-words animate-fadeIn"
+            >
+              <div className="font-semibold text-amber-400 mb-1 flex items-center gap-1 text-[11px]">
+                <Info className="w-3 h-3 text-amber-400 shrink-0" /> {label}
+              </div>
+              <div className="text-gray-300 text-[10.5px] leading-relaxed">
+                {tooltip}
+              </div>
+              <div className="absolute top-full left-3 -mt-px border-4 border-transparent border-t-[#222C3D]" />
+            </div>
+          </div>
+        )}
+      </div>
       {Icon && <Icon className="w-4 h-4 text-gray-500 shrink-0" />}
     </div>
 
@@ -389,16 +417,19 @@ export default function PortfolioTab() {
             icon={s.total_pl >= 0 ? TrendingUp : TrendingDown}
           />
           <SummaryCard
-            label="Portfolio XIRR"
+            label="Personal Return"
+            testId="summary-personal-return"
             value={s.xirr != null ? fmtPct(s.xirr) : "—"}
-            sub="annualized money-weighted"
+            sub="Annualized (XIRR)"
             subColor={s.xirr != null ? colorForPL(s.xirr) : undefined}
             icon={s.xirr >= 0 ? TrendingUp : TrendingDown}
+            tooltip="Personal Return (Money-Weighted / XIRR) calculates your annualized rate of return factoring in the exact timing and dollar amount of all deposits, withdrawals, and current portfolio balance."
           />
           <SummaryCard
             label="Cost Basis"
             value={fmtMoney(s.total_cost)}
             sub="lifetime capital deployed"
+            icon={DollarSign}
           />
           {(() => {
             const div = computeDividendKPI(data.holdings || [], s.total_value, s.total_cost);
