@@ -44,7 +44,7 @@
 ### 4. 🎯 Breakout Scanner & Automated Daily Email Digest
 - **Cross-Sector Scanning**: Scans 60+ high-momentum equities (semis, mega-cap tech, biotech, crypto proxies) combining price momentum, 52-week breakout proximity, unusual call options flow, and recent congressional purchases.
 - **Automated Morning Delivery**: Built-in background cron scheduler (`_daily_scheduler_loop`) dispatches styled HTML daily breakout digests to opted-in users via **Resend**.
-- **Instant Dispatch**: One-click "Send Now" button from the Scanner tab.
+- **Instant Dispatch**: One-click "Send Now" button from the Scanner tab with direct address targeting and automatic preference synchronization (`POST /api/scanner/notify` with optional `{ "email": "..." }`).
 
 ### 5. 🧠 Quantitative Alpha & Options Flow Signals
 - **12-Factor Predictive Signal Engine**: Composite directional scoring (*STRONG BUY*, *BUY*, *HOLD*, *REDUCE*).
@@ -222,7 +222,7 @@ Validates core API routes, dual-mode database CRUD, market quote streaming, trad
 ./backend/venv/bin/pytest tests/
 ```
 
-- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, market status, security details & history.
+- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, `/api/scanner/notify`, market status, security details & history.
 - `tests/test_xirr.py`: Unit and integration tests for Newton-Raphson XIRR solver, multi-lot cash flow timing, negative return scenarios, and short-horizon guards.
 - `tests/test_corporate_actions.py`: Ex-dividend calendars, payout frequency estimator, 12-month projected cash flow schedules, and pre-split lot alerts.
 - `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer, off-hours session history fallback & resilience.

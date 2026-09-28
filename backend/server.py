@@ -773,10 +773,21 @@ async def scanner_breakouts_route(uid: str = Depends(current_user_id)):
     return await scan_breakouts(extras)
 
 
+class ScannerNotifyRequest(BaseModel):
+    email: Optional[str] = None
+
+
 @api_router.post("/scanner/notify")
-async def scanner_notify_route(user=Depends(current_user)):
+async def scanner_notify_route(data: Optional[ScannerNotifyRequest] = None, user=Depends(current_user)):
     pref = await db.notify_prefs.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
-    to_email = pref.get("email") or user["email"]
+    req_email = data.email.strip() if data and data.email else None
+    to_email = req_email or pref.get("email") or user["email"]
+    if req_email:
+        await db.notify_prefs.update_one(
+            {"user_id": user["user_id"]},
+            {"$set": {"email": req_email}},
+            upsert=True,
+        )
     # scan
     wl = await db.watchlist.find({"user_id": user["user_id"]}, {"_id": 0, "symbol": 1}).to_list(200)
     extras = [d["symbol"] for d in wl]

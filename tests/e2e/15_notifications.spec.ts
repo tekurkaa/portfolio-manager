@@ -115,4 +115,24 @@ test.describe('15. Scanner — Email Digest Notifications (TC-NOTIF)', () => {
     const isEligibleForDailySend = prefs.last_sent_date !== today && prefs.enabled;
     expect(isEligibleForDailySend).toBe(false);
   });
+
+  test('TC-NOTIF-05 — UI Send Now button dispatches with typed email without requiring prior save', async ({ page }) => {
+    const userEmail = `sendnow-ui-${Date.now()}@terminus.local`;
+    await loginViaUI(page, userEmail);
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+
+    const emailInput = page.locator('[data-testid="notify-email-input"]');
+    const sendBtn = page.locator('[data-testid="notify-send"]');
+
+    const customTargetEmail = `direct-target-${Date.now()}@terminus.local`;
+    await emailInput.fill(customTargetEmail);
+
+    // Click Send Now directly without clicking Save
+    await sendBtn.click();
+
+    // Verify success toast appears with the custom target email
+    await expect(page.locator(`text=Digest sent to ${customTargetEmail}`)).toBeVisible({ timeout: 10000 });
+  });
 });

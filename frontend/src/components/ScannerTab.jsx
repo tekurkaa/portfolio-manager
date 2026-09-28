@@ -55,15 +55,22 @@ export default function ScannerTab() {
   };
 
   const sendDigest = async () => {
+    if (!email) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     setSending(true);
     try {
-      const { data } = await api.post("/scanner/notify");
+      const { data } = await api.post("/scanner/notify", { email });
       if (data.sent) toast.success(`Digest sent to ${email}`);
       else {
-        toast.warning("Email delivery not configured", { description: data.reason?.slice(0, 120) });
+        toast.warning("Email delivery notice", { description: data.reason?.slice(0, 150) });
       }
-    } catch { toast.error("Failed to send"); }
-    finally { setSending(false); }
+    } catch {
+      toast.error("Failed to send email digest");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (

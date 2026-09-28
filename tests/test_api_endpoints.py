@@ -174,6 +174,27 @@ async def test_scanner_prefs_endpoint():
 
 
 @pytest.mark.asyncio
+async def test_scanner_notify_with_explicit_email():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        login_res = await client.post("/api/auth/dev-login", json={"email": "trader@terminus.local", "name": "Senior Trader"})
+        cookies = login_res.cookies
+
+        # Trigger notify passing an explicit email address in the body
+        notify_res = await client.post("/api/scanner/notify", json={"email": "custom-digest@terminus.local"}, cookies=cookies)
+        assert notify_res.status_code == 200
+        data = notify_res.json()
+        assert data.get("sent") is True
+        assert data.get("candidates_count", 0) > 0
+
+        # Verify notify_prefs was updated with the explicit email
+        get_res = await client.get("/api/scanner/prefs", cookies=cookies)
+        assert get_res.status_code == 200
+        assert get_res.json()["email"] == "custom-digest@terminus.local"
+
+
+
+@pytest.mark.asyncio
 async def test_portfolio_holding_crud():
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:

@@ -661,6 +661,62 @@
       "picture": "https://lh3.googleusercontent.com/pic.jpg",
       "created_at": "2026-09-28 00:45:14.709934+00:00",
       "_id": "ce11bcf0-0657-4aa5-a39d-477ffabec0f7"
+    },
+    {
+      "user_id": "user_c3c5869fa4e7",
+      "email": "new-user-1790558554263@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:22:34.271446+00:00",
+      "_id": "334df045-22a0-40bd-b6f7-d49d41704eb8"
+    },
+    {
+      "user_id": "user_7d84477df6fe",
+      "email": "trigger-1790558557921@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:22:37.965462+00:00",
+      "_id": "89008850-5059-47bc-9e78-50155525af8a"
+    },
+    {
+      "user_id": "user_09203849d7f6",
+      "email": "scheduler-guard-1790558558096@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:22:38.130444+00:00",
+      "_id": "6df47a2c-f683-4ed0-916d-ace855eb3bd2"
+    },
+    {
+      "user_id": "user_b912a78dfcc9",
+      "email": "new-user-1790558584662@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:23:04.669466+00:00",
+      "_id": "7324d798-62ff-4201-becd-9335151dd7e1"
+    },
+    {
+      "user_id": "user_ab9b54c03acd",
+      "email": "trigger-1790558586474@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:23:06.475827+00:00",
+      "_id": "403102da-f98c-40ce-9100-2f177a1e1004"
+    },
+    {
+      "user_id": "user_f32b1e51473b",
+      "email": "scheduler-guard-1790558586541@terminus.local",
+      "name": "Senior Trader",
+      "picture": null,
+      "created_at": "2026-09-28 01:23:06.543071+00:00",
+      "_id": "dfe4af99-0c77-4794-bf82-fcb7747016fd"
+    },
+    {
+      "user_id": "user_e9d2341e9c37",
+      "email": "sendnow-ui-1790558586656@terminus.local",
+      "name": "sendnow-ui-1790558586656",
+      "picture": null,
+      "created_at": "2026-09-28 01:23:07.344394+00:00",
+      "_id": "bf8bc248-0a97-4078-9bc8-00166f40d614"
     }
   ],
   "user_sessions": [
@@ -7743,6 +7799,66 @@
       "user_id": "user_0c00f5369aaf",
       "expires_at": "2026-10-05 00:45:31.220056+00:00",
       "created_at": "2026-09-28 00:45:31.220068+00:00"
+    },
+    {
+      "session_token": "sess_85b6e11d4f2e4d31af94d4bb06886f3d",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-05 01:21:45.247200+00:00",
+      "created_at": "2026-09-28 01:21:45.247218+00:00"
+    },
+    {
+      "session_token": "sess_e14bd62c6d9b4ca4a632931727b18ea6",
+      "user_id": "user_c3c5869fa4e7",
+      "expires_at": "2026-10-05 01:22:34.280350+00:00",
+      "created_at": "2026-09-28 01:22:34.280414+00:00"
+    },
+    {
+      "session_token": "sess_eb108bcaee1b4922a342ed914905210b",
+      "user_id": "user_6a38249c90dc",
+      "expires_at": "2026-10-05 01:22:37.410705+00:00",
+      "created_at": "2026-09-28 01:22:37.410721+00:00"
+    },
+    {
+      "session_token": "sess_de9d53c4e4f6461fb6efab401b02cf8f",
+      "user_id": "user_7d84477df6fe",
+      "expires_at": "2026-10-05 01:22:37.977061+00:00",
+      "created_at": "2026-09-28 01:22:37.977073+00:00"
+    },
+    {
+      "session_token": "sess_16549f4c4d054ac690ca63c17708b660",
+      "user_id": "user_09203849d7f6",
+      "expires_at": "2026-10-05 01:22:38.147351+00:00",
+      "created_at": "2026-09-28 01:22:38.147362+00:00"
+    },
+    {
+      "session_token": "sess_32b0fc955fa2410abdd5a4ac0c7f2ea4",
+      "user_id": "user_b912a78dfcc9",
+      "expires_at": "2026-10-05 01:23:04.677437+00:00",
+      "created_at": "2026-09-28 01:23:04.677449+00:00"
+    },
+    {
+      "session_token": "sess_6c2796cb97fa42ff8aba96efd0c6c67e",
+      "user_id": "user_6a38249c90dc",
+      "expires_at": "2026-10-05 01:23:05.921617+00:00",
+      "created_at": "2026-09-28 01:23:05.921631+00:00"
+    },
+    {
+      "session_token": "sess_432af1e6a42a4eb9b85ff14037e87556",
+      "user_id": "user_ab9b54c03acd",
+      "expires_at": "2026-10-05 01:23:06.488878+00:00",
+      "created_at": "2026-09-28 01:23:06.488896+00:00"
+    },
+    {
+      "session_token": "sess_843926c77b0d4d978bfe771532995a5a",
+      "user_id": "user_f32b1e51473b",
+      "expires_at": "2026-10-05 01:23:06.550929+00:00",
+      "created_at": "2026-09-28 01:23:06.550942+00:00"
+    },
+    {
+      "session_token": "sess_fe9a0733416346e494be472b74ba56cf",
+      "user_id": "user_e9d2341e9c37",
+      "expires_at": "2026-10-05 01:23:07.355328+00:00",
+      "created_at": "2026-09-28 01:23:07.355339+00:00"
     }
   ],
   "holdings": [
@@ -9180,7 +9296,7 @@
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
       "enabled": true,
-      "last_sent_date": "2026-09-13"
+      "last_sent_date": "2026-09-28"
     },
     {
       "user_id": "user_7f21834c89b7",
@@ -9200,7 +9316,7 @@
     },
     {
       "user_id": "user_6a38249c90dc",
-      "email": "digest-1790547700637@terminus.local",
+      "email": "digest-1790558586229@terminus.local",
       "enabled": true,
       "last_sent_date": "2026-09-28"
     },
@@ -9238,6 +9354,35 @@
       "user_id": "user_2a4f2d0cdaa1",
       "email": "scheduler-guard-1790547703749@terminus.local",
       "enabled": true,
+      "last_sent_date": "2026-09-28"
+    },
+    {
+      "user_id": "user_7d84477df6fe",
+      "email": "trigger-1790558557921@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-28"
+    },
+    {
+      "user_id": "user_09203849d7f6",
+      "email": "scheduler-guard-1790558558096@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-28"
+    },
+    {
+      "user_id": "user_ab9b54c03acd",
+      "email": "trigger-1790558586474@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-28"
+    },
+    {
+      "user_id": "user_f32b1e51473b",
+      "email": "scheduler-guard-1790558586541@terminus.local",
+      "enabled": true,
+      "last_sent_date": "2026-09-28"
+    },
+    {
+      "user_id": "user_e9d2341e9c37",
+      "email": "direct-target-1790558587566@terminus.local",
       "last_sent_date": "2026-09-28"
     }
   ],
