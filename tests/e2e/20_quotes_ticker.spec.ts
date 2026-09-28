@@ -202,7 +202,7 @@ test.describe('20. Market Quotes & Ticker Bar (TC-QUOTE)', () => {
     await expect(modal).toBeHidden({ timeout: 5000 });
   });
 
-  test('TC-QUOTE-11 — Security Detail Modal features seamless borderless header with top-right controls and no obsolete title bar', async ({ page }) => {
+  test('TC-QUOTE-11 — Security Detail Modal features seamless header, icon-only footer refresh, and no top button clutter', async ({ page }) => {
     await loginViaUI(page, 'header-tester@terminus.local');
 
     // Trigger open-stock-modal for SMCI
@@ -217,18 +217,21 @@ test.describe('20. Market Quotes & Ticker Bar (TC-QUOTE)', () => {
     const obsoleteTitle = page.locator('text=TERMINAL // SECURITY DETAIL');
     await expect(obsoleteTitle).toHaveCount(0);
 
-    // Assert top-right close and refresh controls are present
-    const closeBtn = page.locator('[data-testid="close-stock-modal-btn"]');
-    await expect(closeBtn).toBeVisible();
-
+    // Assert refresh button is in footer next to updated text and is icon-only (does not contain text "Refresh")
     const refreshBtn = page.locator('[data-testid="refresh-stock-modal-btn"]');
     await expect(refreshBtn).toBeVisible();
+    await expect(refreshBtn).not.toContainText('Refresh');
+
+    // Assert close button is in footer
+    const closeBtn = page.locator('[data-testid="close-stock-modal-btn"]');
+    await expect(closeBtn).toBeVisible();
+    await expect(closeBtn).toContainText('Close [ESC]');
 
     // Wait for live details to load before taking the screenshot
     const priceEl = page.locator('[data-testid="stock-modal-price"]');
     await expect(priceEl).not.toHaveText(/Loading/, { timeout: 10000 });
 
-    // Capture visual artifact of Variation B
+    // Capture visual artifact of updated modal
     await modal.screenshot({ path: '/Users/atharvtekurkar/.gemini/antigravity-ide/brain/c6f235ff-1646-4d42-8591-04ccd765dcbc/stock_detail_modal_variation_b.png' });
 
     // Verify close action

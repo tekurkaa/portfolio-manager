@@ -233,31 +233,7 @@ export default function StockDetailModal({ symbol, onClose }) {
         aria-labelledby="stock-detail-title"
       >
         {/* Modal Scrollable Content */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-5">
-          {/* Top Controls Row (Refresh & Close) */}
-          <div className="flex items-center justify-end gap-2 -mb-2">
-            <button
-              onClick={() => {
-                fetchDetails();
-                fetchHistory(range);
-              }}
-              data-testid="refresh-stock-modal-btn"
-              title="Refresh Quotes"
-              aria-label="Refresh quotes"
-              className="p-1.5 rounded-sm border border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={onClose}
-              data-testid="close-stock-modal-btn"
-              aria-label="Close security detail modal"
-              className="p-1.5 rounded-sm border border-[#222C3D] text-gray-400 hover:text-rose-400 hover:border-rose-900/50 hover:bg-rose-950/20 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
+        <div className="px-4 sm:px-6 pt-3.5 sm:pt-4 pb-4 sm:pb-6 overflow-y-auto space-y-6">
           {/* Top Ticker & Price Banner */}
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#1A2232] pb-5">
             <div>
@@ -553,9 +529,23 @@ export default function StockDetailModal({ symbol, onClose }) {
 
         {/* Modal Action Footer */}
         <div className="px-4 py-3 pb-safe-modal bg-[#0E131F] border-t border-[#222C3D] flex flex-wrap items-center justify-between gap-2 shrink-0">
-          <div className="text-[10px] font-mono text-gray-500 flex items-center gap-1.5">
-            <Clock className="w-3 h-3" />
-            <span>Updated: {new Date().toLocaleTimeString()}</span>
+          <div className="flex items-center gap-2">
+            <div className="text-[10px] font-mono text-gray-500 flex items-center gap-1.5">
+              <Clock className="w-3 h-3" />
+              <span>Updated: {new Date().toLocaleTimeString()}</span>
+            </div>
+            <button
+              onClick={() => {
+                fetchDetails();
+                fetchHistory(range);
+              }}
+              data-testid="refresh-stock-modal-btn"
+              title="Refresh Quotes"
+              aria-label="Refresh quotes"
+              className="p-1 rounded-sm border border-[#222C3D] text-gray-400 hover:text-amber-400 hover:border-amber-500/40 hover:bg-[#161C26] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
+            >
+              <RefreshCw className="w-3 h-3" />
+            </button>
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
@@ -583,6 +573,7 @@ export default function StockDetailModal({ symbol, onClose }) {
             </button>
             <button
               onClick={onClose}
+              data-testid="close-stock-modal-btn"
               className="px-3 py-1.5 rounded-sm font-mono text-xs font-semibold uppercase tracking-wider border border-[#222C3D] text-gray-300 hover:bg-[#161C26] transition-colors cursor-pointer"
             >
               Close [ESC]
