@@ -174,6 +174,24 @@ async def test_scanner_prefs_endpoint():
 
 
 @pytest.mark.asyncio
+async def test_scanner_prefs_empty_email_rejected():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        login_res = await client.post("/api/auth/dev-login", json={"email": "trader@terminus.local", "name": "Senior Trader"})
+        cookies = login_res.cookies
+
+        # Attempt to save with empty email string
+        empty_res = await client.post("/api/scanner/prefs", json={"email": "", "enabled": True}, cookies=cookies)
+        assert empty_res.status_code == 400
+        assert "valid email" in empty_res.json()["detail"].lower()
+
+        # Attempt to save with whitespace email
+        ws_res = await client.post("/api/scanner/prefs", json={"email": "   ", "enabled": True}, cookies=cookies)
+        assert ws_res.status_code == 400
+        assert "valid email" in ws_res.json()["detail"].lower()
+
+
+@pytest.mark.asyncio
 async def test_scanner_notify_with_explicit_email():
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:

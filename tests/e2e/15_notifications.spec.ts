@@ -135,4 +135,28 @@ test.describe('15. Scanner — Email Digest Notifications (TC-NOTIF)', () => {
     // Verify success toast appears with the custom target email
     await expect(page.locator(`text=Digest sent to ${customTargetEmail}`)).toBeVisible({ timeout: 10000 });
   });
+
+  test('TC-NOTIF-06 — Clicking Save with empty email triggers validation error toast and prevents save', async ({ page }) => {
+    const userEmail = `empty-email-${Date.now()}@terminus.local`;
+    await loginViaUI(page, userEmail);
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+
+    const emailInput = page.locator('[data-testid="notify-email-input"]');
+    const saveBtn = page.locator('[data-testid="notify-save"]');
+
+    // Wait for initial preferences to finish loading
+    await expect(emailInput).toHaveValue(userEmail, { timeout: 10000 });
+
+    // Clear input to simulate user wiping the email
+    await emailInput.fill('');
+    await saveBtn.click();
+
+    // Verify error toast is shown
+    await expect(page.locator('text=Please enter a valid email address')).toBeVisible({ timeout: 5000 });
+    // Verify success toast is NOT present
+    await expect(page.locator('text=Notification preferences saved')).not.toBeVisible();
+  });
 });
+

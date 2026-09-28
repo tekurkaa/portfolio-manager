@@ -816,6 +816,16 @@ async def scanner_prefs_get(user=Depends(current_user)):
 
 @api_router.post("/scanner/prefs")
 async def scanner_prefs_set(data: NotifyPref, user=Depends(current_user)):
+    if data.email is not None:
+        trimmed = data.email.strip()
+        if not trimmed or "@" not in trimmed or "." not in trimmed:
+            raise HTTPException(status_code=400, detail="Please enter a valid email address.")
+        data.email = trimmed
+    elif data.enabled:
+        pref = await db.notify_prefs.find_one({"user_id": user["user_id"]}, {"_id": 0}) or {}
+        if not pref.get("email") and not user.get("email"):
+            raise HTTPException(status_code=400, detail="Please enter a valid email address.")
+
     update = {k: v for k, v in data.model_dump().items() if v is not None}
     update["user_id"] = user["user_id"]
     await db.notify_prefs.update_one({"user_id": user["user_id"]}, {"$set": update}, upsert=True)

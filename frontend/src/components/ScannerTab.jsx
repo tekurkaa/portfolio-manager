@@ -48,21 +48,30 @@ export default function ScannerTab() {
   }, []);
 
   const savePrefs = async () => {
+    const trimmed = (email || "").trim();
+    if (!trimmed || !trimmed.includes("@") || !trimmed.includes(".")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     try {
-      await api.post("/scanner/prefs", { email, enabled });
+      await api.post("/scanner/prefs", { email: trimmed, enabled });
       toast.success("Notification preferences saved");
-    } catch { toast.error("Failed to save"); }
+    } catch (err) {
+      const msg = err.response?.data?.detail || "Failed to save";
+      toast.error(msg);
+    }
   };
 
   const sendDigest = async () => {
-    if (!email) {
+    const trimmed = (email || "").trim();
+    if (!trimmed || !trimmed.includes("@") || !trimmed.includes(".")) {
       toast.error("Please enter a valid email address");
       return;
     }
     setSending(true);
     try {
-      const { data } = await api.post("/scanner/notify", { email });
-      if (data.sent) toast.success(`Digest sent to ${email}`);
+      const { data } = await api.post("/scanner/notify", { email: trimmed });
+      if (data.sent) toast.success(`Digest sent to ${trimmed}`);
       else {
         toast.warning("Email delivery notice", { description: data.reason?.slice(0, 150) });
       }
