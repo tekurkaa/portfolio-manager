@@ -158,5 +158,26 @@ test.describe('15. Scanner — Email Digest Notifications (TC-NOTIF)', () => {
     // Verify success toast is NOT present
     await expect(page.locator('text=Notification preferences saved')).not.toBeVisible();
   });
+
+  test('TC-NOTIF-07 — End-to-end Send Now dispatches successfully and displays confirmation toast', async ({ page }) => {
+    const userEmail = `e2e-dispatch-${Date.now()}@terminus.local`;
+    await loginViaUI(page, userEmail);
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+
+    const emailInput = page.locator('[data-testid="notify-email-input"]');
+    const sendBtn = page.locator('[data-testid="notify-send"]');
+
+    await expect(emailInput).toHaveValue(userEmail, { timeout: 10000 });
+
+    const targetEmail = 'atharvtekurkar@gmail.com';
+    await emailInput.fill(targetEmail);
+    await sendBtn.click();
+
+    // Verify success toast confirms delivery to target email
+    const toast = page.locator(`text=Digest sent to ${targetEmail}`);
+    await expect(toast).toBeVisible({ timeout: 20000 });
+  });
 });
 
