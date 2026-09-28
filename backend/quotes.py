@@ -10,6 +10,7 @@ from typing import Any, Optional, Dict, List
 import pytz
 import httpx
 import yfinance as yf
+from asset_metadata_service import get_security_master_profile, BROAD_INDEX_ETFS, THEMATIC_LEVERAGED_ETFS
 
 logger = logging.getLogger(__name__)
 
@@ -410,11 +411,65 @@ _STOCK_DETAILS_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
 _STOCK_HISTORY_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
 
 
+_AV_OVERVIEW_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
+
+
+def _fetch_alpha_vantage_overview_sync(symbol: str) -> Optional[Dict[str, Any]]:
+    sym = symbol.upper().strip()
+    key = os.environ.get("ALPHA_VANTAGE_API_KEY", "")
+    if not key or is_crypto(sym):
+        return None
+    now = time.time()
+    if sym in _AV_OVERVIEW_CACHE:
+        val, exp = _AV_OVERVIEW_CACHE[sym]
+        if exp > now:
+            return val
+    try:
+        with httpx.Client(timeout=6.0) as client:
+            r = client.get("https://www.alphavantage.co/query", params={
+                "function": "OVERVIEW",
+                "symbol": sym,
+                "apikey": key,
+            })
+            if r.status_code == 200:
+                data = r.json()
+                if data and data.get("Name"):
+                    parsed = {
+                        "longName": data.get("Name"),
+                        "longBusinessSummary": data.get("Description"),
+                        "sector": data.get("Sector", "").title() if data.get("Sector") else None,
+                        "industry": data.get("Industry", "").title() if data.get("Industry") else None,
+                        "trailingPE": float(data.get("PERatio")) if data.get("PERatio") and data.get("PERatio") != "None" else None,
+                        "forwardPE": float(data.get("ForwardPE")) if data.get("ForwardPE") and data.get("ForwardPE") != "None" else None,
+                        "dividendYield": float(data.get("DividendYield")) if data.get("DividendYield") and data.get("DividendYield") != "None" else None,
+                        "beta": float(data.get("Beta")) if data.get("Beta") and data.get("Beta") != "None" else None,
+                        "market_cap": int(float(data.get("MarketCapitalization"))) if data.get("MarketCapitalization") and data.get("MarketCapitalization") != "None" else None,
+                    }
+                    _AV_OVERVIEW_CACHE[sym] = (parsed, now + 3600.0)
+                    return parsed
+    except Exception as e:
+        logger.warning(f"Alpha Vantage overview failed for {sym}: {e}")
+    return None
+
+
 def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
     try:
         yh_sym = _normalize_crypto_symbol(symbol)
         t = yf.Ticker(yh_sym)
-        fi = t.fast_info
+        fi = None
+        try:
+            fi = t.fast_info
+        except Exception:
+            fi = None
+
+        def safe_fi_attr(fi_obj, attr_name, default=None):
+            if not fi_obj:
+                return default
+            try:
+                v = getattr(fi_obj, attr_name, default)
+                return v if v is not None else default
+            except Exception:
+                return default
 
         def safe_float(v, decimals=4):
             try:
@@ -438,8 +493,8 @@ def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
             except Exception:
                 return None
 
-        price = getattr(fi, "last_price", None) or getattr(fi, "lastPrice", None)
-        prev = getattr(fi, "previous_close", None) or getattr(fi, "previousClose", None)
+        price = safe_fi_attr(fi, "last_price") or safe_fi_attr(fi, "lastPrice")
+        prev = safe_fi_attr(fi, "previous_close") or safe_fi_attr(fi, "previousClose")
 
         if price is None or (isinstance(price, float) and price != price):
             # Check in-memory quote cache
@@ -448,17 +503,27 @@ def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
                 price = cached_q["price"]
                 prev = cached_q.get("previous_close") or prev
             else:
-                # Fallback to recent 5d history
+                # Direct quote fallback via _yf_fetch_sync
                 try:
-                    h_fallback = t.history(period="5d")
-                    if not h_fallback.empty and "Close" in h_fallback:
-                        valid_closes = h_fallback["Close"].dropna()
-                        if not valid_closes.empty:
-                            price = float(valid_closes.iloc[-1])
-                            if len(valid_closes) > 1:
-                                prev = float(valid_closes.iloc[-2])
+                    q_fb = _yf_fetch_sync(symbol)
+                    if q_fb and q_fb.get("price"):
+                        price = q_fb["price"]
+                        prev = q_fb.get("previous_close") or prev
                 except Exception:
                     pass
+
+                if price is None:
+                    # Fallback to recent 5d history
+                    try:
+                        h_fallback = t.history(period="5d")
+                        if not h_fallback.empty and "Close" in h_fallback:
+                            valid_closes = h_fallback["Close"].dropna()
+                            if not valid_closes.empty:
+                                price = float(valid_closes.iloc[-1])
+                                if len(valid_closes) > 1:
+                                    prev = float(valid_closes.iloc[-2])
+                    except Exception:
+                        pass
 
         if price is None:
             return None
@@ -471,33 +536,73 @@ def _fetch_stock_details_sync(symbol: str) -> Optional[Dict[str, Any]]:
         info = {}
         try:
             info = getattr(t, "info", {}) or {}
+            if not isinstance(info, dict):
+                info = {}
         except Exception:
             info = {}
 
+        # Alpha Vantage fallback if info is missing longBusinessSummary or longName
+        if not info.get("longBusinessSummary") and not is_crypto(symbol):
+            av_data = _fetch_alpha_vantage_overview_sync(symbol)
+            if av_data:
+                for k, v in av_data.items():
+                    if k not in info or not info[k]:
+                        info[k] = v
+
+        # Master security metadata fallback for guaranteed descriptive names & summaries
+        master_profile = get_security_master_profile(symbol)
+        if master_profile:
+            if not info.get("longName") or info.get("longName").strip().upper() == symbol.upper():
+                info["longName"] = master_profile["name"]
+            if not info.get("longBusinessSummary"):
+                info["longBusinessSummary"] = master_profile.get("summary")
+            if not info.get("sector"):
+                info["sector"] = master_profile.get("sector")
+            if not info.get("industry"):
+                info["industry"] = master_profile.get("industry")
+            if not info.get("quote_type"):
+                info["quote_type"] = master_profile.get("quote_type")
+
+        # Fallback for clean name (NEVER allow bare symbol like "DDOG" to be the company name)
+        clean_name = info.get("longName") or info.get("shortName")
+        if not clean_name or clean_name.strip().upper() == symbol.upper():
+            if is_crypto(symbol):
+                clean_name = f"{symbol.upper()} Digital Currency"
+            elif symbol.upper() in BROAD_INDEX_ETFS or symbol.upper() in THEMATIC_LEVERAGED_ETFS:
+                clean_name = f"{symbol.upper()} ETF Trust"
+            else:
+                clean_name = f"{symbol.upper()} Corporation"
+
+        # Fallback for clean summary (NEVER allow null or empty summary)
+        clean_summary = info.get("longBusinessSummary") or info.get("description")
+        if not clean_summary:
+            asset_label = "cryptocurrency network" if is_crypto(symbol) else ("exchange-traded fund (ETF)" if (symbol.upper() in BROAD_INDEX_ETFS or symbol.upper() in THEMATIC_LEVERAGED_ETFS) else "public enterprise")
+            clean_summary = f"{clean_name} ({symbol.upper()}) is an actively traded {asset_label} listed in US capital markets."
+
         return {
             "symbol": symbol.upper(),
-            "name": info.get("longName") or info.get("shortName") or symbol.upper(),
+            "name": clean_name,
             "price": round(price_f, 4),
             "previous_close": round(prev_f, 4) if prev_f else None,
             "change": round(change, 4),
             "change_percent": round(change_pct, 3),
-            "open": safe_float(getattr(fi, "open", None)),
-            "day_high": safe_float(getattr(fi, "day_high", None)),
-            "day_low": safe_float(getattr(fi, "day_low", None)),
-            "year_high": safe_float(getattr(fi, "year_high", None)),
-            "year_low": safe_float(getattr(fi, "year_low", None)),
-            "volume": safe_int(getattr(fi, "last_volume", None)),
-            "avg_volume": safe_int(getattr(fi, "three_month_average_volume", None)),
-            "market_cap": safe_int(getattr(fi, "market_cap", None)),
+            "open": safe_float(safe_fi_attr(fi, "open")),
+            "day_high": safe_float(safe_fi_attr(fi, "day_high")),
+            "day_low": safe_float(safe_fi_attr(fi, "day_low")),
+            "year_high": safe_float(safe_fi_attr(fi, "year_high")),
+            "year_low": safe_float(safe_fi_attr(fi, "year_low")),
+            "volume": safe_int(safe_fi_attr(fi, "last_volume")),
+            "avg_volume": safe_int(safe_fi_attr(fi, "three_month_average_volume")),
+            "market_cap": safe_int(safe_fi_attr(fi, "market_cap")) or safe_int(info.get("market_cap")),
             "pe_ratio": safe_float(info.get("trailingPE"), 2),
             "forward_pe": safe_float(info.get("forwardPE"), 2),
             "dividend_yield": safe_float(info.get("dividendYield"), 4),
             "beta": safe_float(info.get("beta"), 3),
             "sector": info.get("sector"),
             "industry": info.get("industry"),
-            "currency": getattr(fi, "currency", "USD") or "USD",
-            "quote_type": getattr(fi, "quote_type", None) or ("crypto" if is_crypto(symbol) else "stock"),
-            "summary": info.get("longBusinessSummary"),
+            "currency": safe_fi_attr(fi, "currency", "USD") or "USD",
+            "quote_type": info.get("quote_type") or safe_fi_attr(fi, "quote_type") or ("crypto" if is_crypto(symbol) else "stock"),
+            "summary": clean_summary,
             "updated_at": time.time(),
         }
     except Exception as e:

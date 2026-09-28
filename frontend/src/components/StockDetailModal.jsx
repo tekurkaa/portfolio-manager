@@ -76,15 +76,24 @@ export default function StockDetailModal({ symbol, onClose }) {
       try {
         const qRes = await api.get(`/market/quote/${symbol}`);
         if (qRes.data) {
+          const fbType = qRes.data.asset_type || "stock";
+          const symUpper = symbol.toUpperCase();
+          const isFbCrypto = fbType.includes("crypto") || ["BTC", "ETH", "SOL", "DOGE", "AVAX", "LINK"].includes(symUpper);
+          const isFbEtf = fbType.includes("etf") || ["QQQ", "SPY", "VOO", "SOXL", "SOXS", "TQQQ", "SQQQ", "SMH", "ARKK", "GLD", "IBIT"].includes(symUpper);
+          const fbName = (qRes.data.name && qRes.data.name.trim().toUpperCase() !== symUpper)
+            ? qRes.data.name
+            : (isFbCrypto ? `${symUpper} Digital Currency` : isFbEtf ? `${symUpper} ETF Trust` : `${symUpper} Corporation`);
+
           setDetails({
-            symbol: symbol.toUpperCase(),
-            name: qRes.data.symbol || symbol.toUpperCase(),
+            symbol: symUpper,
+            name: fbName,
             price: qRes.data.price,
             previous_close: qRes.data.previous_close,
             change: qRes.data.change,
             change_percent: qRes.data.change_percent,
-            quote_type: qRes.data.asset_type || "stock",
+            quote_type: fbType,
             currency: qRes.data.currency || "USD",
+            summary: `${fbName} (${symUpper}) is an actively traded ${isFbCrypto ? "cryptocurrency network" : isFbEtf ? "exchange-traded fund (ETF)" : "public enterprise"} listed in US capital markets.`,
           });
           return;
         }
@@ -187,6 +196,18 @@ export default function StockDetailModal({ symbol, onClose }) {
   const strokeColor = isUp ? "#10B981" : "#EF4444";
   const fillColor = isUp ? "rgba(16, 185, 129, 0.25)" : "rgba(239, 68, 68, 0.25)";
 
+  const upperSymbol = (details?.symbol || symbol || "").toUpperCase();
+  const quoteType = (details?.quote_type || "").toLowerCase();
+  const isCryptoAsset = quoteType.includes("crypto") || ["BTC", "ETH", "SOL", "DOGE", "AVAX", "LINK"].includes(upperSymbol);
+  const isEtfAsset = quoteType.includes("etf") || ["QQQ", "SPY", "VOO", "SOXL", "SOXS", "TQQQ", "SQQQ", "SMH", "ARKK", "GLD", "IBIT"].includes(upperSymbol);
+
+  const descriptiveName = (details?.name && details.name.trim().toUpperCase() !== upperSymbol)
+    ? details.name
+    : (isCryptoAsset ? `${upperSymbol} Digital Currency` : isEtfAsset ? `${upperSymbol} ETF Trust` : `${upperSymbol} Corporation`);
+
+  const overviewTitle = isCryptoAsset ? "ASSET & NETWORK OVERVIEW" : (isEtfAsset ? "FUND OVERVIEW" : "COMPANY OVERVIEW");
+  const overviewSummary = details?.summary || `${descriptiveName} (${upperSymbol}) is an actively traded ${isCryptoAsset ? "cryptocurrency network" : isEtfAsset ? "exchange-traded fund (ETF)" : "public enterprise"} listed in US capital markets.`;
+
   // Range bar calculation helper
   const calcRangePct = (current, low, high) => {
     if (!current || !low || !high || high <= low) return 50;
@@ -211,26 +232,19 @@ export default function StockDetailModal({ symbol, onClose }) {
         aria-modal="true"
         aria-labelledby="stock-detail-title"
       >
-        {/* Terminal Header Bar */}
-        <div className="flex items-center justify-between px-4 py-3 bg-[#0E131F] border-b border-[#222C3D] shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span id="stock-detail-title" className="font-mono text-xs font-bold text-gray-300 tracking-wider uppercase">
-              TERMINAL // SECURITY DETAIL
-            </span>
-            <span className="text-[10px] font-mono text-gray-500">
-              [LIVE 0-SEC FEED]
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
+        {/* Modal Scrollable Content */}
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-5">
+          {/* Top Controls Row (Refresh & Close) */}
+          <div className="flex items-center justify-end gap-2 -mb-2">
             <button
               onClick={() => {
                 fetchDetails();
                 fetchHistory(range);
               }}
+              data-testid="refresh-stock-modal-btn"
               title="Refresh Quotes"
               aria-label="Refresh quotes"
-              className="p-1 rounded-sm border border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26] transition-colors cursor-pointer"
+              className="p-1.5 rounded-sm border border-[#222C3D] text-gray-400 hover:text-white hover:bg-[#161C26] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
             >
               <RefreshCw className="w-3.5 h-3.5" />
             </button>
@@ -238,20 +252,17 @@ export default function StockDetailModal({ symbol, onClose }) {
               onClick={onClose}
               data-testid="close-stock-modal-btn"
               aria-label="Close security detail modal"
-              className="p-1 rounded-sm border border-[#222C3D] text-gray-400 hover:text-rose-400 hover:border-rose-900/50 hover:bg-rose-950/20 transition-colors cursor-pointer"
+              className="p-1.5 rounded-sm border border-[#222C3D] text-gray-400 hover:text-rose-400 hover:border-rose-900/50 hover:bg-rose-950/20 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
-        </div>
 
-        {/* Modal Scrollable Content */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-6">
           {/* Top Ticker & Price Banner */}
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#1A2232] pb-5">
             <div>
               <div className="flex items-center gap-3">
-                <span className="text-2xl sm:text-3xl font-mono font-bold text-amber-400 tracking-wider">
+                <span id="stock-detail-title" className="text-2xl sm:text-3xl font-mono font-bold text-amber-400 tracking-wider">
                   {details?.symbol || symbol.toUpperCase()}
                 </span>
                 {details?.quote_type && (
@@ -265,8 +276,8 @@ export default function StockDetailModal({ symbol, onClose }) {
                   </span>
                 )}
               </div>
-              <div className="text-sm text-gray-300 font-medium mt-1">
-                {details?.name || symbol.toUpperCase()}
+              <div className="text-sm text-gray-300 font-medium mt-1" data-testid="stock-modal-company-name">
+                {descriptiveName}
                 {details?.industry && (
                   <span className="text-xs text-gray-500 ml-2">· {details.industry}</span>
                 )}
@@ -509,27 +520,35 @@ export default function StockDetailModal({ symbol, onClose }) {
           </div>
 
           {/* Company Profile / Summary */}
-          {details?.summary && (
-            <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4">
-              <div className="text-xs font-mono font-semibold tracking-wider text-gray-200 uppercase mb-2 flex items-center gap-2">
-                <Building2 className="w-3.5 h-3.5 text-amber-500" />
-                <span>COMPANY OVERVIEW</span>
-              </div>
-              <p className={`text-xs text-gray-300 leading-relaxed font-sans ${showFullSummary ? "" : "line-clamp-3"}`}>
-                {details.summary}
-              </p>
-              {details.summary.length > 200 && (
-                <button
-                  onClick={() => setShowFullSummary(!showFullSummary)}
-                  aria-expanded={showFullSummary}
-                  data-testid="toggle-full-summary-btn"
-                  className="text-[11px] font-mono text-amber-400 hover:text-amber-300 mt-2 underline cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
-                >
-                  {showFullSummary ? "Show less" : "Read full profile..."}
-                </button>
-              )}
+          <div className="border border-[#222C3D] bg-[#121721] rounded-sm p-4" data-testid="stock-modal-overview-section">
+            <div className="text-xs font-mono font-semibold tracking-wider text-gray-200 uppercase mb-2 flex items-center gap-2">
+              <Building2 className="w-3.5 h-3.5 text-amber-500" />
+              <span>{overviewTitle}</span>
             </div>
-          )}
+            {loadingDetails && !details ? (
+              <div className="space-y-1.5 animate-pulse py-1">
+                <div className="h-3 bg-[#1D2635] rounded w-full"></div>
+                <div className="h-3 bg-[#1D2635] rounded w-5/6"></div>
+                <div className="h-3 bg-[#1D2635] rounded w-2/3"></div>
+              </div>
+            ) : (
+              <>
+                <p className={`text-xs text-gray-300 leading-relaxed font-sans ${showFullSummary ? "" : "line-clamp-3"}`} data-testid="stock-modal-summary-text">
+                  {overviewSummary}
+                </p>
+                {overviewSummary.length > 200 && (
+                  <button
+                    onClick={() => setShowFullSummary(!showFullSummary)}
+                    aria-expanded={showFullSummary}
+                    data-testid="toggle-full-summary-btn"
+                    className="text-[11px] font-mono text-amber-400 hover:text-amber-300 mt-2 underline cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
+                  >
+                    {showFullSummary ? "Show less" : "Read full profile..."}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         {/* Modal Action Footer */}

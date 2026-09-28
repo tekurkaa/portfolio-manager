@@ -110,3 +110,68 @@ async def test_stock_history_resilience():
     assert h_rvi is not None
     assert len(h_rvi["points"]) > 0
 
+
+@pytest.mark.asyncio
+async def test_stock_details_descriptive_name_and_overview_cloud_fallback(monkeypatch):
+    from quotes import get_stock_details, _STOCK_DETAILS_CACHE
+    import yfinance as yf
+
+    _STOCK_DETAILS_CACHE.pop("DDOG", None)
+
+    # Monkeypatch Ticker.info to raise Exception (simulating Yahoo Cloud Block 403 on Render)
+    def mock_info_property(self):
+        raise Exception("403 Client Error: Forbidden for url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/DDOG")
+
+    monkeypatch.setattr(yf.Ticker, "info", property(mock_info_property))
+
+    d = await get_stock_details("DDOG")
+    assert d is not None
+    assert d["symbol"] == "DDOG"
+    # Name must NOT be the ticker string 'DDOG'
+    assert d["name"] != "DDOG"
+    assert "Datadog" in d["name"]
+    # Summary must be present and descriptive
+    assert d["summary"] is not None
+    assert len(d["summary"]) > 20
+    assert "Datadog" in d["summary"]
+
+
+@pytest.mark.asyncio
+async def test_crypto_details_descriptive_name_and_overview(monkeypatch):
+    from quotes import get_stock_details, _STOCK_DETAILS_CACHE
+    import yfinance as yf
+
+    _STOCK_DETAILS_CACHE.pop("BTC", None)
+
+    def mock_info_property(self):
+        raise Exception("403 Forbidden")
+
+    monkeypatch.setattr(yf.Ticker, "info", property(mock_info_property))
+
+    d = await get_stock_details("BTC")
+    assert d is not None
+    assert d["symbol"] == "BTC"
+    assert d["name"] == "Bitcoin"
+    assert d["summary"] is not None
+    assert "Bitcoin" in d["summary"]
+
+
+@pytest.mark.asyncio
+async def test_etf_details_descriptive_name_and_overview(monkeypatch):
+    from quotes import get_stock_details, _STOCK_DETAILS_CACHE
+    import yfinance as yf
+
+    _STOCK_DETAILS_CACHE.pop("QQQ", None)
+
+    def mock_info_property(self):
+        raise Exception("403 Forbidden")
+
+    monkeypatch.setattr(yf.Ticker, "info", property(mock_info_property))
+
+    d = await get_stock_details("QQQ")
+    assert d is not None
+    assert d["symbol"] == "QQQ"
+    assert d["name"] != "QQQ"
+    assert "Invesco" in d["name"] or "QQQ" in d["name"]
+    assert d["summary"] is not None
+

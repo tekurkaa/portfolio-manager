@@ -65,7 +65,7 @@
 - **Off-Hours & Low-Liquidity Intraday Resilience**: Multi-tier chart fallback engine: if 1D intraday interval is empty (e.g. market closed, weekend, or micro-cap equity), automatically extracts the most recent completed market session from a 5-day window, or daily bars, ensuring charts always render without blank states.
 - **Visual Range Gauges**: High-contrast sliders displaying current price relative to **Day Low / High** and **52-Week Range**.
 - **Institutional Key Metrics Grid**: Market Cap, Trailing P/E, Forward P/E, Beta (5Y), Day Open, Previous Close, Volume, and Dividend Yield with safe null/NaN defensive parsing.
-- **Company Profile & Overview**: Business summary with expandable profile text.
+- **Company Profile & Overview (Cloud-Resilient Metadata)**: Official descriptive company name and full business summary with expandable profile text. Incorporates a multi-tier fallback architecture combining Yahoo Finance, Alpha Vantage `OVERVIEW`, and an institutional master security directory in `asset_metadata_service.py` to guarantee official descriptive names and complete overview cards for equities, ETFs, and cryptocurrencies without bare symbol repetition or missing summaries even under datacenter IP restrictions.
 - **Universal Cross-Tab Click Triggers**: Accessible anywhere a symbol appears across the entire terminal:
   - **Top Ticker Bar** & **Holdings Table**
   - **Watchlist Tab**

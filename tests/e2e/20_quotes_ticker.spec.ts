@@ -138,7 +138,105 @@ test.describe('20. Market Quotes & Ticker Bar (TC-QUOTE)', () => {
     await closeBtn.click();
     await expect(modal).toBeHidden({ timeout: 5000 });
   });
+
+  test('TC-QUOTE-09 — Security Detail Modal renders official descriptive company name and company overview for Equities (DDOG)', async ({ page }) => {
+    await loginViaUI(page, 'ddog-modal-tester@terminus.local');
+
+    // Trigger open-stock-modal for DDOG
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('open-stock-modal', { detail: { symbol: 'DDOG' } }));
+    });
+
+    const modal = page.locator('[data-testid="stock-detail-modal"]');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+
+    // Verify symbol and descriptive name
+    await expect(page.locator('text=DDOG').first()).toBeVisible();
+    const companyNameEl = page.locator('[data-testid="stock-modal-company-name"]');
+    await expect(companyNameEl).toBeVisible();
+    await expect(companyNameEl).toContainText('Datadog');
+    const nameText = await companyNameEl.textContent();
+    expect(nameText?.trim()).not.toBe('DDOG');
+
+    // Verify Company Overview section is visible and contains descriptive text
+    const overviewSection = page.locator('[data-testid="stock-modal-overview-section"]');
+    await expect(overviewSection).toBeVisible();
+    await expect(overviewSection).toContainText('COMPANY OVERVIEW');
+
+    const summaryText = page.locator('[data-testid="stock-modal-summary-text"]');
+    await expect(summaryText).toBeVisible();
+    await expect(summaryText).toContainText('Datadog');
+
+    // Close via ESC key
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden({ timeout: 5000 });
+  });
+
+  test('TC-QUOTE-10 — Security Detail Modal renders descriptive asset name and overview for Crypto (BTC)', async ({ page }) => {
+    await loginViaUI(page, 'btc-modal-tester@terminus.local');
+
+    // Trigger open-stock-modal for BTC
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('open-stock-modal', { detail: { symbol: 'BTC' } }));
+    });
+
+    const modal = page.locator('[data-testid="stock-detail-modal"]');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+
+    // Verify symbol and descriptive name
+    await expect(page.locator('text=BTC').first()).toBeVisible();
+    const companyNameEl = page.locator('[data-testid="stock-modal-company-name"]');
+    await expect(companyNameEl).toBeVisible();
+    await expect(companyNameEl).toContainText('Bitcoin');
+
+    // Verify Overview section is visible and contains Bitcoin summary
+    const overviewSection = page.locator('[data-testid="stock-modal-overview-section"]');
+    await expect(overviewSection).toBeVisible();
+
+    const summaryText = page.locator('[data-testid="stock-modal-summary-text"]');
+    await expect(summaryText).toBeVisible();
+    await expect(summaryText).toContainText('Bitcoin');
+
+    // Close via ESC key
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden({ timeout: 5000 });
+  });
+
+  test('TC-QUOTE-11 — Security Detail Modal features seamless borderless header with top-right controls and no obsolete title bar', async ({ page }) => {
+    await loginViaUI(page, 'header-tester@terminus.local');
+
+    // Trigger open-stock-modal for SMCI
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('open-stock-modal', { detail: { symbol: 'SMCI' } }));
+    });
+
+    const modal = page.locator('[data-testid="stock-detail-modal"]');
+    await expect(modal).toBeVisible({ timeout: 10000 });
+
+    // Assert obsolete "TERMINAL // SECURITY DETAIL" text is removed
+    const obsoleteTitle = page.locator('text=TERMINAL // SECURITY DETAIL');
+    await expect(obsoleteTitle).toHaveCount(0);
+
+    // Assert top-right close and refresh controls are present
+    const closeBtn = page.locator('[data-testid="close-stock-modal-btn"]');
+    await expect(closeBtn).toBeVisible();
+
+    const refreshBtn = page.locator('[data-testid="refresh-stock-modal-btn"]');
+    await expect(refreshBtn).toBeVisible();
+
+    // Wait for live details to load before taking the screenshot
+    const priceEl = page.locator('[data-testid="stock-modal-price"]');
+    await expect(priceEl).not.toHaveText(/Loading/, { timeout: 10000 });
+
+    // Capture visual artifact of Variation B
+    await modal.screenshot({ path: '/Users/atharvtekurkar/.gemini/antigravity-ide/brain/c6f235ff-1646-4d42-8591-04ccd765dcbc/stock_detail_modal_variation_b.png' });
+
+    // Verify close action
+    await closeBtn.click();
+    await expect(modal).toBeHidden({ timeout: 5000 });
+  });
 });
+
 
 
 
