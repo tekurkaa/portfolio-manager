@@ -43,6 +43,10 @@
 
 ### 4. 🎯 Breakout Scanner & Automated Daily Email Digest
 - **Cross-Sector Scanning**: Scans 60+ high-momentum equities (semis, mega-cap tech, biotech, crypto proxies) combining price momentum, 52-week breakout proximity, unusual call options flow, and recent congressional purchases.
+- **Catalyst Intelligence Layer**:
+  - **SEC EDGAR 8-K Monitor**: Real-time inspection of official SEC submissions (`data.sec.gov`) detecting material catalysts—such as FDA breakthrough designations, clinical trial results, mergers & acquisitions, and major contract awards—*before* news outlets report them.
+  - **Finnhub Earnings Calendar**: Identifies upcoming earnings dates within 14 days, awarding pre-earnings momentum bonuses and highlighting days until report.
+  - **Alpha Vantage News Sentiment Integration**: Incorporates high-conviction article sentiment scoring (`NEWS_SENTIMENT`) for top candidates.
 - **Automated Morning Delivery**: Built-in background cron scheduler (`_daily_scheduler_loop`) dispatches styled HTML daily breakout digests to opted-in users via **Resend**.
 - **Instant Dispatch**: One-click "Send Now" button from the Scanner tab with direct address targeting and automatic preference synchronization (`POST /api/scanner/notify` with optional `{ "email": "..." }`).
 
@@ -214,23 +218,24 @@ cd portfolio-manager
 
 The project features a dual testing setup: backend unit/integration tests with **Pytest** and full end-to-end browser automation with **Playwright (TypeScript)**.
 
-### 1. Backend Integration Tests (Pytest — 50 Tests)
-Validates core API routes, dual-mode database CRUD, market quote streaming, trade activity import, and scanner scoring:
+### 1. Backend Integration Tests (Pytest — 73 Tests)
+Validates core API routes, dual-mode database CRUD, market quote streaming, trade activity import, scanner scoring, and catalyst intelligence:
 
 ```bash
 # From the project root
 ./backend/venv/bin/pytest tests/
 ```
 
-- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, `/api/scanner/notify`, market status, security details & history.
+- `tests/test_catalyst_service.py`: SEC EDGAR 8-K parsing, CIK ticker map, Finnhub earnings calendar, Alpha Vantage news sentiment, and catalyst scoring.
+- `tests/test_api_endpoints.py`: Auth dev-login, session cookies, Bearer tokens, `/api/portfolio/holdings`, trade activity import preview & commit, `/api/chat/*`, `/api/scanner/prefs`, `/api/scanner/notify`, `/api/scanner/breakouts`, market status, security details & history.
 - `tests/test_xirr.py`: Unit and integration tests for Newton-Raphson XIRR solver, multi-lot cash flow timing, negative return scenarios, and short-horizon guards.
 - `tests/test_corporate_actions.py`: Ex-dividend calendars, payout frequency estimator, 12-month projected cash flow schedules, and pre-split lot alerts.
 - `tests/test_quotes.py`: Real-time index parser, equity quotes, batch requests, crypto symbol normalizer, off-hours session history fallback & resilience.
 - `tests/test_news.py`: Stock news by ticker, macro news, HTML cleaner, RFC-822 date parser.
-- `tests/test_scanner.py`: Breakout scoring, composite metrics, HTML digest builder.
+- `tests/test_scanner.py`: Breakout scoring, composite metrics, catalyst integration, HTML digest builder.
 - `tests/test_db.py`: Local JSON database engine, insertion, queries, updates, upserts, and deletions.
 
-### 2. End-to-End Browser Tests (Playwright — 117 Tests across 30 Suites)
+### 2. End-to-End Browser Tests (Playwright — 118 Tests across 30 Suites)
 Automates user-facing interactions, state transitions, calculations, and network resilience per [`specs/feature-tests.md`](specs/feature-tests.md):
 
 ```bash
@@ -250,7 +255,7 @@ npx playwright test --ui
 **Coverage Summary**:
 - **Suites 01–05**: Authentication, Holdings CRUD, Summary KPIs & XIRR, History Chart Ranges & Benchmarks, Allocation Treemap.
 - **Suites 06–10**: CSV Upload, Robinhood Activity Import, Demo Seed, Watchlist Management, Held Stock News.
-- **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner, Email Notifications.
+- **Suites 11–15**: Macro Intelligence, Reddit/StockTwits Sentiment, Smart Money (Congress/SEC Form 4), Breakout Scanner (including Catalyst Intelligence drivers), Email Notifications.
 - **Suites 16–30**: Alpha Signals Engine, 9-Month Backtest Model, AI Chat Assistant, Portfolio Risk Auditor, Market Indices Ticker Bar, Empty State Fallbacks, Error Boundary & Resilience, Corporate Actions & Dividend Calendar, Design System & Accessibility Audit (Batches 1–4), User Layout Refinements, Branding & Webpage Favicon (`>_` terminal motif), and Personal Return (MWR / XIRR) KPI Card.
 
 ---
@@ -275,6 +280,7 @@ npx playwright test --ui
    DB_NAME=portfolio_manager
    CORS_ORIGINS=https://<your-frontend-domain>.vercel.app
    COOKIE_SECURE=true
+   FINNHUB_API_KEY=your_finnhub_api_key_here
    ALPHA_VANTAGE_API_KEY=your_alpha_vantage_api_key_here
    NEWSAPI_KEY=your_newsapi_key_here
    RESEND_API_KEY=your_resend_api_key_here
@@ -282,6 +288,7 @@ npx playwright test --ui
    ```
 
 > **Important**: `COOKIE_SECURE=true` is required on Render because the frontend (Vercel) and backend (Render) are on different domains. This sets the cookie to `samesite=none; Secure`, which is necessary for cross-origin cookie acceptance. The app also uses `Authorization: Bearer` header-based auth as a fallback, so even if cookies are blocked by the browser, sessions will still work.
+
 
 ---
 

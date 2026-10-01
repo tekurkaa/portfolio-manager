@@ -75,4 +75,46 @@ test.describe('14. Scanner Tab — Breakout Scanner (TC-SCAN)', () => {
     // Verify empty state text
     await expect(page.locator('text=No candidates. Try again during market hours.')).toBeVisible({ timeout: 10000 });
   });
+
+  test('TC-SCAN-04 — Catalyst Intelligence Drivers Render in Table', async ({ page }) => {
+    await loginViaUI(page, testUser);
+
+    // Mock candidates response with catalyst drivers
+    await page.route('**/api/scanner/breakouts', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          candidates: [
+            {
+              symbol: 'MRNA',
+              price: 112.50,
+              composite: 88.0,
+              momentum_5d: 12.4,
+              momentum_20d: 28.5,
+              vol_surge: 2.4,
+              near_52w_high_pct: 94.0,
+              options_tilt: 75.0,
+              congress_buys: 1,
+              catalyst_bonus: 20.0,
+              drivers: ['+12.4% 5d momentum', 'Recent 8-K: Material FDA/Clinical catalyst', 'Earnings in 2 days (2026-10-02)'],
+              signal: 'STRONG BUY',
+            },
+          ],
+          universe_size: 61,
+          scanned: 61,
+        }),
+      });
+    });
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="scanner-table"]')).toBeVisible();
+
+    // Verify symbol and catalyst drivers are visible in the table row
+    await expect(page.locator('text=MRNA')).toBeVisible();
+    await expect(page.locator('text=Recent 8-K: Material FDA/Clinical catalyst')).toBeVisible();
+    await expect(page.locator('text=Earnings in 2 days (2026-10-02)')).toBeVisible();
+  });
 });
+

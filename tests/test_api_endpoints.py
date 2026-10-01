@@ -211,6 +211,26 @@ async def test_scanner_notify_with_explicit_email():
         assert get_res.json()["email"] == "custom-digest@terminus.local"
 
 
+@pytest.mark.asyncio
+async def test_scanner_breakouts_endpoint():
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        login_res = await client.post("/api/auth/dev-login", json={"email": "trader@terminus.local", "name": "Senior Trader"})
+        cookies = login_res.cookies
+
+        res = await client.get("/api/scanner/breakouts", cookies=cookies)
+        assert res.status_code == 200
+        data = res.json()
+        assert "candidates" in data
+        assert "universe_size" in data
+        assert len(data["candidates"]) > 0
+        first = data["candidates"][0]
+        assert "symbol" in first
+        assert "composite" in first
+        assert "signal" in first
+
+
+
 
 @pytest.mark.asyncio
 async def test_portfolio_holding_crud():

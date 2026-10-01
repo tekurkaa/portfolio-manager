@@ -13,6 +13,13 @@ import yfinance as yf
 
 from signal_service import _options_flow_sync
 from insider_service import get_trades_for_symbol
+from catalyst_service import (
+    fetch_recent_8k,
+    fetch_earnings_calendar,
+    score_catalyst,
+    enrich_candidates_with_catalysts,
+    fetch_av_news_sentiment,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +67,13 @@ _LAST_GOOD_SCAN: Optional[Dict[str, Any]] = {
     "scanned": 60, "universe_size": 60, "candidates": _DEFAULT_CANDIDATES
 }
 _CACHE_TTL = 300  # 5 minutes
+
+
+def clear_scan_cache() -> None:
+    """Clear scanner cache for forced refreshes and deterministic tests."""
+    global _SCAN_CACHE
+    _SCAN_CACHE.clear()
+
 
 # Universe: S&P popular names + high-momentum sectors (biotech, semis, EV, AI)
 UNIVERSE = [
@@ -215,6 +229,26 @@ async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Di
                 return r
 
         enriched = await asyncio.gather(*[_enrich(r) for r in candidates_to_enrich])
+
+        # Step 3: Enrich with Catalyst Intelligence (SEC EDGAR 8-K filings & Finnhub earnings calendar)
+        try:
+            enriched = await enrich_candidates_with_catalysts(enriched)
+        except Exception as cat_err:
+            logger.warning(f"Catalyst enrichment failed: {cat_err}")
+
+        # Step 4: Alpha Vantage news sentiment tilt for top candidates (if API key available)
+        if os.environ.get("ALPHA_VANTAGE_API_KEY"):
+            try:
+                for c in enriched[:5]:
+                    sym = c.get("symbol")
+                    if sym:
+                        av_s = await fetch_av_news_sentiment(sym)
+                        if av_s and av_s.get("label") in ("Bullish", "Somewhat-Bullish"):
+                            c["drivers"].append(f"AV News: {av_s['label']}")
+                            c["composite"] = min(100.0, round(c["composite"] + 3.0, 1))
+            except Exception as av_err:
+                logger.debug(f"AV news sentiment enrichment error: {av_err}")
+
         enriched.sort(key=lambda x: x["composite"], reverse=True)
         top = enriched[:top_n]
 

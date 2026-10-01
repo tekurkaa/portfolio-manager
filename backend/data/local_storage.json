@@ -9690,19 +9690,19 @@
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_7f21834c89b7",
       "email": "trader@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_5171bed7f2c8",
       "email": "custom@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_59f3837c4719",
@@ -9712,67 +9712,67 @@
       "user_id": "user_6a38249c90dc",
       "email": "digest-1790560326065@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_a618dd4df3ab",
       "email": "trigger-1789739086061@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_33663d6bb922",
       "email": "scheduler-guard-1789739086088@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_9c88e72c4d9f",
       "email": "trigger-1789739431829@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_4f7b7faeeb86",
       "email": "scheduler-guard-1789739434507@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_4918b7f824eb",
       "email": "trigger-1790547701656@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_2a4f2d0cdaa1",
       "email": "scheduler-guard-1790547703749@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_7d84477df6fe",
       "email": "trigger-1790558557921@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_09203849d7f6",
       "email": "scheduler-guard-1790558558096@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_ab9b54c03acd",
       "email": "trigger-1790558586474@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_f32b1e51473b",
       "email": "scheduler-guard-1790558586541@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_e9d2341e9c37",
@@ -9788,13 +9788,13 @@
       "user_id": "user_69cbaa224e86",
       "email": "trigger-1790559323201@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_31820e936459",
       "email": "scheduler-guard-1790559325344@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_c772ebb1a1d0",
@@ -9810,13 +9810,13 @@
       "user_id": "user_861418f80da6",
       "email": "trigger-1790559353371@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_0394db127efd",
       "email": "scheduler-guard-1790559353432@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_f4cee0f21353",
@@ -9837,13 +9837,13 @@
       "user_id": "user_d045560ee3c5",
       "email": "trigger-1790560046483@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_abf9b007082b",
       "email": "scheduler-guard-1790560046543@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_918b5997a44b",
@@ -9859,13 +9859,13 @@
       "user_id": "user_db0bea2b649c",
       "email": "trigger-1790560326397@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_e31b6f414f51",
       "email": "scheduler-guard-1790560329183@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-09-28"
+      "last_sent_date": "2026-10-01"
     },
     {
       "user_id": "user_fe81a242942b",

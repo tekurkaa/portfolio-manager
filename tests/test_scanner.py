@@ -9,7 +9,10 @@ from scanner_service import (
     scan_breakouts,
     build_digest_html,
     send_digest_email,
+    clear_scan_cache,
 )
+from catalyst_service import clear_catalyst_cache
+
 
 
 @pytest.mark.asyncio
@@ -46,3 +49,32 @@ def test_build_digest_html():
     assert "STRONG BUY" in html
     assert "88.5" in html
     assert "trader@terminus.local" in html
+
+
+@pytest.mark.asyncio
+async def test_scan_breakouts_integrates_catalysts():
+    from unittest.mock import patch
+    from datetime import datetime, timedelta
+
+    clear_scan_cache()
+    clear_catalyst_cache()
+
+    mock_8ks = [
+        {
+            "form": "8-K",
+            "filing_date": (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d"),
+            "description": "Item 8.01 FDA approval granted for breakthrough therapy",
+            "url": "https://sec.gov/sample",
+        }
+    ]
+
+    with patch("catalyst_service.fetch_recent_8k", return_value=mock_8ks):
+        res = await scan_breakouts(extra_symbols=["MRNA"], top_n=10)
+        assert "candidates" in res
+        cand = next((c for c in res["candidates"] if c.get("catalyst_bonus", 0) > 0), None)
+        assert cand is not None
+        assert cand["catalyst_bonus"] >= 20.0
+        assert any("FDA" in d or "Material 8-K" in d for d in cand["drivers"])
+
+
+
