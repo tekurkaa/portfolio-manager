@@ -163,6 +163,68 @@ test.describe('14. Scanner Tab — Breakout Scanner (TC-SCAN)', () => {
     await expect(page.locator('text=9/10 Conviction')).toBeVisible();
     await expect(page.locator('text=Institutional accumulation surging with 3.1x volume breakout')).toBeVisible();
   });
+
+  test('TC-SCAN-06 — Live Breaking News and Velocity Badges Render in DRIVERS Column', async ({ page }) => {
+    await loginViaUI(page, testUser);
+
+    await page.route('**/api/scanner/breakouts', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          candidates: [
+            {
+              symbol: 'NVDA',
+              price: 135.20,
+              composite: 95.0,
+              momentum_5d: 8.4,
+              momentum_20d: 18.2,
+              vol_surge: 3.1,
+              near_52w_high_pct: 98.0,
+              options_tilt: 82.0,
+              congress_buys: 2,
+              drivers: [
+                '+8.4% 5d momentum',
+                '📰 🔴 Breaking (34m ago): NVDA signs $12B AI hyperscaler infrastructure deal with Microsoft [Reuters]',
+              ],
+              signal: 'STRONG BUY',
+              news_score: 18.5,
+              top_headline: 'NVDA signs $12B AI hyperscaler infrastructure deal with Microsoft',
+              top_headline_url: 'https://reuters.com/nvda-deal',
+              top_headline_source: 'Reuters',
+              top_headline_age: '34m ago',
+              top_headline_tier: 'Tier 1 - Commercial Deal',
+              news_velocity: 4,
+              recency_label: '🔴 Breaking',
+              thesis: 'Massive hyperscaler agreement signed today accelerates revenue pipeline.',
+              conviction: 10,
+              catalyst_type: 'Commercial Deal',
+            },
+          ],
+          universe_size: 61,
+          scanned: 61,
+        }),
+      });
+    });
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="scanner-table"]')).toBeVisible();
+
+    // Verify breaking news card rendered
+    const newsCard = page.locator('[data-testid="breaking-news-NVDA"]');
+    await expect(newsCard).toBeVisible();
+    await expect(newsCard).toContainText('🔴 Breaking');
+    await expect(newsCard).toContainText('(34m ago)');
+    await expect(newsCard).toContainText('[Reuters]');
+    await expect(newsCard).toContainText('4 in 4h');
+    await expect(newsCard).toContainText('NVDA signs $12B AI hyperscaler infrastructure deal');
+
+    // Verify headline link has correct href and opens new tab
+    const link = newsCard.locator('a');
+    await expect(link).toHaveAttribute('href', 'https://reuters.com/nvda-deal');
+    await expect(link).toHaveAttribute('target', '_blank');
+  });
 });
 
 

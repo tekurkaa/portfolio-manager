@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, fmtPct, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
-import { RefreshCw, Radar, Mail, Bell, ChevronRight, Sparkles, Zap } from "lucide-react";
+import { RefreshCw, Radar, Mail, Bell, ChevronRight, Sparkles, Zap, ExternalLink, Newspaper, Flame } from "lucide-react";
 
 const signalColor = (s) => {
   if (s === "STRONG BUY") return "text-emerald-400 border-emerald-800 bg-emerald-950/40";
@@ -91,7 +91,7 @@ export default function ScannerTab() {
               <Radar className="w-4 h-4" /> Breakout Scanner
             </div>
             <div className="text-[11px] text-gray-500 font-mono mt-0.5">
-              Scans {data.universe_size || 60}+ tickers (S&P + biotech + semis + AI + crypto). Momentum × volume surge × options × congress buys.
+              Scans {data.universe_size || 60}+ tickers (S&P + biotech + semis + AI + crypto). Momentum × volume surge × options × congress buys × live news catalysts.
             </div>
           </div>
           <button onClick={() => load(false, true)} disabled={loading || refreshing} data-testid="scan-refresh"
@@ -205,6 +205,41 @@ export default function ScannerTab() {
                   <td className="px-3 py-2">
                     <div className="max-w-[220px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[420px] text-[11px] break-words leading-relaxed">
                       <div className="text-gray-400">{c.drivers?.join(" · ")}</div>
+                      {c.top_headline && (
+                        <div className="mt-2 p-2 rounded-xs bg-[#0E1522] border border-cyan-500/30 text-gray-200 shadow-sm" data-testid={`breaking-news-${c.symbol}`}>
+                          <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider mb-1 flex-wrap">
+                            <Newspaper className="w-3 h-3 text-cyan-400 shrink-0" />
+                            <span>{c.recency_label || "📰 Breaking"}</span>
+                            {c.top_headline_age && (
+                              <span className="text-gray-400 font-normal">({c.top_headline_age})</span>
+                            )}
+                            {c.top_headline_source && (
+                              <span className="text-gray-400 font-mono text-[9px]">[{c.top_headline_source}]</span>
+                            )}
+                            {c.news_velocity >= 3 && (
+                              <span className="ml-auto inline-flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-xs bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono font-semibold">
+                                <Flame className="w-2.5 h-2.5 text-rose-400" />
+                                {c.news_velocity} in 4h
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-gray-300 font-sans leading-snug">
+                            {c.top_headline_url ? (
+                              <a
+                                href={c.top_headline_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:underline hover:text-cyan-300 text-gray-200 inline-flex items-center gap-1 group font-medium"
+                              >
+                                <span>{c.top_headline}</span>
+                                <ExternalLink className="w-2.5 h-2.5 text-gray-500 group-hover:text-cyan-300 shrink-0" />
+                              </a>
+                            ) : (
+                              <span className="font-medium">{c.top_headline}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
                       {c.thesis && (
                         <div className="mt-2 p-2 rounded-xs bg-[#0E131F] border border-amber-500/30 text-gray-200 shadow-sm" data-testid={`thesis-${c.symbol}`}>
                           <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider mb-1">

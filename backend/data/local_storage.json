@@ -8253,6 +8253,258 @@
       "user_id": "user_43a01a4756e8",
       "expires_at": "2026-10-05 01:52:12.714150+00:00",
       "created_at": "2026-09-28 01:52:12.714170+00:00"
+    },
+    {
+      "session_token": "sess_360dadfc750a45e2ac7e8c98d49a2f62",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:00.425412+00:00",
+      "created_at": "2026-10-02 03:07:00.425425+00:00"
+    },
+    {
+      "session_token": "sess_a570acdbcb6742f2bd3eec486291a65b",
+      "user_id": "user_cc6815b10cff",
+      "expires_at": "2026-10-09 03:07:00.479114+00:00",
+      "created_at": "2026-10-02 03:07:00.479125+00:00"
+    },
+    {
+      "session_token": "sess_ceacf0566b5447b08cc1e276dedb5e7c",
+      "user_id": "user_bfd1e687d0d5",
+      "expires_at": "2026-10-09 03:07:00.500409+00:00",
+      "created_at": "2026-10-02 03:07:00.500420+00:00"
+    },
+    {
+      "session_token": "sess_f42699dd68e544d5a2a38cddb21a7453",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:00.807202+00:00",
+      "created_at": "2026-10-02 03:07:00.807212+00:00"
+    },
+    {
+      "session_token": "sess_75dae3e26a7b4413a328e01a97b639af",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:02.164892+00:00",
+      "created_at": "2026-10-02 03:07:02.164904+00:00"
+    },
+    {
+      "session_token": "sess_6d26efa1a25b4dab91e9418af924c6fd",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:02.190039+00:00",
+      "created_at": "2026-10-02 03:07:02.190048+00:00"
+    },
+    {
+      "session_token": "sess_8d7aef0b6dd042348c4f0a710b7a7cf3",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:02.207518+00:00",
+      "created_at": "2026-10-02 03:07:02.207528+00:00"
+    },
+    {
+      "session_token": "sess_384efb0a898049538efd1a6c8a2209c4",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:08.615988+00:00",
+      "created_at": "2026-10-02 03:07:08.615997+00:00"
+    },
+    {
+      "session_token": "sess_ee2d22208f364e2497568536c7fb7fb3",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:12.990948+00:00",
+      "created_at": "2026-10-02 03:07:12.990959+00:00"
+    },
+    {
+      "session_token": "sess_463f870c01f94587aeb679440e79eaff",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:13.030628+00:00",
+      "created_at": "2026-10-02 03:07:13.030636+00:00"
+    },
+    {
+      "session_token": "sess_0571b06852864e1d8cd9e844044636f4",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:13.227891+00:00",
+      "created_at": "2026-10-02 03:07:13.227900+00:00"
+    },
+    {
+      "session_token": "sess_7810148eb44847179bcdd9b03e94e66d",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:14.059544+00:00",
+      "created_at": "2026-10-02 03:07:14.059553+00:00"
+    },
+    {
+      "session_token": "sess_bb72496be2f5449c926a0abea8e41428",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:07:14.095258+00:00",
+      "created_at": "2026-10-02 03:07:14.095267+00:00"
+    },
+    {
+      "session_token": "sess_f5ef25b6fa2946c0ba7faa07903fb496",
+      "user_id": "user_44a10b1c32b0",
+      "expires_at": "2026-10-09 03:07:16.577180+00:00",
+      "created_at": "2026-10-02 03:07:16.577188+00:00"
+    },
+    {
+      "session_token": "sess_702c8aa3cd5849d9a6a665837786a8b2",
+      "user_id": "user_0c00f5369aaf",
+      "expires_at": "2026-10-09 03:07:33.316550+00:00",
+      "created_at": "2026-10-02 03:07:33.316560+00:00"
+    },
+    {
+      "session_token": "sess_076073f9516d4dc5b89583f1f5bb7642",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:13:13.299607+00:00",
+      "created_at": "2026-10-02 03:13:13.299620+00:00"
+    },
+    {
+      "session_token": "sess_86a76edccec747758e7cce7f8e718299",
+      "user_id": "user_336bd6085d37",
+      "expires_at": "2026-10-09 03:13:23.658257+00:00",
+      "created_at": "2026-10-02 03:13:23.658268+00:00"
+    },
+    {
+      "session_token": "sess_cbe32e36cfa446d49d53a59251f7b18e",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:13:28.386105+00:00",
+      "created_at": "2026-10-02 03:13:28.386114+00:00"
+    },
+    {
+      "session_token": "sess_4933f1df792a4f7b90a1bff2ba9142c7",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:13:29.209442+00:00",
+      "created_at": "2026-10-02 03:13:29.209476+00:00"
+    },
+    {
+      "session_token": "sess_2ed37c648a8941e99600f972331999fa",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:13:30.095090+00:00",
+      "created_at": "2026-10-02 03:13:30.095105+00:00"
+    },
+    {
+      "session_token": "sess_3e5f46825db84c2aa3785a53912fedce",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:13:30.984828+00:00",
+      "created_at": "2026-10-02 03:13:30.984844+00:00"
+    },
+    {
+      "session_token": "sess_372a3638a8424f2c94eb7f2ad12e5cdb",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:40.948621+00:00",
+      "created_at": "2026-10-02 03:13:40.948633+00:00"
+    },
+    {
+      "session_token": "sess_dcab50fc5a894d369afea02501195761",
+      "user_id": "user_cc6815b10cff",
+      "expires_at": "2026-10-09 03:13:41.043469+00:00",
+      "created_at": "2026-10-02 03:13:41.043480+00:00"
+    },
+    {
+      "session_token": "sess_da906e7d1dbd48b18ff5aa86d5509409",
+      "user_id": "user_bfd1e687d0d5",
+      "expires_at": "2026-10-09 03:13:41.064979+00:00",
+      "created_at": "2026-10-02 03:13:41.064993+00:00"
+    },
+    {
+      "session_token": "sess_262d06df8ac14e288d0c12c0c31bbb19",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:41.393929+00:00",
+      "created_at": "2026-10-02 03:13:41.393939+00:00"
+    },
+    {
+      "session_token": "sess_930208427d0e477da951858a3fd43f9a",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:42.604623+00:00",
+      "created_at": "2026-10-02 03:13:42.604633+00:00"
+    },
+    {
+      "session_token": "sess_d7a3b925b09a47bdb2d850056ee5a387",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:42.630780+00:00",
+      "created_at": "2026-10-02 03:13:42.630789+00:00"
+    },
+    {
+      "session_token": "sess_df8ddd9dbef74572bff7830306ee6d1d",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:42.649053+00:00",
+      "created_at": "2026-10-02 03:13:42.649063+00:00"
+    },
+    {
+      "session_token": "sess_8da507487e674874bb37a996af9d6533",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:49.676176+00:00",
+      "created_at": "2026-10-02 03:13:49.676186+00:00"
+    },
+    {
+      "session_token": "sess_ce8c75166b05402cb25e3ccc6587b3b7",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:54.592811+00:00",
+      "created_at": "2026-10-02 03:13:54.592822+00:00"
+    },
+    {
+      "session_token": "sess_8d66b36f7844427fb8b7e35e209b1151",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:54.633349+00:00",
+      "created_at": "2026-10-02 03:13:54.633358+00:00"
+    },
+    {
+      "session_token": "sess_d5d861b41dd74b01afd76a07b57287ec",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:54.887547+00:00",
+      "created_at": "2026-10-02 03:13:54.887558+00:00"
+    },
+    {
+      "session_token": "sess_6c8dd54badc7470b9bd481df86588c74",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:55.666799+00:00",
+      "created_at": "2026-10-02 03:13:55.666812+00:00"
+    },
+    {
+      "session_token": "sess_e7095f4f6d2a48b2a45b1d873c5f69cb",
+      "user_id": "user_7f21834c89b7",
+      "expires_at": "2026-10-09 03:13:55.708610+00:00",
+      "created_at": "2026-10-02 03:13:55.708625+00:00"
+    },
+    {
+      "session_token": "sess_cf36b543a8c64f7db7f7569fa558b757",
+      "user_id": "user_44a10b1c32b0",
+      "expires_at": "2026-10-09 03:13:58.376350+00:00",
+      "created_at": "2026-10-02 03:13:58.376360+00:00"
+    },
+    {
+      "session_token": "sess_54928d0717834099add1687afdefb351",
+      "user_id": "user_0c00f5369aaf",
+      "expires_at": "2026-10-09 03:14:22.666045+00:00",
+      "created_at": "2026-10-02 03:14:22.666057+00:00"
+    },
+    {
+      "session_token": "sess_a913deba3b344a38a73b744c8828a103",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:23:27.387092+00:00",
+      "created_at": "2026-10-02 03:23:27.387107+00:00"
+    },
+    {
+      "session_token": "sess_a38d21d3cc074168a77739d7ade295e6",
+      "user_id": "user_336bd6085d37",
+      "expires_at": "2026-10-09 03:23:39.914352+00:00",
+      "created_at": "2026-10-02 03:23:39.914363+00:00"
+    },
+    {
+      "session_token": "sess_f9613f6911dd4119b46b0573989024df",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:23:44.701000+00:00",
+      "created_at": "2026-10-02 03:23:44.701012+00:00"
+    },
+    {
+      "session_token": "sess_a271598aa63f4c65bc26240794aad876",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:23:45.506417+00:00",
+      "created_at": "2026-10-02 03:23:45.506443+00:00"
+    },
+    {
+      "session_token": "sess_68e265460a864c958a85ef36d2533914",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:23:46.307051+00:00",
+      "created_at": "2026-10-02 03:23:46.307062+00:00"
+    },
+    {
+      "session_token": "sess_188405617f4c477f94b41a84b4abab96",
+      "user_id": "user_b01ec7331e94",
+      "expires_at": "2026-10-09 03:23:47.392128+00:00",
+      "created_at": "2026-10-02 03:23:47.392140+00:00"
     }
   ],
   "holdings": [
@@ -9629,48 +9881,6 @@
       "user_id": "user_9740073f1848"
     },
     {
-      "id": "8417f442-48c8-4ede-8a44-425bd52b8c1f",
-      "user_id": "user_7f21834c89b7",
-      "symbol": "BTC",
-      "name": "Bitcoin",
-      "quantity": 0.01,
-      "avg_cost": 60000.0,
-      "asset_type": "crypto",
-      "is_broad_market": false,
-      "sub_type": "blue_chip",
-      "date_of_purchase": "2026-08-10",
-      "lot_count": 1,
-      "created_at": "2026-09-28T00:45:17.743200+00:00"
-    },
-    {
-      "id": "776b88d4-d450-4b99-a567-d7854670ff4d",
-      "user_id": "user_7f21834c89b7",
-      "symbol": "VOO",
-      "name": "Vanguard S&P 500 ETF",
-      "quantity": 0.5,
-      "avg_cost": 700.0,
-      "asset_type": "etf",
-      "is_broad_market": true,
-      "sub_type": "broad_index",
-      "date_of_purchase": "2026-08-17",
-      "lot_count": 1,
-      "created_at": "2026-09-28T00:45:17.743200+00:00"
-    },
-    {
-      "id": "b31f1204-da09-4bd6-aea1-73cf0120d6f9",
-      "user_id": "user_7f21834c89b7",
-      "symbol": "ETH",
-      "name": "Ethereum",
-      "quantity": 2.0,
-      "avg_cost": 3000.0,
-      "asset_type": "crypto",
-      "is_broad_market": false,
-      "sub_type": "blue_chip",
-      "date_of_purchase": "2026-08-01",
-      "lot_count": 1,
-      "created_at": "2026-09-28T00:45:17.782442+00:00"
-    },
-    {
       "id": "342be20e-1853-414c-ab20-bb8eec94bac9",
       "symbol": "AAPL",
       "name": null,
@@ -9683,6 +9893,76 @@
       "date_of_purchase": "2026-03-31",
       "lot_count": null,
       "user_id": "user_0c00f5369aaf"
+    },
+    {
+      "id": "9820ac91-f661-4560-b529-89d74036ae9d",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-10-02T03:07:33.324858+00:00",
+      "date_of_purchase": "2026-04-04",
+      "lot_count": null,
+      "user_id": "user_0c00f5369aaf"
+    },
+    {
+      "id": "8129df45-3432-42b4-bea1-80cda9ee8028",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "quantity": 0.01,
+      "avg_cost": 60000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "date_of_purchase": "2026-08-10",
+      "lot_count": 1,
+      "created_at": "2026-10-02T03:13:55.737522+00:00"
+    },
+    {
+      "id": "ccb0552f-2851-4669-9a5b-78d4757429ae",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "VOO",
+      "name": "Vanguard S&P 500 ETF",
+      "quantity": 0.5,
+      "avg_cost": 700.0,
+      "asset_type": "etf",
+      "is_broad_market": true,
+      "sub_type": "broad_index",
+      "date_of_purchase": "2026-08-17",
+      "lot_count": 1,
+      "created_at": "2026-10-02T03:13:55.737522+00:00"
+    },
+    {
+      "id": "32da56a0-d035-4c39-89f4-81ee9a6862c1",
+      "user_id": "user_7f21834c89b7",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "quantity": 2.0,
+      "avg_cost": 3000.0,
+      "asset_type": "crypto",
+      "is_broad_market": false,
+      "sub_type": "blue_chip",
+      "date_of_purchase": "2026-08-01",
+      "lot_count": 1,
+      "created_at": "2026-10-02T03:13:55.767960+00:00"
+    },
+    {
+      "id": "23a48555-a2de-43e3-ab01-4bce864ced9b",
+      "symbol": "AAPL",
+      "name": null,
+      "quantity": 10.0,
+      "avg_cost": 150.0,
+      "asset_type": "stock",
+      "is_broad_market": false,
+      "sub_type": null,
+      "created_at": "2026-10-02T03:14:22.677158+00:00",
+      "date_of_purchase": "2026-04-04",
+      "lot_count": null,
+      "user_id": "user_0c00f5369aaf"
     }
   ],
   "notify_prefs": [
@@ -9690,19 +9970,19 @@
       "user_id": "user_45b3b10a99cb",
       "email": "atharvtekurkar@gmail.com",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_7f21834c89b7",
-      "email": "trader@terminus.local",
+      "email": "custom-digest@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_5171bed7f2c8",
       "email": "custom@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_59f3837c4719",
@@ -9712,67 +9992,67 @@
       "user_id": "user_6a38249c90dc",
       "email": "digest-1790560326065@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_a618dd4df3ab",
       "email": "trigger-1789739086061@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_33663d6bb922",
       "email": "scheduler-guard-1789739086088@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_9c88e72c4d9f",
       "email": "trigger-1789739431829@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_4f7b7faeeb86",
       "email": "scheduler-guard-1789739434507@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_4918b7f824eb",
       "email": "trigger-1790547701656@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_2a4f2d0cdaa1",
       "email": "scheduler-guard-1790547703749@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_7d84477df6fe",
       "email": "trigger-1790558557921@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_09203849d7f6",
       "email": "scheduler-guard-1790558558096@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_ab9b54c03acd",
       "email": "trigger-1790558586474@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_f32b1e51473b",
       "email": "scheduler-guard-1790558586541@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_e9d2341e9c37",
@@ -9788,13 +10068,13 @@
       "user_id": "user_69cbaa224e86",
       "email": "trigger-1790559323201@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_31820e936459",
       "email": "scheduler-guard-1790559325344@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_c772ebb1a1d0",
@@ -9810,13 +10090,13 @@
       "user_id": "user_861418f80da6",
       "email": "trigger-1790559353371@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_0394db127efd",
       "email": "scheduler-guard-1790559353432@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_f4cee0f21353",
@@ -9837,13 +10117,13 @@
       "user_id": "user_d045560ee3c5",
       "email": "trigger-1790560046483@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_abf9b007082b",
       "email": "scheduler-guard-1790560046543@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_918b5997a44b",
@@ -9859,13 +10139,13 @@
       "user_id": "user_db0bea2b649c",
       "email": "trigger-1790560326397@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_e31b6f414f51",
       "email": "scheduler-guard-1790560329183@terminus.local",
       "enabled": true,
-      "last_sent_date": "2026-10-01"
+      "last_sent_date": "2026-10-02"
     },
     {
       "user_id": "user_fe81a242942b",
@@ -11878,7 +12158,7 @@
       "imported_at": "2026-09-13T18:45:12.890040+00:00"
     },
     {
-      "id": "07607b79-0b9d-4fbd-a9b4-5b587666e4ff",
+      "id": "e5bfb9b3-a08d-48be-8606-c9a86df65983",
       "user_id": "user_7f21834c89b7",
       "symbol": "BTC",
       "asset_type": "crypto",
@@ -11886,10 +12166,10 @@
       "price": 60000.0,
       "trade_date": "2026-08-10",
       "broker": "robinhood",
-      "imported_at": "2026-09-28T00:45:17.743200+00:00"
+      "imported_at": "2026-10-02T03:13:55.737522+00:00"
     },
     {
-      "id": "8c47c596-c351-43a0-aa6a-24fcb18d9a11",
+      "id": "920bf3bc-c138-4aa7-9a0a-0d9a9170c004",
       "user_id": "user_7f21834c89b7",
       "symbol": "VOO",
       "asset_type": "etf",
@@ -11897,10 +12177,10 @@
       "price": 700.0,
       "trade_date": "2026-08-17",
       "broker": "robinhood",
-      "imported_at": "2026-09-28T00:45:17.743200+00:00"
+      "imported_at": "2026-10-02T03:13:55.737522+00:00"
     },
     {
-      "id": "708a0efd-b114-41ac-8641-dea41d5fc1d8",
+      "id": "066e1f01-b951-46a5-ab14-19c5584d2f20",
       "user_id": "user_7f21834c89b7",
       "symbol": "ETH",
       "asset_type": "crypto",
@@ -11908,7 +12188,7 @@
       "price": 3000.0,
       "trade_date": "2026-08-01",
       "broker": "robinhood",
-      "imported_at": "2026-09-28T00:45:17.782442+00:00"
+      "imported_at": "2026-10-02T03:13:55.767960+00:00"
     }
   ]
 }

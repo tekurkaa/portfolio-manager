@@ -42,15 +42,22 @@
 
 
 ### 4. 🎯 Breakout Scanner & Automated Daily Email Digest
-- **Cross-Sector Scanning**: Scans 60+ high-momentum equities (semis, mega-cap tech, biotech, crypto proxies) combining price momentum, 52-week breakout proximity, unusual call options flow, and recent congressional purchases.
-- **Catalyst Intelligence Layer**:
-  - **SEC EDGAR 8-K Monitor**: Real-time inspection of official SEC submissions (`data.sec.gov`) detecting material catalysts—such as FDA breakthrough designations, clinical trial results, mergers & acquisitions, and major contract awards—*before* news outlets report them.
-  - **Finnhub Earnings Calendar**: Identifies upcoming earnings dates within 14 days, awarding pre-earnings momentum bonuses and highlighting days until report.
-  - **Alpha Vantage News Sentiment Integration**: Incorporates high-conviction article sentiment scoring (`NEWS_SENTIMENT`) for top candidates.
+- **Cross-Sector Scanning**: Scans 60+ high-momentum equities (semis, mega-cap tech, biotech, crypto proxies) combining price momentum, 52-week breakout proximity, unusual call options flow, recent congressional purchases, and live breaking news velocity.
+- **Catalyst Intelligence & Live News Layer (`news_intelligence.py`)**:
+  - **12-Category Catalyst Keyword Dictionary**: Tracks market-moving events across 3 impact tiers:
+    - *Tier 1 (10 pts)*: Regulatory / FDA approvals, Clinical Trial breakthroughs, Mega M&A agreements, Landmark commercial/hyperscaler contracts, Guidance raises & record quarters.
+    - *Tier 2 (6 pts)*: Pipeline & product milestones, Strategic corporate actions (spin-offs, activist stakes), Index inclusions (S&P 500), AI / technology inflection events.
+    - *Tier 3 (3 pts)*: Analyst upgrades & price target hikes, Macro sector tailwinds, Pre-earnings whispers.
+  - **Exponential Recency Decay Model**: Multiplies catalyst score by $e^{-0.08 \times \text{hours}}$, prioritizing breaking news (< 1h) while fading articles over 48 hours to prevent stale news from distorting scores.
+  - **Source Credibility Weighting**: Tiered multipliers from 1.0× (WSJ, Bloomberg, Reuters, FT, CNBC) down to 0.5× for generic aggregators.
+  - **News Velocity Bonus**: Awards an additional +3 points when $\ge 3$ articles cover the same security in a 4-hour window, capturing institutional media convergence.
+  - **SEC EDGAR 8-K Monitor**: Real-time inspection of official SEC submissions (`data.sec.gov`) detecting material catalysts *before* broad dissemination.
+  - **Finnhub Earnings Calendar**: Identifies upcoming earnings dates within 14 days, awarding pre-earnings momentum bonuses.
+  - **Alpha Vantage News Sentiment Integration**: Incorporates article sentiment scoring (`NEWS_SENTIMENT`) for top candidates.
 - **AI Breakout Thesis & Conviction Engine (Google Gemini 3.8 Flash)**:
-  - Formulates institutional 1-2 sentence trade theses detailing catalyst drivers, technical setup, and volume confirmation.
-  - Computes quantitative conviction scores (1–10) and catalyst classifications (*FDA Breakthrough*, *Pre-Earnings Squeeze*, *Institutional Accumulation*, *Volume Surge*).
-  - Highlights trade theses directly within the terminal UI and embeds them in daily HTML email digests.
+  - Formulates institutional 1-2 sentence trade theses directly synthesizing real breaking headlines, catalyst drivers, technical setup, and volume confirmation.
+  - Computes quantitative conviction scores (1–10) and catalyst classifications (*FDA Approval*, *Mega M&A*, *Pre-Earnings Squeeze*, *AI Inflection*, *Commercial Deal*, *Institutional Accumulation*).
+  - Highlights trade theses and breaking news cards (with live article links, recency badges, and velocity tags) directly in the terminal UI and embeds them in daily HTML email digests.
 - **Automated Morning Delivery**: Built-in background cron scheduler (`_daily_scheduler_loop`) dispatches styled HTML daily breakout digests to opted-in users via **Resend**.
 - **Instant Dispatch**: One-click "Send Now" button from the Scanner tab with direct address targeting and automatic preference synchronization (`POST /api/scanner/notify` with optional `{ "email": "..." }`).
 
@@ -129,6 +136,8 @@ portfolio-manager/
 │   ├── server.py            # REST API Routes, middleware & background scheduler
 │   ├── quotes.py            # Parallelized real-time market data engine
 │   ├── news_service.py      # Stock & macro financial news aggregator
+│   ├── news_intelligence.py # Live breaking news velocity & 12-category catalyst scoring
+│   ├── catalyst_service.py  # SEC 8-K monitor, earnings calendar & Gemini AI thesis engine
 │   ├── scanner_service.py   # Breakout scoring engine & Resend email delivery
 │   ├── signal_service.py    # Alpha models & options flow calculations
 │   ├── trade_import_service.py # Robinhood trade activity CSV parser & lot accountant
@@ -140,9 +149,9 @@ portfolio-manager/
 ├── specs/                   # QA test specifications (Given/When/Then format)
 │   └── feature-tests.md     # Exhaustive 22-suite specification
 ├── tests/
-│   ├── e2e/                 # Playwright TypeScript E2E test suite (143 tests across 30 suites)
+│   ├── e2e/                 # Playwright TypeScript E2E test suite (144 tests across 30 suites)
 │   ├── helpers/             # E2E test session bootstrap & database reset utilities
-│   └── test_*.py            # Pytest backend integration test suite (53 tests)
+│   └── test_*.py            # Pytest backend integration test suite (88 tests)
 ├── playwright.config.ts     # Playwright configuration (workers: 1, dual backend/frontend webServers)
 └── package.json             # Root dependencies & test scripts
 ```

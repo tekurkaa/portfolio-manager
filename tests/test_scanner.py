@@ -122,5 +122,39 @@ async def test_scan_breakouts_generates_ai_theses():
         assert top_cand["catalyst_type"] == "Institutional Accumulation"
 
 
+@pytest.mark.asyncio
+async def test_scan_breakouts_includes_news_score():
+    clear_scan_cache()
+    clear_catalyst_cache()
+    res = await scan_breakouts(extra_symbols=["NVDA"], top_n=3)
+    assert len(res["candidates"]) > 0
+    top_cand = res["candidates"][0]
+    assert "news_score" in top_cand
+    assert isinstance(top_cand["news_score"], (int, float))
 
 
+@pytest.mark.asyncio
+async def test_scan_breakouts_breaking_news_elevates_rank():
+    from unittest.mock import patch
+    from datetime import datetime, timezone, timedelta
+    clear_scan_cache()
+    clear_catalyst_cache()
+
+    now = datetime.now(timezone.utc)
+
+    def mock_fetch(sym, client=None):
+        return [
+            {
+                "title": f"{sym} receives FDA approval granted for flagship oncology therapy",
+                "source": "Reuters",
+                "url": "https://reuters.com/approval",
+                "published_at": (now - timedelta(minutes=15)).isoformat(),
+            }
+        ]
+
+    with patch("news_intelligence.fetch_candidate_news", side_effect=mock_fetch):
+        res = await scan_breakouts(extra_symbols=["NVDA"], top_n=5)
+        cand = next((c for c in res["candidates"] if c.get("news_score", 0) > 0), None)
+        assert cand is not None
+        assert cand["news_score"] > 8.0
+        assert any("📰" in d for d in cand["drivers"])

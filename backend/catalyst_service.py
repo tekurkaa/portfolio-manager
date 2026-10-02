@@ -486,13 +486,23 @@ async def generate_candidate_theses(
         drivers_str = "; ".join(c.get("drivers", []))
         earnings = c.get("upcoming_earnings")
         earnings_str = f"Earnings on {earnings.get('date')} (in {earnings.get('days_until')}d)" if earnings else "No earnings in next 14d"
+        top_hl = c.get("top_headline")
+        if top_hl:
+            hl_age = c.get("top_headline_age") or "recent"
+            hl_src = c.get("top_headline_source") or "News"
+            headline_str = f'Breaking News ({hl_age}): "{top_hl}" [{hl_src}]'
+        else:
+            headline_str = "No breaking news in last 48h"
+
         items_desc.append(
-            f"Ticker: {sym} | Price: ${price} | 5D Mom: {mom5}% | Vol Surge: {vol}x | Setup Drivers: {drivers_str} | Earnings: {earnings_str}"
+            f"Ticker: {sym} | Price: ${price} | 5D Mom: {mom5}% | Vol Surge: {vol}x | "
+            f"Setup Drivers: {drivers_str} | Earnings: {earnings_str} | {headline_str}"
         )
 
     prompt = (
         "You are a senior hedge fund strategist and quantitative analyst specializing in momentum and catalyst breakouts.\n"
-        "Analyze the following high-probability breakout candidates and formulate a crisp, institutional trade thesis for each.\n\n"
+        "Analyze the following high-probability breakout candidates and formulate a crisp, institutional trade thesis for each.\n"
+        "If breaking news headlines are present, synthesize the specific event catalyst into the thesis rationale.\n\n"
         + "\n".join(items_desc)
         + "\n\n"
         "Return ONLY a valid JSON array of objects with the exact schema:\n"
@@ -501,7 +511,7 @@ async def generate_candidate_theses(
         "    \"symbol\": \"XYZ\",\n"
         "    \"thesis\": \"1-2 crisp, professional sentences detailing the specific catalyst, volume confirmation, and breakout rationale.\",\n"
         "    \"conviction\": 8,\n"
-        "    \"catalyst_type\": \"FDA Breakthrough | Pre-Earnings Squeeze | Volume Surge | Institutional Accumulation\"\n"
+        "    \"catalyst_type\": \"FDA Approval | Mega M&A | Pre-Earnings Squeeze | AI Inflection | Commercial Deal | Institutional Accumulation\"\n"
         "  }\n"
         "]"
     )

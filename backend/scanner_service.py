@@ -250,11 +250,20 @@ async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Di
             except Exception as av_err:
                 logger.debug(f"AV news sentiment enrichment error: {av_err}")
 
+        # Step 5: Live News Intelligence enrichment (12 catalyst categories, recency decay, velocity)
+        try:
+            from news_intelligence import enrich_candidates_with_news
+            enriched = await enrich_candidates_with_news(enriched)
+        except Exception as news_err:
+            logger.warning(f"News intelligence enrichment error: {news_err}")
+
         enriched.sort(key=lambda x: x["composite"], reverse=True)
         top = enriched[:top_n]
 
         # Classify signals
         for r in top:
+            if "news_score" not in r:
+                r["news_score"] = 0.0
             if r["composite"] >= 70:
                 r["signal"] = "STRONG BUY"
             elif r["composite"] >= 55:
@@ -262,7 +271,7 @@ async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Di
             else:
                 r["signal"] = "WATCH"
 
-        # Step 5: Generate AI Breakout Theses & Conviction Scores via Gemini reasoning model
+        # Step 6: Generate AI Breakout Theses & Conviction Scores via Gemini reasoning model
         try:
             top = await generate_candidate_theses(top)
         except Exception as thesis_err:
