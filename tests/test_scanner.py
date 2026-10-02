@@ -77,4 +77,50 @@ async def test_scan_breakouts_integrates_catalysts():
         assert any("FDA" in d or "Material 8-K" in d for d in cand["drivers"])
 
 
+def test_build_digest_html_with_thesis():
+    dummy_scan = {
+        "universe_size": 60,
+        "candidates": [
+            {
+                "symbol": "NVDA",
+                "signal": "STRONG BUY",
+                "composite": 88.5,
+                "price": 128.50,
+                "drivers": ["Momentum surge", "Call volume"],
+                "thesis": "Massive institutional call sweeps and upcoming data center cycle.",
+                "conviction": 9,
+                "catalyst_type": "Institutional Accumulation",
+            }
+        ],
+    }
+    html = build_digest_html(dummy_scan, "trader@terminus.local")
+    assert "NVDA" in html
+    assert "Massive institutional call sweeps" in html
+    assert "Conviction: 9/10" in html
+
+
+@pytest.mark.asyncio
+async def test_scan_breakouts_generates_ai_theses():
+    from unittest.mock import patch
+    clear_scan_cache()
+    clear_catalyst_cache()
+
+    async def mock_theses(candidates):
+        for c in candidates:
+            c["thesis"] = f"Breakout imminent for {c['symbol']} due to high relative volume."
+            c["conviction"] = 9
+            c["catalyst_type"] = "Institutional Accumulation"
+        return candidates
+
+    with patch("scanner_service.generate_candidate_theses", side_effect=mock_theses):
+        res = await scan_breakouts(extra_symbols=["NVDA"], top_n=3)
+        assert len(res["candidates"]) > 0
+        top_cand = res["candidates"][0]
+        assert "thesis" in top_cand
+        assert "Breakout imminent" in top_cand["thesis"]
+        assert top_cand["conviction"] == 9
+        assert top_cand["catalyst_type"] == "Institutional Accumulation"
+
+
+
 

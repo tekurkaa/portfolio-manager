@@ -334,9 +334,9 @@ function App() {
       </main>
 
       <footer className="border-t border-[#222C3D] px-4 py-2 text-[10px] font-mono text-gray-500 flex flex-col md:grid md:grid-cols-3 md:items-center gap-1 md:gap-2 text-center md:text-left mt-auto pb-16 sm:pb-12">
-        <span className="md:justify-self-start truncate">DATA: YAHOO · GOOGLE NEWS · NEWSAPI · KADOA · SEC · STOCKTWITS</span>
+        <span className="md:justify-self-start truncate">DATA: YAHOO · GOOGLE NEWS · NEWSAPI · KADOA · SEC · FINNHUB · ALPHA VANTAGE · STOCKTWITS</span>
         <span className="md:justify-self-center md:text-center text-gray-400">Sources equivalent to <span className="text-amber-500">$24,000/yr</span> institutional terminals · yours costs nothing</span>
-        <span className="md:justify-self-end truncate">ANALYSIS: CLAUDE SONNET 4.6</span>
+        <span className="md:justify-self-end truncate">ANALYSIS: GEMINI 3.8 FLASH</span>
       </footer>
 
       {/* Fixed Bottom Regulatory Disclaimer Footer */}

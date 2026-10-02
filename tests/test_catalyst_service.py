@@ -286,3 +286,69 @@ async def test_fetch_av_news_sentiment():
             assert res["label"] == "Bullish"
             assert res["score"] > 0
 
+
+@pytest.mark.asyncio
+async def test_generate_candidate_theses_success():
+    from catalyst_service import generate_candidate_theses
+
+    candidates = [
+        {
+            "symbol": "MRNA",
+            "price": 112.50,
+            "composite": 88.0,
+            "momentum_5d": 12.4,
+            "vol_surge": 2.4,
+            "drivers": ["+12.4% 5d momentum", "Recent 8-K: Material FDA/Clinical catalyst"],
+            "recent_8k_count": 1,
+            "upcoming_earnings": {"date": "2026-10-20", "days_until": 20},
+        }
+    ]
+
+    mock_gemini_response = {
+        "candidates": [
+            {
+                "content": {
+                    "parts": [
+                        {
+                            "text": """```json
+[
+  {
+    "symbol": "MRNA",
+    "thesis": "FDA Breakthrough designation de-risks oncology pipeline with heavy call accumulation ahead of earnings.",
+    "conviction": 9,
+    "catalyst_type": "FDA Breakthrough"
+  }
+]
+```"""
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = mock_gemini_response
+
+    with patch.dict("os.environ", {"GEMINI_API_KEY": "test_gemini_key"}):
+        with patch("httpx.AsyncClient.post", return_value=mock_resp):
+            enriched = await generate_candidate_theses(candidates)
+            assert len(enriched) == 1
+            cand = enriched[0]
+            assert cand.get("thesis") == "FDA Breakthrough designation de-risks oncology pipeline with heavy call accumulation ahead of earnings."
+            assert cand.get("conviction") == 9
+            assert cand.get("catalyst_type") == "FDA Breakthrough"
+
+
+@pytest.mark.asyncio
+async def test_generate_candidate_theses_without_key_returns_gracefully():
+    from catalyst_service import generate_candidate_theses
+
+    candidates = [{"symbol": "NVDA", "composite": 75.0}]
+    with patch.dict("os.environ", {"GEMINI_API_KEY": ""}, clear=False):
+        enriched = await generate_candidate_theses(candidates)
+        assert len(enriched) == 1
+        assert "thesis" not in enriched[0] or enriched[0]["thesis"] is None
+
+

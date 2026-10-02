@@ -47,6 +47,10 @@
   - **SEC EDGAR 8-K Monitor**: Real-time inspection of official SEC submissions (`data.sec.gov`) detecting material catalysts—such as FDA breakthrough designations, clinical trial results, mergers & acquisitions, and major contract awards—*before* news outlets report them.
   - **Finnhub Earnings Calendar**: Identifies upcoming earnings dates within 14 days, awarding pre-earnings momentum bonuses and highlighting days until report.
   - **Alpha Vantage News Sentiment Integration**: Incorporates high-conviction article sentiment scoring (`NEWS_SENTIMENT`) for top candidates.
+- **AI Breakout Thesis & Conviction Engine (Google Gemini 3.8 Flash)**:
+  - Formulates institutional 1-2 sentence trade theses detailing catalyst drivers, technical setup, and volume confirmation.
+  - Computes quantitative conviction scores (1–10) and catalyst classifications (*FDA Breakthrough*, *Pre-Earnings Squeeze*, *Institutional Accumulation*, *Volume Surge*).
+  - Highlights trade theses directly within the terminal UI and embeds them in daily HTML email digests.
 - **Automated Morning Delivery**: Built-in background cron scheduler (`_daily_scheduler_loop`) dispatches styled HTML daily breakout digests to opted-in users via **Resend**.
 - **Instant Dispatch**: One-click "Send Now" button from the Scanner tab with direct address targeting and automatic preference synchronization (`POST /api/scanner/notify` with optional `{ "email": "..." }`).
 
@@ -83,8 +87,9 @@
   - **Portfolio Charts Tab** (interactive allocation treemap tiles)
 - **Actions**: One-click "Add to Watchlist" integration and keyboard `ESC` dismissal.
 
-### 8. 🤖 Grounded AI Chat Assistant
-- **Fintech Research Engine**: Multi-turn conversational AI grounded in live portfolio holdings, news events, congress transactions, and quantitative alpha signals.
+### 8. 🤖 Grounded AI Chat Assistant & Executive Briefs
+- **Fintech Research Engine (Google Gemini 3.8 Flash)**: Multi-turn conversational AI grounded in live portfolio holdings, news events, congress transactions, and quantitative alpha signals.
+- **Executive & Macro News Briefs**: Real-time AI executive summaries synthesizing key portfolio news and macroeconomic trends via high-throughput, low-latency reasoning models.
 - **Auto-Ticker Extraction & Conversation Lifecycle**: Thread persistence, automated conversation creation/deletion, and clickable ticker references.
 
 ### 9. 🗄️ Dual-Mode Database Architecture

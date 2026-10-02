@@ -342,9 +342,10 @@ async def _llm_summarize(articles: List[Dict[str, Any]], focus: str) -> Optional
     # 3. Gemini API
     gemini_key = GEMINI_API_KEY
     if gemini_key:
+        gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash").strip()
         try:
-            async with httpx.AsyncClient(timeout=20.0) as client:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+            async with httpx.AsyncClient(timeout=25.0) as client:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={gemini_key}"
                 resp = await client.post(
                     url,
                     headers={"Content-Type": "application/json"},

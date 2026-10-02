@@ -56,15 +56,20 @@ _EARNINGS_CACHE_TTL: float = 1800.0  # 30 minutes
 _AV_SENTIMENT_CACHE: Dict[str, Tuple[Optional[Dict[str, Any]], float]] = {}
 _AV_SENTIMENT_CACHE_TTL: float = 3600.0  # 1 hour
 
+_THESIS_CACHE: Dict[str, Tuple[Dict[str, Any], float]] = {}
+_THESIS_CACHE_TTL: float = 900.0  # 15 minutes
+
 
 def clear_catalyst_cache() -> None:
     """Clear all in-memory catalyst caches (useful in testing or manual refresh)."""
-    global _CIK_CACHE, _CIK_CACHE_EXPIRY, _8K_CACHE, _EARNINGS_CACHE, _AV_SENTIMENT_CACHE
+    global _CIK_CACHE, _CIK_CACHE_EXPIRY, _8K_CACHE, _EARNINGS_CACHE, _AV_SENTIMENT_CACHE, _THESIS_CACHE
     _CIK_CACHE.clear()
     _CIK_CACHE_EXPIRY = 0.0
     _8K_CACHE.clear()
     _EARNINGS_CACHE.clear()
     _AV_SENTIMENT_CACHE.clear()
+    _THESIS_CACHE.clear()
+
 
 
 
@@ -439,4 +444,108 @@ async def fetch_av_news_sentiment(
     except Exception as e:
         logger.warning(f"Error fetching Alpha Vantage news sentiment for {sym}: {e}")
         return None
+
+
+async def generate_candidate_theses(
+    candidates: List[Dict[str, Any]], client: Optional[httpx.AsyncClient] = None
+) -> List[Dict[str, Any]]:
+    """Use Gemini reasoning model (gemini-3.8-flash) to generate institutional breakout theses and conviction scores."""
+    if not candidates:
+        return candidates
+
+    gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not gemini_key:
+        return candidates
+
+    model_name = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash").strip()
+    now = time.time()
+
+    needed_candidates = []
+    for c in candidates:
+        sym = c.get("symbol", "")
+        if not sym:
+            continue
+        if sym in _THESIS_CACHE:
+            cached, exp = _THESIS_CACHE[sym]
+            if exp > now:
+                c["thesis"] = cached.get("thesis")
+                c["conviction"] = cached.get("conviction", 7)
+                c["catalyst_type"] = cached.get("catalyst_type", "Breakout Setup")
+                continue
+        needed_candidates.append(c)
+
+    if not needed_candidates:
+        return candidates
+
+    items_desc = []
+    for c in needed_candidates[:6]:
+        sym = c.get("symbol", "")
+        price = c.get("price", 0)
+        mom5 = c.get("momentum_5d", 0)
+        vol = c.get("vol_surge", 1.0)
+        drivers_str = "; ".join(c.get("drivers", []))
+        earnings = c.get("upcoming_earnings")
+        earnings_str = f"Earnings on {earnings.get('date')} (in {earnings.get('days_until')}d)" if earnings else "No earnings in next 14d"
+        items_desc.append(
+            f"Ticker: {sym} | Price: ${price} | 5D Mom: {mom5}% | Vol Surge: {vol}x | Setup Drivers: {drivers_str} | Earnings: {earnings_str}"
+        )
+
+    prompt = (
+        "You are a senior hedge fund strategist and quantitative analyst specializing in momentum and catalyst breakouts.\n"
+        "Analyze the following high-probability breakout candidates and formulate a crisp, institutional trade thesis for each.\n\n"
+        + "\n".join(items_desc)
+        + "\n\n"
+        "Return ONLY a valid JSON array of objects with the exact schema:\n"
+        "[\n"
+        "  {\n"
+        "    \"symbol\": \"XYZ\",\n"
+        "    \"thesis\": \"1-2 crisp, professional sentences detailing the specific catalyst, volume confirmation, and breakout rationale.\",\n"
+        "    \"conviction\": 8,\n"
+        "    \"catalyst_type\": \"FDA Breakthrough | Pre-Earnings Squeeze | Volume Surge | Institutional Accumulation\"\n"
+        "  }\n"
+        "]"
+    )
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={gemini_key}"
+    try:
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.2, "responseMimeType": "application/json"},
+        }
+        if client:
+            resp = await client.post(url, json=payload, timeout=25.0)
+        else:
+            async with httpx.AsyncClient(timeout=25.0) as c:
+                resp = await c.post(url, json=payload, timeout=25.0)
+
+        if resp.status_code == 200:
+            raw_text = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+            if raw_text.startswith("```"):
+                lines = raw_text.splitlines()
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw_text = "\n".join(lines).strip()
+
+            import json
+            parsed = json.loads(raw_text)
+            if isinstance(parsed, list):
+                mapping = {item.get("symbol", "").upper(): item for item in parsed if isinstance(item, dict)}
+                for c in candidates:
+                    sym = c.get("symbol", "").upper()
+                    if sym in mapping:
+                        info = mapping[sym]
+                        thesis = info.get("thesis")
+                        conviction = info.get("conviction", 7)
+                        cat_type = info.get("catalyst_type", "Breakout Setup")
+                        c["thesis"] = thesis
+                        c["conviction"] = conviction
+                        c["catalyst_type"] = cat_type
+                        _THESIS_CACHE[sym] = ({"thesis": thesis, "conviction": conviction, "catalyst_type": cat_type}, now + _THESIS_CACHE_TTL)
+    except Exception as e:
+        logger.warning(f"Error generating breakout theses with Gemini: {e}")
+
+    return candidates
+
 

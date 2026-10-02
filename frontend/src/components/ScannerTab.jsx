@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, fmtPct, openStockModal } from "@/lib/api";
 import { toast } from "sonner";
-import { RefreshCw, Radar, Mail, Bell, ChevronRight } from "lucide-react";
+import { RefreshCw, Radar, Mail, Bell, ChevronRight, Sparkles, Zap } from "lucide-react";
 
 const signalColor = (s) => {
   if (s === "STRONG BUY") return "text-emerald-400 border-emerald-800 bg-emerald-950/40";
@@ -133,9 +133,15 @@ export default function ScannerTab() {
 
       {/* Candidates */}
       <div className="border border-[#222C3D] bg-[#121721] rounded-sm overflow-hidden panel-raised">
-        <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center gap-2">
-          <ChevronRight className="w-3.5 h-3.5 text-amber-500" />
-          <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">Top Breakout Candidates</span>
+        <div className="px-4 py-2.5 bg-[#0E131F] border-b border-[#222C3D] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ChevronRight className="w-3.5 h-3.5 text-amber-500" />
+            <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">Top Breakout Candidates</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[10px] font-mono text-gray-400" data-testid="scanner-ai-model">
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span>AI Reasoning: <span className="text-gray-200 font-semibold">Gemini 3.8 Flash</span></span>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[760px]" data-testid="scanner-table">
@@ -197,8 +203,22 @@ export default function ScannerTab() {
                   <td className="px-3 py-2 font-mono text-gray-300 whitespace-nowrap">{c.options_tilt}%</td>
                   <td className="px-3 py-2 font-mono text-emerald-400 whitespace-nowrap">{c.congress_buys || 0}</td>
                   <td className="px-3 py-2">
-                    <div className="max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[340px] text-gray-400 text-[11px] break-words leading-relaxed">
-                      {c.drivers?.join(" · ")}
+                    <div className="max-w-[220px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[420px] text-[11px] break-words leading-relaxed">
+                      <div className="text-gray-400">{c.drivers?.join(" · ")}</div>
+                      {c.thesis && (
+                        <div className="mt-2 p-2 rounded-xs bg-[#0E131F] border border-amber-500/30 text-gray-200 shadow-sm" data-testid={`thesis-${c.symbol}`}>
+                          <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider mb-1">
+                            <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                            <span>AI Thesis · {c.catalyst_type || "Breakout Setup"}</span>
+                            {c.conviction && (
+                              <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-xs bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                                {c.conviction}/10 Conviction
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-gray-300 font-sans leading-snug">{c.thesis}</p>
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -69,7 +69,7 @@ export default function MacroNewsTab() {
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-blue-400" />
             <span className="text-[10px] font-mono tracking-widest text-blue-400 uppercase">
-              AI Macro Brief · Claude Sonnet 4.6
+              AI Macro Brief · Gemini 3.8 Flash
             </span>
           </div>
           <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{data.summary}</p>

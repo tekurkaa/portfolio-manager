@@ -19,6 +19,7 @@ from catalyst_service import (
     score_catalyst,
     enrich_candidates_with_catalysts,
     fetch_av_news_sentiment,
+    generate_candidate_theses,
 )
 
 logger = logging.getLogger(__name__)
@@ -261,6 +262,12 @@ async def scan_breakouts(extra_symbols: List[str] = None, top_n: int = 15) -> Di
             else:
                 r["signal"] = "WATCH"
 
+        # Step 5: Generate AI Breakout Theses & Conviction Scores via Gemini reasoning model
+        try:
+            top = await generate_candidate_theses(top)
+        except Exception as thesis_err:
+            logger.warning(f"AI breakout thesis generation error: {thesis_err}")
+
         payload = {"scanned": len(scored), "universe_size": len(symbols), "candidates": top}
         _SCAN_CACHE[cache_key] = (payload, now + _CACHE_TTL)
         _LAST_GOOD_SCAN = payload
@@ -277,14 +284,25 @@ def build_digest_html(scan_data: Dict[str, Any], user_email: str) -> str:
     rows = ""
     for c in scan_data.get("candidates", [])[:10]:
         drivers = " · ".join(c.get("drivers", []))
+        thesis_block = ""
+        if c.get("thesis"):
+            conv = c.get("conviction", 7)
+            cat = c.get("catalyst_type", "Breakout Setup")
+            thesis_block = f"""<div style="margin-top:6px;padding:6px 8px;background:#0E131F;border-left:2px solid #F59E0B;font-size:11px;color:#E5E7EB;">
+              <span style="color:#F59E0B;font-weight:bold;letter-spacing:1px;font-size:10px;">⚡ AI THESIS ({cat} · Conviction: {conv}/10):</span><br/>
+              {c['thesis']}
+            </div>"""
         sig_color = "#10B981" if c["signal"] == "STRONG BUY" else "#F59E0B" if c["signal"] == "BUY" else "#9CA3AF"
         rows += f"""
         <tr>
-          <td style="padding:8px;font-family:monospace;font-weight:bold;color:#F59E0B;">{c['symbol']}</td>
-          <td style="padding:8px;color:{sig_color};font-weight:bold;">{c['signal']}</td>
-          <td style="padding:8px;font-family:monospace;">{c['composite']}</td>
-          <td style="padding:8px;font-family:monospace;">${c['price']}</td>
-          <td style="padding:8px;color:#6B7280;font-size:12px;">{drivers}</td>
+          <td style="padding:8px;font-family:monospace;font-weight:bold;color:#F59E0B;vertical-align:top;">{c['symbol']}</td>
+          <td style="padding:8px;color:{sig_color};font-weight:bold;vertical-align:top;">{c['signal']}</td>
+          <td style="padding:8px;font-family:monospace;vertical-align:top;">{c['composite']}</td>
+          <td style="padding:8px;font-family:monospace;vertical-align:top;">${c['price']}</td>
+          <td style="padding:8px;color:#6B7280;font-size:12px;vertical-align:top;">
+            <div>{drivers}</div>
+            {thesis_block}
+          </td>
         </tr>
         """
     return f"""

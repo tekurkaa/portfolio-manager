@@ -259,9 +259,10 @@ async def _generate_llm_response(prompt: str) -> str | None:
 
     # 3. Try Gemini API if key is available
     if GEMINI_API_KEY:
+        gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash").strip()
         try:
             async with httpx.AsyncClient(timeout=45.0) as client:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={GEMINI_API_KEY}"
                 r = await client.post(
                     url,
                     headers={"Content-Type": "application/json"},

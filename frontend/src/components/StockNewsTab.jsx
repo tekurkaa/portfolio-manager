@@ -61,7 +61,7 @@ export default function StockNewsTab() {
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-amber-400" />
             <span className="text-[10px] font-mono tracking-widest text-amber-400 uppercase">
-              AI Executive Brief · Claude Sonnet 4.6
+              AI Executive Brief · Gemini 3.8 Flash
             </span>
           </div>
           <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{data.summary}</p>

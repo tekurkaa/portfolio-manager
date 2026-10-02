@@ -116,5 +116,53 @@ test.describe('14. Scanner Tab — Breakout Scanner (TC-SCAN)', () => {
     await expect(page.locator('text=Recent 8-K: Material FDA/Clinical catalyst')).toBeVisible();
     await expect(page.locator('text=Earnings in 2 days (2026-10-02)')).toBeVisible();
   });
+
+  test('TC-SCAN-05 — AI Breakout Thesis and Gemini 3.8 Flash Engine Indicator Render in Table', async ({ page }) => {
+    await loginViaUI(page, testUser);
+
+    await page.route('**/api/scanner/breakouts', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          candidates: [
+            {
+              symbol: 'NVDA',
+              price: 135.20,
+              composite: 92.5,
+              momentum_5d: 8.4,
+              momentum_20d: 18.2,
+              vol_surge: 3.1,
+              near_52w_high_pct: 98.0,
+              options_tilt: 82.0,
+              congress_buys: 2,
+              drivers: ['+8.4% 5d momentum', 'Call-heavy options (82%)'],
+              signal: 'STRONG BUY',
+              thesis: 'Institutional accumulation surging with 3.1x volume breakout prior to Blackwell delivery expansion.',
+              conviction: 9,
+              catalyst_type: 'Institutional Accumulation',
+            },
+          ],
+          universe_size: 61,
+          scanned: 61,
+        }),
+      });
+    });
+
+    await page.locator('[data-testid="tab-scanner-button"]').click();
+    await expect(page.locator('[data-testid="scanner-tab"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="scanner-table"]')).toBeVisible();
+
+    // Verify AI Reasoning indicator in header
+    await expect(page.locator('[data-testid="scanner-ai-model"]')).toBeVisible();
+    await expect(page.locator('[data-testid="scanner-ai-model"]')).toContainText('Gemini 3.8 Flash');
+
+    // Verify thesis card rendered with conviction and catalyst type
+    await expect(page.locator('[data-testid="thesis-NVDA"]')).toBeVisible();
+    await expect(page.locator('text=AI Thesis · Institutional Accumulation')).toBeVisible();
+    await expect(page.locator('text=9/10 Conviction')).toBeVisible();
+    await expect(page.locator('text=Institutional accumulation surging with 3.1x volume breakout')).toBeVisible();
+  });
 });
+
 
